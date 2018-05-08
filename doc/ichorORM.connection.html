@@ -1,0 +1,287 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html ><head ><title >Python: module ichorORM.connection</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</head><body bgcolor="#f0f0f8" >
+
+<table width="100%" cellspacing="0" cellpadding="2" border="0" summary="heading" >
+<tr bgcolor="#7799ee" >
+<td valign="bottom" >&nbsp;<br />
+<font color="#ffffff" face="helvetica, arial" >&nbsp;<br /><big ><big ><strong ><a href="ichorORM.html" ><font color="#ffffff" >ichorORM</font></a>.connection</strong></big></big></font></td><td align="right" valign="bottom" ><font color="#ffffff" face="helvetica, arial" ><a href="ichorORM.html" >index</a></font></td></tr></table>
+    <p ><tt >Copyright&nbsp;(c)&nbsp;2016-2018&nbsp;Timothy&nbsp;Savannah<br />
+&nbsp;<br />
+Licensed&nbsp;under&nbsp;the&nbsp;terms&nbsp;of&nbsp;the&nbsp;Lesser&nbsp;GNU&nbsp;Lesser&nbsp;General&nbsp;Public&nbsp;License&nbsp;version&nbsp;2.1<br />
+&nbsp;<br />
+&nbsp;&nbsp;license&nbsp;can&nbsp;be&nbsp;found&nbsp;at&nbsp;https://raw.githubusercontent.com/kata198/ichorORM/master/LICENSE<br />
+&nbsp;<br />
+connection&nbsp;-&nbsp;Database&nbsp;access&nbsp;stuff</tt></p>
+<p >
+<table width="100%" cellspacing="0" cellpadding="2" border="0" summary="section" >
+<tr bgcolor="#aa55cc" >
+<td colspan="3" valign="bottom" >&nbsp;<br />
+<font color="#ffffff" face="helvetica, arial" ><big ><strong >Modules</strong></big></font></td></tr>
+    
+<tr ><td bgcolor="#aa55cc" ><tt >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td >&nbsp;</td>
+<td width="100%" ><table width="100%" summary="list" ><tr ><td width="25%" valign="top" ><a href="psycopg2.html" >psycopg2</a><br />
+<a href="psycopg2.extensions.html" >psycopg2.extensions</a><br />
+</td><td width="25%" valign="top" ><a href="sys.html" >sys</a><br />
+<a href="threading.html" >threading</a><br />
+</td><td width="25%" valign="top" ><a href="time.html" >time</a><br />
+<a href="traceback.html" >traceback</a><br />
+</td><td width="25%" valign="top" ></td></tr></table></td></tr></table><p >
+<table width="100%" cellspacing="0" cellpadding="2" border="0" summary="section" >
+<tr bgcolor="#ee77aa" >
+<td colspan="3" valign="bottom" >&nbsp;<br />
+<font color="#ffffff" face="helvetica, arial" ><big ><strong >Classes</strong></big></font></td></tr>
+    
+<tr ><td bgcolor="#ee77aa" ><tt >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td >&nbsp;</td>
+<td width="100%" ><dl >
+<dt ><font face="helvetica, arial" ><a href="builtins.html#Exception" >builtins.Exception</a>(<a href="builtins.html#BaseException" >builtins.BaseException</a>)
+</font></dt><dd >
+<dl >
+<dt ><font face="helvetica, arial" ><a href="ichorORM.connection.html#DatabaseConnectionFailure" >DatabaseConnectionFailure</a>
+</font></dt></dl>
+</dd>
+<dt ><font face="helvetica, arial" ><a href="builtins.html#object" >builtins.object</a>
+</font></dt><dd >
+<dl >
+<dt ><font face="helvetica, arial" ><a href="ichorORM.connection.html#DatabaseConnection" >DatabaseConnection</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p >
+<table width="100%" cellspacing="0" cellpadding="2" border="0" summary="section" >
+<tr bgcolor="#ffc8d8" >
+<td colspan="3" valign="bottom" >&nbsp;<br />
+<font color="#000000" face="helvetica, arial" ><a name="DatabaseConnection" >class <strong >DatabaseConnection</strong></a>(<a href="builtins.html#object" >builtins.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8" ><td rowspan="2" ><tt >&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan="2" ><tt ><a href="#DatabaseConnection" >DatabaseConnection</a>&nbsp;-&nbsp;Manages&nbsp;connections&nbsp;to&nbsp;the&nbsp;postgresql&nbsp;database<br />&nbsp;</tt></td></tr>
+<tr ><td >&nbsp;</td>
+<td width="100%" >Methods defined here:<br />
+<dl ><dt ><a name="DatabaseConnection-__init__" ><strong >__init__</strong></a>(self, host=&lt;ichorORM.objs.IgnoreParameterType object at 0x7fe2c62cf550&gt;, dbname=&lt;ichorORM.objs.IgnoreParameterType object at 0x7fe2c62cf550&gt;, user=&lt;ichorORM.objs.IgnoreParameterType object at 0x7fe2c62cf550&gt;, password=&lt;ichorORM.objs.IgnoreParameterType object at 0x7fe2c62cf550&gt;, isTransactionMode=False)</dt><dd ><tt >__init__&nbsp;-&nbsp;Create&nbsp;a&nbsp;<a href="#DatabaseConnection" >DatabaseConnection</a>&nbsp;<a href="builtins.html#object" >object</a><br />
+&nbsp;<br />
+&nbsp;&nbsp;@param&nbsp;host&nbsp;&lt;str/None/UseGlobalSetting&gt;&nbsp;Default&nbsp;UseGlobalSetting&nbsp;-<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IP&nbsp;or&nbsp;hostname&nbsp;to&nbsp;postgresql&nbsp;server.<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;left&nbsp;at&nbsp;default&nbsp;UseGlobalSetting,&nbsp;the&nbsp;global&nbsp;value<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;will&nbsp;be&nbsp;used.&nbsp;Use&nbsp;"None"&nbsp;to&nbsp;not&nbsp;provide&nbsp;this&nbsp;element&nbsp;when&nbsp;connecting,<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;otherwise&nbsp;give&nbsp;a&nbsp;value&nbsp;to&nbsp;use.<br />
+&nbsp;<br />
+&nbsp;&nbsp;@param&nbsp;dbname&nbsp;&lt;str/None/UseGlobalSetting&gt;&nbsp;Default&nbsp;UseGlobalSetting&nbsp;-<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Name&nbsp;of&nbsp;database&nbsp;to&nbsp;use<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;left&nbsp;at&nbsp;default&nbsp;UseGlobalSetting,&nbsp;the&nbsp;global&nbsp;value<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;will&nbsp;be&nbsp;used.&nbsp;Use&nbsp;"None"&nbsp;to&nbsp;not&nbsp;provide&nbsp;this&nbsp;element&nbsp;when&nbsp;connecting,<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;otherwise&nbsp;give&nbsp;a&nbsp;value&nbsp;to&nbsp;use.<br />
+&nbsp;<br />
+&nbsp;&nbsp;@param&nbsp;user&nbsp;&lt;str/None/UseGlobalSetting&gt;&nbsp;Default&nbsp;UseGlobalSetting&nbsp;-<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Username&nbsp;to&nbsp;use<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;left&nbsp;at&nbsp;default&nbsp;UseGlobalSetting,&nbsp;the&nbsp;global&nbsp;value<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;will&nbsp;be&nbsp;used.&nbsp;Use&nbsp;"None"&nbsp;to&nbsp;not&nbsp;provide&nbsp;this&nbsp;element&nbsp;when&nbsp;connecting,<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;otherwise&nbsp;give&nbsp;a&nbsp;value&nbsp;to&nbsp;use.<br />
+&nbsp;<br />
+&nbsp;&nbsp;@param&nbsp;password&nbsp;&lt;str/None/UseGlobalSetting&gt;&nbsp;Default&nbsp;UseGlobalSetting&nbsp;-<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Password&nbsp;to&nbsp;use<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;left&nbsp;at&nbsp;default&nbsp;UseGlobalSetting,&nbsp;the&nbsp;global&nbsp;value<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;will&nbsp;be&nbsp;used.&nbsp;Use&nbsp;"None"&nbsp;to&nbsp;not&nbsp;provide&nbsp;this&nbsp;element&nbsp;when&nbsp;connecting,<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;otherwise&nbsp;give&nbsp;a&nbsp;value&nbsp;to&nbsp;use.<br />
+&nbsp;<br />
+&nbsp;&nbsp;@param&nbsp;isTransactionMode&nbsp;&lt;bool&gt;&nbsp;default&nbsp;False,&nbsp;whether&nbsp;or&nbsp;not&nbsp;to&nbsp;default&nbsp;this&nbsp;connection&nbsp;to&nbsp;using&nbsp;transactions.<br />
+&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;False,&nbsp;autocommit&nbsp;is&nbsp;enabled.</tt></dd></dl>
+
+<dl ><dt ><a name="DatabaseConnection-closeConnection" ><strong >closeConnection</strong></a>(self)</dt><dd ><tt >closeConnection&nbsp;-&nbsp;Close&nbsp;the&nbsp;database&nbsp;connection</tt></dd></dl>
+
+<dl ><dt ><a name="DatabaseConnection-commit" ><strong >commit</strong></a>(self)</dt><dd ><tt >commit&nbsp;-&nbsp;Commit&nbsp;whatever&nbsp;is&nbsp;on&nbsp;the&nbsp;current&nbsp;connection</tt></dd></dl>
+
+<dl ><dt ><a name="DatabaseConnection-commitTransaction" ><strong >commitTransaction</strong></a>(self)</dt><dd ><tt >commitTransaction&nbsp;-&nbsp;Commit&nbsp;the&nbsp;current&nbsp;in-progress&nbsp;transaction.<br />
+&nbsp;<br />
+&nbsp;&nbsp;Requires&nbsp;transaction&nbsp;mode&nbsp;to&nbsp;be&nbsp;on,&nbsp;@see&nbsp;#startTransactionMode</tt></dd></dl>
+
+<dl ><dt ><a name="DatabaseConnection-doInsert" ><strong >doInsert</strong></a>(self, query, valueDicts, autoCommit=True, returnPk=True)</dt><dd ><tt >doInsert&nbsp;-&nbsp;Perform&nbsp;an&nbsp;INSERT&nbsp;query&nbsp;with&nbsp;a&nbsp;parameterized&nbsp;query<br />
+&nbsp;<br />
+@param&nbsp;query&nbsp;-&nbsp;Query&nbsp;string.<br />
+&nbsp;<br />
+&nbsp;&nbsp;For&nbsp;fields,&nbsp;e.x.&nbsp;"name"&nbsp;and&nbsp;"value":<br />
+&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;INSERT&nbsp;INTO&nbsp;mytable&nbsp;(name,&nbsp;number)&nbsp;VALUES&nbsp;(&nbsp;%(name)s&nbsp;,&nbsp;%(value)s&nbsp;)<br />
+&nbsp;<br />
+@param&nbsp;valueDicts&nbsp;-&nbsp;A&nbsp;list&nbsp;of&nbsp;dicts,&nbsp;where&nbsp;each&nbsp;dict&nbsp;key&nbsp;=&nbsp;column&nbsp;name&nbsp;and&nbsp;value&nbsp;=&nbsp;column&nbsp;value.<br />
+&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;So&nbsp;with&nbsp;above&nbsp;example&nbsp;select,&nbsp;valueDicts&nbsp;might&nbsp;be:<br />
+&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;[<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{&nbsp;'name'&nbsp;:&nbsp;'Jimbo'&nbsp;,&nbsp;'value'&nbsp;:&nbsp;18&nbsp;},<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{&nbsp;'name'&nbsp;:&nbsp;'Timbob',&nbsp;'value'&nbsp;:&nbsp;3033&nbsp;},<br />
+&nbsp;&nbsp;&nbsp;&nbsp;]<br />
+&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;which&nbsp;would&nbsp;cause&nbsp;the&nbsp;insert&nbsp;line&nbsp;to&nbsp;be&nbsp;executed&nbsp;twice,<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;once&nbsp;for&nbsp;each&nbsp;row&nbsp;to&nbsp;be&nbsp;inserted&nbsp;(element&nbsp;in&nbsp;the&nbsp;list)<br />
+&nbsp;<br />
+&nbsp;@param&nbsp;autoCommit&nbsp;-&nbsp;If&nbsp;True,&nbsp;will&nbsp;commit&nbsp;after&nbsp;this&nbsp;transaction.<br />
+&nbsp;<br />
+&nbsp;@param&nbsp;returnPk&nbsp;&lt;bool&gt;&nbsp;-&nbsp;If&nbsp;True,&nbsp;will&nbsp;return&nbsp;the&nbsp;primary&nbsp;key(s)&nbsp;inserted<br />
+&nbsp;<br />
+&nbsp;@return&nbsp;list&lt;int&gt;&nbsp;-&nbsp;if&nbsp;returnPk&nbsp;is&nbsp;True,&nbsp;otherwise&nbsp;None</tt></dd></dl>
+
+<dl ><dt ><a name="DatabaseConnection-doSelect" ><strong >doSelect</strong></a>(self, query)</dt><dd ><tt >doSelect&nbsp;-&nbsp;Perform&nbsp;a&nbsp;SELECT&nbsp;query&nbsp;and&nbsp;return&nbsp;all&nbsp;the&nbsp;rows.<br />
+&nbsp;&nbsp;&nbsp;&nbsp;Results&nbsp;are&nbsp;ordered&nbsp;by&nbsp;SELECT&nbsp;order<br />
+&nbsp;<br />
+@param&nbsp;list&lt;tuple&gt;&nbsp;-&nbsp;List&nbsp;of&nbsp;rows,&nbsp;each&nbsp;tuple&nbsp;of&nbsp;cols</tt></dd></dl>
+
+<dl ><dt ><a name="DatabaseConnection-doSelectParams" ><strong >doSelectParams</strong></a>(self, query, params)</dt></dl>
+
+<dl ><dt ><a name="DatabaseConnection-endTransactionMode" ><strong >endTransactionMode</strong></a>(self)</dt><dd ><tt >endTransactionMode&nbsp;-&nbsp;Disable&nbsp;transaction&nbsp;mode.<br />
+&nbsp;&nbsp;This&nbsp;will&nbsp;enable&nbsp;autocommit&nbsp;on&nbsp;future&nbsp;connections,&nbsp;and&nbsp;closes&nbsp;current&nbsp;connection.<br />
+&nbsp;<br />
+@see&nbsp;#startTransactionMode&nbsp;to&nbsp;re-enable&nbsp;transaction&nbsp;mode</tt></dd></dl>
+
+<dl ><dt ><a name="DatabaseConnection-executeSql" ><strong >executeSql</strong></a>(self, query)</dt><dd ><tt >executeSql&nbsp;-&nbsp;Execute&nbsp;arbitrary&nbsp;SQL.<br />
+&nbsp;<br />
+@param&nbsp;query&nbsp;&lt;str&gt;&nbsp;-&nbsp;SQL&nbsp;query&nbsp;to&nbsp;execute<br />
+&nbsp;<br />
+No&nbsp;return.&nbsp;Maybe&nbsp;can&nbsp;guage&nbsp;number&nbsp;of&nbsp;rows&nbsp;returned&nbsp;etc</tt></dd></dl>
+
+<dl ><dt ><a name="DatabaseConnection-executeSqlParams" ><strong >executeSqlParams</strong></a>(self, query, params)</dt><dd ><tt >executeSqlParams&nbsp;-&nbsp;Execute&nbsp;arbitary&nbsp;SQL&nbsp;with&nbsp;parameterized&nbsp;values<br />
+&nbsp;<br />
+@param&nbsp;query&nbsp;&lt;str&gt;&nbsp;-&nbsp;SQL&nbsp;Query<br />
+&nbsp;<br />
+@param&nbsp;params&nbsp;&lt;dict&gt;&nbsp;-&nbsp;Params&nbsp;to&nbsp;pass,&nbsp;&nbsp;%(name)s&nbsp;&nbsp;should&nbsp;have&nbsp;an&nbsp;entry&nbsp;"name"</tt></dd></dl>
+
+<dl ><dt ><a name="DatabaseConnection-getConnection" ><strong >getConnection</strong></a>(self, forceReconnect=False)</dt><dd ><tt >getConnection&nbsp;-&nbsp;Return&nbsp;a&nbsp;psycopg2&nbsp;connection&nbsp;based&nbsp;on<br />
+&nbsp;&nbsp;&nbsp;&nbsp;connection&nbsp;info&nbsp;on&nbsp;this&nbsp;<a href="builtins.html#object" >object</a>.<br />
+&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;Will&nbsp;reuse&nbsp;existing&nbsp;connection,&nbsp;if&nbsp;present.<br />
+&nbsp;<br />
+&nbsp;&nbsp;@param&nbsp;forceReconnect&nbsp;&lt;bool&gt;&nbsp;default&nbsp;False&nbsp;-&nbsp;If&nbsp;True,<br />
+&nbsp;&nbsp;&nbsp;&nbsp;will&nbsp;force&nbsp;the&nbsp;connection&nbsp;to&nbsp;be&nbsp;re-established<br />
+&nbsp;<br />
+&nbsp;&nbsp;@return&nbsp;&lt;&nbsp;None/&nbsp;psycopg2.connection&nbsp;<a href="builtins.html#object" >object</a>&gt;&nbsp;-<br />
+&nbsp;&nbsp;&nbsp;&nbsp;Connection,&nbsp;if&nbsp;successful,&nbsp;otherwise&nbsp;None</tt></dd></dl>
+
+<dl ><dt ><a name="DatabaseConnection-getCursor" ><strong >getCursor</strong></a>(self, forceReconnect=False)</dt><dd ><tt >getCursor&nbsp;-&nbsp;Gets&nbsp;a&nbsp;psycopg&nbsp;cursor&nbsp;to&nbsp;the&nbsp;database<br />
+&nbsp;<br />
+@param&nbsp;forceReconnect&nbsp;&lt;bool&gt;&nbsp;-&nbsp;Default&nbsp;False,&nbsp;if&nbsp;True<br />
+&nbsp;&nbsp;&nbsp;&nbsp;will&nbsp;force&nbsp;the&nbsp;connection&nbsp;to&nbsp;be&nbsp;re-established<br />
+&nbsp;<br />
+@return&nbsp;psycopg2.cursor&nbsp;<a href="builtins.html#object" >object</a></tt></dd></dl>
+
+<dl ><dt ><a name="DatabaseConnection-rollback" ><strong >rollback</strong></a>(self)</dt><dd ><tt >rollback&nbsp;-&nbsp;rollback&nbsp;whatever&nbsp;transaction&nbsp;is&nbsp;on&nbsp;the&nbsp;current&nbsp;connection</tt></dd></dl>
+
+<dl ><dt ><a name="DatabaseConnection-startTransactionMode" ><strong >startTransactionMode</strong></a>(self)</dt><dd ><tt >startTransactionMode&nbsp;-&nbsp;Set&nbsp;transaction&nbsp;mode.<br />
+&nbsp;&nbsp;This&nbsp;disables&nbsp;autocommit&nbsp;on&nbsp;future&nbsp;connection,&nbsp;and&nbsp;closes&nbsp;current&nbsp;connection.<br />
+&nbsp;<br />
+@see&nbsp;#commitTransaction&nbsp;to&nbsp;commit&nbsp;the&nbsp;current&nbsp;transaction<br />
+@see&nbsp;#endTransactionMode&nbsp;to&nbsp;unset&nbsp;transaction&nbsp;mode</tt></dd></dl>
+
+<hr />
+Data descriptors defined here:<br />
+<dl ><dt ><strong >__dict__</strong></dt>
+<dd ><tt >dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl ><dt ><strong >__weakref__</strong></dt>
+<dd ><tt >list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p >
+<table width="100%" cellspacing="0" cellpadding="2" border="0" summary="section" >
+<tr bgcolor="#ffc8d8" >
+<td colspan="3" valign="bottom" >&nbsp;<br />
+<font color="#000000" face="helvetica, arial" ><a name="DatabaseConnectionFailure" >class <strong >DatabaseConnectionFailure</strong></a>(<a href="builtins.html#Exception" >builtins.Exception</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8" ><td rowspan="2" ><tt >&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan="2" ><tt >Common&nbsp;base&nbsp;class&nbsp;for&nbsp;all&nbsp;non-exit&nbsp;exceptions.<br />&nbsp;</tt></td></tr>
+<tr ><td >&nbsp;</td>
+<td width="100%" ><dl ><dt >Method resolution order:</dt>
+<dd ><a href="ichorORM.connection.html#DatabaseConnectionFailure" >DatabaseConnectionFailure</a></dd>
+<dd ><a href="builtins.html#Exception" >builtins.Exception</a></dd>
+<dd ><a href="builtins.html#BaseException" >builtins.BaseException</a></dd>
+<dd ><a href="builtins.html#object" >builtins.object</a></dd>
+</dl>
+<hr />
+Data descriptors defined here:<br />
+<dl ><dt ><strong >__weakref__</strong></dt>
+<dd ><tt >list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr />
+Methods inherited from <a href="builtins.html#Exception" >builtins.Exception</a>:<br />
+<dl ><dt ><a name="DatabaseConnectionFailure-__init__" ><strong >__init__</strong></a>(self, /, *args, **kwargs)</dt><dd ><tt >Initialize&nbsp;self.&nbsp;&nbsp;See&nbsp;help(type(self))&nbsp;for&nbsp;accurate&nbsp;signature.</tt></dd></dl>
+
+<dl ><dt ><a name="DatabaseConnectionFailure-__new__" ><strong >__new__</strong></a>(*args, **kwargs)<font color="#909090" ><font face="helvetica, arial" > from <a href="builtins.html#type" >builtins.type</a></font></font></dt><dd ><tt >Create&nbsp;and&nbsp;return&nbsp;a&nbsp;new&nbsp;<a href="builtins.html#object" >object</a>.&nbsp;&nbsp;See&nbsp;help(type)&nbsp;for&nbsp;accurate&nbsp;signature.</tt></dd></dl>
+
+<hr />
+Methods inherited from <a href="builtins.html#BaseException" >builtins.BaseException</a>:<br />
+<dl ><dt ><a name="DatabaseConnectionFailure-__delattr__" ><strong >__delattr__</strong></a>(self, name, /)</dt><dd ><tt >Implement&nbsp;delattr(self,&nbsp;name).</tt></dd></dl>
+
+<dl ><dt ><a name="DatabaseConnectionFailure-__getattribute__" ><strong >__getattribute__</strong></a>(self, name, /)</dt><dd ><tt >Return&nbsp;getattr(self,&nbsp;name).</tt></dd></dl>
+
+<dl ><dt ><a name="DatabaseConnectionFailure-__reduce__" ><strong >__reduce__</strong></a>(...)</dt><dd ><tt >helper&nbsp;for&nbsp;pickle</tt></dd></dl>
+
+<dl ><dt ><a name="DatabaseConnectionFailure-__repr__" ><strong >__repr__</strong></a>(self, /)</dt><dd ><tt >Return&nbsp;repr(self).</tt></dd></dl>
+
+<dl ><dt ><a name="DatabaseConnectionFailure-__setattr__" ><strong >__setattr__</strong></a>(self, name, value, /)</dt><dd ><tt >Implement&nbsp;setattr(self,&nbsp;name,&nbsp;value).</tt></dd></dl>
+
+<dl ><dt ><a name="DatabaseConnectionFailure-__setstate__" ><strong >__setstate__</strong></a>(...)</dt></dl>
+
+<dl ><dt ><a name="DatabaseConnectionFailure-__str__" ><strong >__str__</strong></a>(self, /)</dt><dd ><tt >Return&nbsp;str(self).</tt></dd></dl>
+
+<dl ><dt ><a name="DatabaseConnectionFailure-with_traceback" ><strong >with_traceback</strong></a>(...)</dt><dd ><tt ><a href="builtins.html#Exception" >Exception</a>.<a href="#DatabaseConnectionFailure-with_traceback" >with_traceback</a>(tb)&nbsp;--<br />
+set&nbsp;self.<strong >__traceback__</strong>&nbsp;to&nbsp;tb&nbsp;and&nbsp;return&nbsp;self.</tt></dd></dl>
+
+<hr />
+Data descriptors inherited from <a href="builtins.html#BaseException" >builtins.BaseException</a>:<br />
+<dl ><dt ><strong >__cause__</strong></dt>
+<dd ><tt >exception&nbsp;cause</tt></dd>
+</dl>
+<dl ><dt ><strong >__context__</strong></dt>
+<dd ><tt >exception&nbsp;context</tt></dd>
+</dl>
+<dl ><dt ><strong >__dict__</strong></dt>
+</dl>
+<dl ><dt ><strong >__suppress_context__</strong></dt>
+</dl>
+<dl ><dt ><strong >__traceback__</strong></dt>
+</dl>
+<dl ><dt ><strong >args</strong></dt>
+</dl>
+</td></tr></table></p></p></td></tr></table><p >
+<table width="100%" cellspacing="0" cellpadding="2" border="0" summary="section" >
+<tr bgcolor="#eeaa77" >
+<td colspan="3" valign="bottom" >&nbsp;<br />
+<font color="#ffffff" face="helvetica, arial" ><big ><strong >Functions</strong></big></font></td></tr>
+    
+<tr ><td bgcolor="#eeaa77" ><tt >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td >&nbsp;</td>
+<td width="100%" ><dl ><dt ><a name="-getDatabaseConnection" ><strong >getDatabaseConnection</strong></a>(host=&lt;ichorORM.objs.IgnoreParameterType object at 0x7fe2c62cf550&gt;, dbname=&lt;ichorORM.objs.IgnoreParameterType object at 0x7fe2c62cf550&gt;, user=&lt;ichorORM.objs.IgnoreParameterType object at 0x7fe2c62cf550&gt;, password=&lt;ichorORM.objs.IgnoreParameterType object at 0x7fe2c62cf550&gt;, isTransactionMode=False)</dt><dd ><tt >getDatabaseConnection&nbsp;-&nbsp;Gets&nbsp;a&nbsp;database&nbsp;connection.<br />
+&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;Should&nbsp;use&nbsp;this&nbsp;instead&nbsp;of&nbsp;creating&nbsp;a&nbsp;<a href="#DatabaseConnection" >DatabaseConnection</a>&nbsp;manually,&nbsp;to&nbsp;ensure&nbsp;ease&nbsp;of&nbsp;refactoring<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(like&nbsp;if&nbsp;we&nbsp;introduce&nbsp;connection&nbsp;pooling,&nbsp;global&nbsp;connections,&nbsp;etc)<br />
+&nbsp;<br />
+@see&nbsp;<a href="#DatabaseConnection" >DatabaseConnection</a>.__init__&nbsp;for&nbsp;arguments<br />
+&nbsp;<br />
+@return&nbsp;<a href="#DatabaseConnection" >DatabaseConnection</a>&nbsp;<a href="builtins.html#object" >object</a></tt></dd></dl>
+ <dl ><dt ><a name="-setGlobalConnectionParams" ><strong >setGlobalConnectionParams</strong></a>(host=&lt;ichorORM.objs.IgnoreParameterType object at 0x7fe2c62cf160&gt;, dbname=&lt;ichorORM.objs.IgnoreParameterType object at 0x7fe2c62cf160&gt;, user=&lt;ichorORM.objs.IgnoreParameterType object at 0x7fe2c62cf160&gt;, password=&lt;ichorORM.objs.IgnoreParameterType object at 0x7fe2c62cf160&gt;)</dt><dd ><tt >setGlobalConnectionParams&nbsp;-&nbsp;Sets&nbsp;the&nbsp;global&nbsp;connection&nbsp;parameters&nbsp;which&nbsp;will&nbsp;be&nbsp;used&nbsp;by&nbsp;default<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;connections&nbsp;to&nbsp;postgresql.<br />
+&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Every&nbsp;parameter&nbsp;defaults&nbsp;to&nbsp;"IgnoreParameter"&nbsp;and&nbsp;will&nbsp;thus&nbsp;not&nbsp;be&nbsp;set&nbsp;unless<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;specified&nbsp;to&nbsp;be&nbsp;something&nbsp;different.<br />
+&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i.e.&nbsp;to&nbsp;change&nbsp;the&nbsp;database&nbsp;with&nbsp;which&nbsp;to&nbsp;connect,&nbsp;you&nbsp;can&nbsp;call&nbsp;just:<br />
+&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#-setGlobalConnectionParams" >setGlobalConnectionParams</a>(&nbsp;dbname="blah"&nbsp;)<br />
+&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;without&nbsp;upsetting&nbsp;the&nbsp;existing&nbsp;host,&nbsp;username,&nbsp;etc.<br />
+&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@param&nbsp;host&nbsp;&lt;str&gt;&nbsp;default&nbsp;IgnoreParameter&nbsp;-&nbsp;The&nbsp;hostname/ip&nbsp;with&nbsp;which&nbsp;to&nbsp;connect<br />
+&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@param&nbsp;dbname&nbsp;&lt;str&gt;&nbsp;default&nbsp;IgnoreParameter&nbsp;-&nbsp;The&nbsp;database&nbsp;name&nbsp;with&nbsp;which&nbsp;to&nbsp;USE<br />
+&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@param&nbsp;user&nbsp;&lt;str/None&gt;&nbsp;default&nbsp;IgnoreParameter&nbsp;-&nbsp;The&nbsp;username&nbsp;with&nbsp;which&nbsp;to&nbsp;use.<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Use&nbsp;None&nbsp;(the&nbsp;default&nbsp;state)&nbsp;to&nbsp;not&nbsp;provide&nbsp;a&nbsp;username.<br />
+&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@param&nbsp;password&nbsp;&lt;str&gt;&nbsp;default&nbsp;IgnoreParameter&nbsp;-&nbsp;The&nbsp;password&nbsp;with&nbsp;which&nbsp;to&nbsp;use<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Use&nbsp;None&nbsp;(the&nbsp;default&nbsp;state)&nbsp;to&nbsp;not&nbsp;provide&nbsp;a&nbsp;password.</tt></dd></dl>
+</td></tr></table><p >
+<table width="100%" cellspacing="0" cellpadding="2" border="0" summary="section" >
+<tr bgcolor="#55aa55" >
+<td colspan="3" valign="bottom" >&nbsp;<br />
+<font color="#ffffff" face="helvetica, arial" ><big ><strong >Data</strong></big></font></td></tr>
+    
+<tr ><td bgcolor="#55aa55" ><tt >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td >&nbsp;</td>
+<td width="100%" ><strong >__all__</strong> = ('setGlobalConnectionParams', 'getDatabaseConnection', 'DatabaseConnection', 'DatabaseConnectionFailure')</td></tr></table>
+</p></p></p></p></body></html>

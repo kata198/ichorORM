@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html ><head ><title >Python: module ichorORM.WhereClause</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</head><body bgcolor="#f0f0f8" >
+
+<table width="100%" cellspacing="0" cellpadding="2" border="0" summary="heading" >
+<tr bgcolor="#7799ee" >
+<td valign="bottom" >&nbsp;<br />
+<font color="#ffffff" face="helvetica, arial" >&nbsp;<br /><big ><big ><strong ><a href="ichorORM.html" ><font color="#ffffff" >ichorORM</font></a>.WhereClause</strong></big></big></font></td><td align="right" valign="bottom" ><font color="#ffffff" face="helvetica, arial" ><a href="ichorORM.html" >index</a></font></td></tr></table>
+    <p ><tt >Copyright&nbsp;(c)&nbsp;2016-2018&nbsp;Timothy&nbsp;Savannah<br />
+&nbsp;<br />
+Licensed&nbsp;under&nbsp;the&nbsp;terms&nbsp;of&nbsp;the&nbsp;Lesser&nbsp;GNU&nbsp;Lesser&nbsp;General&nbsp;Public&nbsp;License&nbsp;version&nbsp;2.1<br />
+&nbsp;<br />
+&nbsp;&nbsp;license&nbsp;can&nbsp;be&nbsp;found&nbsp;at&nbsp;https://raw.githubusercontent.com/kata198/ichorORM/master/LICENSE<br />
+&nbsp;<br />
+<a href="#WhereClause" >WhereClause</a>&nbsp;-&nbsp;type&nbsp;to&nbsp;represent&nbsp;a&nbsp;WHERE&nbsp;clause&nbsp;and&nbsp;related</tt></p>
+<p >
+<table width="100%" cellspacing="0" cellpadding="2" border="0" summary="section" >
+<tr bgcolor="#ee77aa" >
+<td colspan="3" valign="bottom" >&nbsp;<br />
+<font color="#ffffff" face="helvetica, arial" ><big ><strong >Classes</strong></big></font></td></tr>
+    
+<tr ><td bgcolor="#ee77aa" ><tt >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td >&nbsp;</td>
+<td width="100%" ><dl >
+<dt ><font face="helvetica, arial" ><a href="builtins.html#object" >builtins.object</a>
+</font></dt><dd >
+<dl >
+<dt ><font face="helvetica, arial" ><a href="ichorORM.WhereClause.html#WhereClause" >WhereClause</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p >
+<table width="100%" cellspacing="0" cellpadding="2" border="0" summary="section" >
+<tr bgcolor="#ffc8d8" >
+<td colspan="3" valign="bottom" >&nbsp;<br />
+<font color="#000000" face="helvetica, arial" ><a name="WhereClause" >class <strong >WhereClause</strong></a>(<a href="builtins.html#object" >builtins.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8" ><td rowspan="2" ><tt >&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan="2" ><tt ><a href="#WhereClause" >WhereClause</a>&nbsp;-&nbsp;Construct&nbsp;a&nbsp;"Where"&nbsp;clause&nbsp;in&nbsp;one&nbsp;of&nbsp;several&nbsp;forms<br />
+&nbsp;&nbsp;&nbsp;&nbsp;psycopg2&nbsp;understands<br />&nbsp;</tt></td></tr>
+<tr ><td >&nbsp;</td>
+<td width="100%" >Static methods defined here:<br />
+<dl ><dt ><a name="WhereClause-fromFieldValuesDictParam" ><strong >fromFieldValuesDictParam</strong></a>(fieldValues, joinBy='AND')</dt><dd ><tt >fromFieldValuesDictParam&nbsp;-&nbsp;Get&nbsp;a&nbsp;WHERE&nbsp;clause&nbsp;for&nbsp;dict-param&nbsp;input<br />
+&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;@param&nbsp;fieldValues&nbsp;&lt;dict&gt;&nbsp;fieldName&nbsp;:&nbsp;fieldVaulue<br />
+&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;@param&nbsp;joinBy&nbsp;&lt;str&gt;&nbsp;WHERE_AND&nbsp;or&nbsp;WHERE_OR<br />
+&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;@return&nbsp;String&nbsp;ready&nbsp;to&nbsp;be&nbsp;used&nbsp;for&nbsp;dict&nbsp;params</tt></dd></dl>
+
+<dl ><dt ><a name="WhereClause-fromFieldValuesDirect" ><strong >fromFieldValuesDirect</strong></a>(fieldValues, joinBy='AND')</dt><dd ><tt >fromFieldValuesDirect&nbsp;-&nbsp;Get&nbsp;a&nbsp;WHERE&nbsp;clause&nbsp;joining&nbsp;fieldValues&nbsp;with&nbsp;AND/OR<br />
+&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;@param&nbsp;fieldValues&nbsp;&lt;dict&gt;&nbsp;fieldName&nbsp;:&nbsp;fieldValue<br />
+&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;@param&nbsp;joinBy&nbsp;&lt;str&gt;&nbsp;-&nbsp;WHERE_AND&nbsp;or&nbsp;WHERE_OR<br />
+&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;@return&nbsp;String&nbsp;of&nbsp;where&nbsp;clause&nbsp;assembled&nbsp;from&nbsp;above</tt></dd></dl>
+
+<dl ><dt ><a name="WhereClause-fromFieldValuesParam" ><strong >fromFieldValuesParam</strong></a>(fieldValues, joinBy='AND')</dt><dd ><tt >fromFieldValuesParam&nbsp;-&nbsp;Get&nbsp;a&nbsp;WHERE&nbsp;clause&nbsp;ready&nbsp;for&nbsp;paramertized&nbsp;input<br />
+&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;@param&nbsp;fieldValues&nbsp;&lt;dict&gt;&nbsp;fieldName&nbsp;:&nbsp;fieldValue<br />
+&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;@param&nbsp;joinBy&nbsp;&lt;str&gt;&nbsp;WHERE_AND&nbsp;or&nbsp;WHERE_OR<br />
+&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;@return&nbsp;String&nbsp;ready&nbsp;to&nbsp;be&nbsp;used&nbsp;for&nbsp;parameterization</tt></dd></dl>
+
+<hr />
+Data descriptors defined here:<br />
+<dl ><dt ><strong >__dict__</strong></dt>
+<dd ><tt >dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl ><dt ><strong >__weakref__</strong></dt>
+<dd ><tt >list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table></p></td></tr></table><p >
+<table width="100%" cellspacing="0" cellpadding="2" border="0" summary="section" >
+<tr bgcolor="#55aa55" >
+<td colspan="3" valign="bottom" >&nbsp;<br />
+<font color="#ffffff" face="helvetica, arial" ><big ><strong >Data</strong></big></font></td></tr>
+    
+<tr ><td bgcolor="#55aa55" ><tt >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td >&nbsp;</td>
+<td width="100%" ><strong >WHERE_AND</strong> = 'AND'<br />
+<strong >WHERE_OR</strong> = 'OR'<br />
+<strong >__all__</strong> = ('WHERE_AND', 'WHERE_OR', 'WhereClause')</td></tr></table>
+</p></p></body></html>
