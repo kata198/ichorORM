@@ -326,7 +326,10 @@ class DatabaseModel(object):
                 except:
                     raise ValueError('Unknown filter param: "%s". double-underscore should be followed by an operation, e.x. __ne' %(fieldName, ))
             else:
-                operation = '='
+                if fieldValue is None:
+                    operation = 'is'
+                else:
+                    operation = '='
 
             where.addCondition(fieldName, operation, fieldValue)
 
