@@ -1,0 +1,8 @@
+1.0.1 - May 31 2018
+-------------------
+* With something like DatabaseModel.filter(fieldName=None) this would formerly generate a query like "fieldName = NULL" which is always False. fieldName__is=None would translate to the proper "fieldName is NULL" and fieldName__isnot=None to "fieldName is not NULL".
+
+  Simplify/unify so that when the value is .filter is None or constants.SQL_NULL, we automatically convert 'eq' and 'ne' to 'is' and 'is not'
+
+* Small optimization: use LIMIT 1 when doing DatabaseModel.get(primaryKey)
+
