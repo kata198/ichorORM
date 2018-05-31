@@ -1,3 +1,13 @@
+1.0.2 - May 31 2018
+-------------------
+
+* Fix a case where string "NULL" could be interpreted as literal NULL (None)
+
+* Support using a native list/tuple in a conditional with "in" or "not in"
+
+* Fixup the support for an "in" or "not in" conditional with a string-list using parameterized queries. Quotes are now properly handled.
+
+
 1.0.1 - May 31 2018
 -------------------
 * With something like DatabaseModel.filter(fieldName=None) this would formerly generate a query like "fieldName = NULL" which is always False. fieldName__is=None would translate to the proper "fieldName is NULL" and fieldName__isnot=None to "fieldName is not NULL".
