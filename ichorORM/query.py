@@ -138,14 +138,26 @@ class FilterField(FilterType):
             params[paramName] = filterValue
         else:
             # Otherwise, we have to insert a list of parameterized values, like ( %(p1)s , %(p2)s )
+            if not issubclass(filterValue.__class__, (list, tuple)):
+                # If this is not a list but a string of a list, extract the items
+                innerParenRE = re.match('^[ \t]*[(](?P<innerValues>[^)]+)[)]', filterValue)
 
-            innerParenRE = re.match('^[ \t]*[(](?P<innerValues>[^)]+)[)]', filterValue)
+                if not innerParenRE:
+                    raise ValueError('Cannot parse value: %s' %(repr(filterValue), ))
 
-            if not innerParenRE:
-                raise ValueError('Cannot parse value: %s' %(repr(filterValue), ))
-
-            # TODO: Quoted , will mess up here.
-            innerValues = innerParenRE.groupdict()['innerValues'].strip().split(',')
+                innerValues = innerParenRE.groupdict()['innerValues'].strip().split(',')
+                innerValues2 = []
+                for innerValue in innerValues:
+                    innerValue = innerValue.strip()
+                    if len(innerValue) >= 2:
+                        if ( innerValue[0] == "'" and innerValue[-1] == "'" ) or \
+                             (innerValue[0] == '"' and innerValue[-1] == '"'):
+                                innerValue = innerValue[1:-1]
+                    innerValues2.append(innerValue)
+                innerValues = innerValues2
+            else:
+                # Otherwise, use the direct values provided
+                innerValues = filterValue
 
             ret += '( '
 
