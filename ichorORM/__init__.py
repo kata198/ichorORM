@@ -12,8 +12,8 @@ from .connection import setGlobalConnectionParams, getDatabaseConnection, Databa
 
 from .model import DatabaseModel
 
-__version__ = '1.0.0'
-__version_tuple__ = ('1', '0', '0')
-__version_int_tuple__ = (1, 0, 0)
+__version__ = '1.0.1'
+__version_tuple__ = ('1', '0', '1')
+__version_int_tuple__ = (1, 0, 1)
 
 __all__ = ('setGlobalConnectionParams', 'getDatabaseConnection', 'DatabaseConnection', 'DatabaseConnectionFailure', 'DatabaseModel')
