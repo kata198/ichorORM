@@ -326,11 +326,13 @@ class DatabaseModel(object):
                 except:
                     raise ValueError('Unknown filter param: "%s". double-underscore should be followed by an operation, e.x. __ne' %(fieldName, ))
             else:
-                if fieldValue is None:
-                    operation = 'is'
-                else:
-                    operation = '='
+                operation = '='
 
+            if fieldValue is None:
+                if operation in ('eq', '='):
+                    operation = 'is'
+                elif operation == 'ne':
+                    operation = 'is not'
             where.addCondition(fieldName, operation, fieldValue)
 
         objs = q.executeGetObjs(dbConn=dbConn)
