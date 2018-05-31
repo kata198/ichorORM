@@ -128,7 +128,7 @@ class FilterField(FilterType):
         if isinstance(filterValue, QueryStr):
             # Raw embedded SQL
             ret += filterValue + " "
-        elif filterValue == SQL_NULL:
+        elif filterValue is SQL_NULL:
             # A raw NULL
             ret += "NULL "
 
