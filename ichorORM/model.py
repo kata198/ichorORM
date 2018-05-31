@@ -232,7 +232,7 @@ class DatabaseModel(object):
 
         _pk = str(_pk)
 
-        q = SelectQuery(cls, selectFields='ALL')
+        q = SelectQuery(cls, selectFields='ALL', limitNum=1)
 
         where = q.addStage()
 
