@@ -10,7 +10,7 @@
 
 import copy
 
-from .constants import FETCH_ALL_FIELDS, WHERE_AND, WHERE_OR, ALL_WHERE_TYPES
+from .constants import FETCH_ALL_FIELDS, WHERE_AND, WHERE_OR, ALL_WHERE_TYPES, SQL_NULL
 from . import DatabaseConnection, getDatabaseConnection
 
 from .query import InsertQuery, UpdateQuery, SelectQuery, DeleteQuery
@@ -328,7 +328,7 @@ class DatabaseModel(object):
             else:
                 operation = '='
 
-            if fieldValue is None:
+            if fieldValue is None or fieldValue is SQL_NULL:
                 if operation in ('eq', '='):
                     operation = 'is'
                 elif operation == 'ne':
