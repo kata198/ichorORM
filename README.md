@@ -151,15 +151,15 @@ This will return a list of all Person objects where *age > 20* and *gender = 'ma
 
 The standard "filter" rules apply here, double underscore and operation.
 
-	* = or \_\_eq=   - Equals operator
+	* = or __eq=   - Equals operator
 
-	* \_\_ne= - Not Equal ( <> ) operator
+	* __ne= - Not Equal ( <> ) operator
 
-	* \_\_ is or \_\_isnot - IS or IS NOT ( you can use *None* to represent NULL, or the SQL\_NULL constant )
+	* __ is or __isnot - IS or IS NOT ( you can use *None* to represent NULL, or the SQL\_NULL constant )
 
-	* \_\_in or \_\_notin - IN or NOT IN a list of values
+	* __in or __notin - IN or NOT IN a list of values
 
-	* \_\_isnull=True or \_\_isnull=False - Compare IS NULL or IS NOT NULL.
+	* __isnull=True or __isnull=False - Compare IS NULL or IS NOT NULL.
 
 Or to fetch all objects of a given table, use the *all* method
 
