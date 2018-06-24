@@ -1092,6 +1092,8 @@ class SelectGenericJoinQuery(SelectQuery):
                 @param joinType <str> - A join type (see JOIN_* in constants.py)
 
                 @param conditionGrouping <str> default AND, either WHERE_AND or WHERE_OR
+
+                @return - The stage that makes up the conditional on the join.
         '''
         joinType = joinType.upper()
 
