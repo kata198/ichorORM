@@ -23,6 +23,10 @@ from collections import OrderedDict
 
 from . import getDatabaseConnection
 
+__all__ = ('QueryStr', 'QueryBase', 'FilterType', 'isFilterType', 'FilterField', 'FilterJoin', 'FilterStage',
+            'SelectQuery', 'SelectInnerJoinQuery', 'SelectGenericJoinQuery',
+            'UpdateQuery', 'InsertQuery', 'DeleteQuery' )
+
 # TODO: Better handle stringing of potential filter values (like to addCondition),
 #         Currently we have QueryStr as a special type and SQL_NULL as a special singleton
 # TODO: Support "in" <iterable> for filter addCondition
