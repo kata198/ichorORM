@@ -182,7 +182,7 @@ class DatabaseModel(object):
 
         return self
 
-    # TODO: Support transaction here?
+
     def updateObject(self, updateFieldNames, dbConn=None, doCommit=True):
         '''
             updateObject - Performs an UPDATE on a given list of field names, based on value held on current object.
