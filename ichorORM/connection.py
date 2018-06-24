@@ -314,24 +314,28 @@ class DatabaseConnection(object):
         self._cursor = None
 
 
-    def startTransactionMode(self):
+    def beginTransactionMode(self):
         '''
-            startTransactionMode - Set transaction mode.
+            beginTransactionMode - Set transaction mode.
               This disables autocommit on future connection, and closes current connection.
 
             @see #commitTransaction to commit the current transaction
             @see #endTransactionMode to unset transaction mode
+
+            Alias is "startTransactionMode"
         '''
         if self.isTransaction is False:
             self.closeConnection()
 
         self.isTransaction = True
 
+    startTransactionMode = beginTransactionMode
+
     def commitTransaction(self):
         '''
             commitTransaction - Commit the current in-progress transaction.
 
-              Requires transaction mode to be on, @see #startTransactionMode
+              Requires transaction mode to be on, @see #beginTransactionMode
         '''
         if not self.isTransaction:
             return False
@@ -345,7 +349,7 @@ class DatabaseConnection(object):
             endTransactionMode - Disable transaction mode.
               This will enable autocommit on future connections, and closes current connection.
 
-            @see #startTransactionMode to re-enable transaction mode
+            @see #beginTransactionMode to re-enable transaction mode
         '''
         if self.isTransaction:
             self.closeConnection()
