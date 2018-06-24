@@ -88,7 +88,7 @@ class DatabaseModel(object):
 
 
     @classmethod
-    def createAndSave(cls, replaceSpecialValues=True, dbConn=None, **kwargs):
+    def createAndSave(cls, replaceSpecialValues=True, dbConn=None, doCommit=True, **kwargs):
         '''
             createAndSave - Creates an object of this type and saves it.
 
@@ -104,6 +104,10 @@ class DatabaseModel(object):
             @param dbConn <None/DatabaseConnection> Default None- A specific DatabaseConnection to use,
                 if None generate a new connection with global settings
 
+            @param doCommit <bool> default True - If True, will commit upon insert.
+                If False, you must call dbConn.commitTransaction yourself when ready.
+                Primary key is set either way.
+                If doCommit is False, dbConn must be specified (obviously, so you can commit later)
 
             @return - An object of this model's type
         '''
@@ -129,7 +133,7 @@ class DatabaseModel(object):
         q = InsertQuery(cls, setFieldValues=useSetDict)
 
         # Set replaceSpecialValues to False here, as we already handled it above.
-        _pk = q.executeInsert(doCommit=True, replaceSpecialValues=False, dbConn=dbConn)
+        _pk = q.executeInsert(doCommit=doCommit, replaceSpecialValues=False, dbConn=dbConn)
 
         useSetDict[cls.PRIMARY_KEY] = _pk
 
