@@ -60,8 +60,8 @@ You may find it useful to add relevant methods to this model object.
 		# TABLE_NAME - This is the name of the corrosponding table in your database
 		TABLE_NAME = 'Person'   
 
-		# FIELDS - A list of all fields on this table (excluding the primary pk, "id" )
-		FIELDS = [ 'first_name', 'last_name', 'age', 'gender', 'eye_color', 'ethnicity', 'title' ]
+		# FIELDS - A list of all fields on this table
+		FIELDS = [ 'id', 'first_name', 'last_name', 'age', 'birthday', 'gender', 'eye_color', 'ethnicity', 'title' ]
 
 		# REQUIRED_FIELDS - A list of NOT NULL fields which will validate prior to 
 		#        insertObject/createAndSave (cannot be None or ValueError raised)
@@ -489,5 +489,151 @@ A DeleteQuery object is used to build queries to delete records
 *execute* can also be used as an alias to *executeDelete*
 
 Keep in mind you can also delect records in a transaction by passing dbConn and doCommit=False to *execute* or *executeDelete*. Changes will be applied when *commit* is called on that connection.
+
+
+Transactions within Query Builder
+---------------------------------
+
+To use transactions with query builder statements, get a isTransactionMode=True Database connection like before and pass it to the execute\* methods along with doCommit=False. When ready, call commit on the connection object.
+
+
+	dbConn = getDatabaseConnection(isTransactionMode=True)
+
+	magicCake = Meal(food_group='desert', item_name='cake', price='5.99')
+
+	# Everyone on their birthday will get a magic cake
+	for person in birthdayPeople:
+		magicCakeCopy = copy.deepcopy(magicCake)
+		magicCakeCopy.id_person = person.id
+		magicCakeCopy.insertObject(dbConn=dbConn, doCommit=False)
+
+		# Everyone who eats the magic cake has their eyes turn blue
+		upQ = UpdateQuery(Person)
+		upQ.setFieldValue('eye_color', 'Blue')
+		upQ.execue(dbConn=dbConn, doCommit=False)
+
+	# Execute the transaction, but only commit on success. If fail, exception will be raised.
+	try:
+		dbConn.commit()
+	except Exception as e:
+		print ( 'Unable to run birthday transaction, rolling back. Error is %s   %s' %(str(type(e)), str(e)))
+
+
+Handling Errors
+---------------
+
+If a query fails, an exception will be raised (a psycopg2 exception).
+
+For transactions, you can wrap the "dbConn.commit" call in a try/except loop.
+
+For any immediate commit actions, the *execute\* * method or the *insertObject/updateObject/createAndSave* method will raise an exception upon error.
+
+
+Using explicit SQL / Special Values
+===================================
+
+
+NULL
+----
+
+There are a few ways to represent a value of "NULL." The most common is that ichorORM associates NULL with None.
+
+None will be used when fields have a NULL value, and can be used with filtering as a replacement for NULL.
+
+You may also find it useful sometimes to use "ichorORM.constants.SQL\_NULL".
+
+If you do a quey like:
+
+    myObjs = MyModel.filter(some_field=None)
+
+ichorORM will automatically convert the "equals" operator to the "is" operator; that is to say you would have a query like:
+
+    SELECT * FROM MyModel WHERE some_field IS NULL
+
+which will return results as expected, versus:
+
+    SELECT * FROM MyModel WHERE some_field = NULL
+
+which would return NOTHING (postgres is pedantic that you must use "is" and "is not" with NULL)
+
+
+
+Explicit Query Strings
+----------------------
+
+While the given ORM functions should cover 98% of use cases, sometimes you want to use a call to an explicit sql function or otherwise.
+
+You can use the same functions such as "setFieldValue" but instead of interpreting the value as a string (thus quoting / escaping) you can provide explicit SQL by wrapping the value in a *QueryStr* type.
+
+
+Example:
+
+	import datetime
+
+	from ichorORM.query import QueryStr, SelectQuery, UpdateQuery
+
+	today = datetime.date.today()
+
+	# Find all the "Person" objects
+	birthdayQ = SelectQuery(Person, selectFields=['id'])
+
+	# Filter on all folks who had birthday today.
+	#   Note: we can directly pass a datetime.date/datetime.datetime object for TIMESTAMP fields
+	birthdayQWhere = birthdayQ.addStage()
+	birthdayQWhere.addCondition('birthday', '>=', today)
+	birthdayQWhere.addCondition('birthday', '<', today + datetime.timedelta(days=1))
+
+	# Execute the query and return rows
+	birthdayQRows = birthdayQ.executeGetRows()
+
+	# Rows are returned with columns matching #selectFields in SelectQuery.
+	#    In this case, we are only selecting 'id' and thus take first col in every row
+	birthdayIds = [ row[0] for row in birthdayQRows ]
+
+	upQ = UpdateQuery(Person)
+
+	# Increment age + 1 for people whose birthday is today
+	#  NOTE: WE USE QueryStr HERE FOR EXPLICIT "age + 1" rather than a string holding value 'age + 1'
+	upQ.setFieldValue('age', QueryStr('age + 1'))
+
+	# Qualify the WHERE to be the birthday ids
+	upQWhere = upQ.addStage()
+	upQWhere.addCondition('id', 'in', birthdayIds)
+
+	try:
+		upQ.execute()
+	except Exception as e:
+		print ( "Failed to increment age of birthday people. Error is %s  %s" %(str(type(e)), str(e)) )
+
+
+This example would execute a select to gather ids, and then perform an update like this:
+
+	UPDATE Person SET age = age + 1 WHERE id in ( ...list_of_ids... )
+
+
+This is also a drawn-out example for documentation/tutorial purposes. It executes a SELECT query, returns the ids back to the client, which then issues an UPDATE query using those ids. This can all be simplified by just using the SELECT conditionals within the Update query itself:
+
+	upQ = UpdateQuery(Person)
+
+	upQ.setFieldValue('age', QueryStr('age + 1'))
+
+	upQWhere = upQ.addStage()
+
+	upQWhere.addCondition('birthday', '>=', today)
+	upQWhere.addCondition('birthday', '<', today + datetime.timedelta(days=1))
+	try:
+		upQ.execute()
+	except Exception as e:
+		print ( "Failed to increment age of birthday people. Error is %s  %s" %(str(type(e)), str(e)) )
+
+
+Or the entire condition value can be a QueryStr:
+
+	upQWhere.addCondition('birthday', 'BETWEEN', QueryStr("""date_trunc('day', CURRENT_TIMESTAMP) AND (day_trunc('day', CURRENT_TIMESTAMP) + INTERVAL '23:59:59')))
+
+
+Or a tuple of two items (range start, range end), either as "date-like" objects or QueryStr, or a mix thereof
+
+	upQWhere.addCondition('birthday', 'BETWEEN', [ QueryStr("""date_trunc('day', CURRENT_TIMESTAMP)"""), today + datetime.timedelta(days=1)] )
 
 
