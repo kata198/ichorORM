@@ -27,10 +27,12 @@ class DatabaseModel(object):
     # TABLE_NAME - Set to the Postgresql table name
     TABLE_NAME = None
 
-    # FIELDS - List of fields on this table
+    # FIELDS - List of fields on this table.
+    #            FIELDS should include the PRIMARY_KEY, which will be prepended if you don't specify
     FIELDS = []
 
     # REQUIRED_FIELDS - List of fields that are also required (NOT NULL)
+    #            Exclude PRIMARY_KEY from this list
     REQUIRED_FIELDS = []
 
     # DEFAULT_FIELD_VALUES - Field names to default values (when not specified, these will be used)
@@ -51,6 +53,8 @@ class DatabaseModel(object):
               Arguments are in form of fieldName=fieldValue
 
         '''
+        self._setupModel()
+
         FIELDS = self.FIELDS
         DEFAULT_FIELD_VALUES = self.DEFAULT_FIELD_VALUES
 
@@ -111,6 +115,7 @@ class DatabaseModel(object):
 
             @return - An object of this model's type
         '''
+        cls._setupModel()
 
         for reqField in cls.REQUIRED_FIELDS:
             if reqField not in kwargs and reqField not in cls.DEFAULT_FIELD_VALUES:
@@ -231,6 +236,7 @@ class DatabaseModel(object):
 
             @return object of this type with all fields populated
         '''
+        cls._setupModel()
 
         primaryKeyName = cls.PRIMARY_KEY
 
@@ -306,6 +312,8 @@ class DatabaseModel(object):
 
               @return list<objs> - List of objects of this model type
         '''
+        cls._setupModel()
+
         if whereType not in ALL_WHERE_TYPES:
             raise ValueError('Unknown where type: %s.   Possible types:  %s.' %(repr(whereType), repr(ALL_WHERE_TYPES)))
 
@@ -359,6 +367,8 @@ class DatabaseModel(object):
                 @return list<DatabaseModel> - A list of all objects in the database for this model
         '''
 
+        cls._setupModel()
+
         q = SelectQuery(cls, orderByField=orderByField, orderByDir=orderByDir)
 
         objs = q.executeGetObjs(dbConn=dbConn)
@@ -386,5 +396,22 @@ class DatabaseModel(object):
               ( self.__class__.__name__, \
                 ' , '.join(fieldValues) \
         )
+
+    @classmethod
+    def _setupModel(cls):
+        '''
+            _setupModel - Class method called once to validate and ensure class is setup right.
+
+                Afer called once this function will replace itself with the dummy _setupModel_Finished
+        '''
+
+        if cls.PRIMARY_KEY not in cls.FIELDS:
+            cls.FIELDS = [cls.PRIMARY_KEY] + list(cls.FIELDS)
+        cls._setupModel = cls._setupModel_Finished
+
+    @classmethod
+    def _setupModel_Finished(cls):
+        pass
+
 
 # vim: set ts=4 sw=4 expandtab :

@@ -26,7 +26,7 @@ JOIN_OUTER_FULL = 'OUTER FULL'
 
 ALL_JOINS = (JOIN_INNER, JOIN_LEFT, JOIN_RIGHT, JOIN_OUTER_FULL)
 
-
+# TODO: Change SQL_NULL to extend QueryStr to simplify logic in places
 class _SQL_NULL_TYPE(str):
     '''
         _SQL_NULL_TYPE - The type of the SQL_NULL singleton. Don't use this directly.

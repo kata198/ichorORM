@@ -29,7 +29,9 @@ __all__ = ('QueryStr', 'QueryBase', 'FilterType', 'isFilterType', 'FilterField',
 
 # TODO: Better handle stringing of potential filter values (like to addCondition),
 #         Currently we have QueryStr as a special type and SQL_NULL as a special singleton
-# TODO: Support "in" <iterable> for filter addCondition
+
+# TODO: Refactor SQL_NULL to extend QueryStr to simplify logic
+
 class QueryStr(str):
     '''
         QueryStr - A portion that should be treated like a raw string (Embedded sql),
@@ -458,6 +460,9 @@ class QueryBase(object):
                     with an empty list. Call #addStage to add a stage to the WHERE
         '''
         self.model = model
+
+        # Ensure model is init and valid
+        self.model._setupModel()
 
         if filterStages is None:
             filterStages = []
@@ -1488,6 +1493,7 @@ class UpdateQuery(QueryBase):
     '''
         UpdateQuery - Perform an update on a model
     '''
+
 
     def __init__(self, model, newFieldValues=None, filterStages=None):
         '''
