@@ -131,12 +131,45 @@ class FilterField(FilterType):
 
         filterValue = self.getFilterValue()
 
-        if isinstance(filterValue, QueryStr):
+        if issubclass(filterValue.__class__, QueryStr):
             # Raw embedded SQL
             ret += filterValue + " "
         elif filterValue is SQL_NULL:
             # A raw NULL
             ret += "NULL "
+        elif self.operator.lower() == 'between':
+            if issubclass(filterValue.__class__, (tuple, list)) and len(filterValue) == 2:
+                # Check if we are using "BETWEEN" operator and have a 2-element list/tuple
+                slot2Name = paramName + '__item2_'
+                thisItem = []
+
+                # If we have a query str, put that directly in, otherwise param value
+                if issubclass(filterValue[0].__class__, QueryStr):
+                    thisItem.append(filterValue[0])
+                else:
+                    slot1Name = paramName + '__item1_'
+
+                    thisItem += ['%(', slot1Name, ')s ']
+                    params[slot1Name] = filterValue[0]
+
+                thisItem.append('  AND  ')
+
+                if issubclass(filterValue[1].__class__, QueryStr):
+                    thisItem.append(filterValue[1])
+                else:
+                    slot2Name = paramName + '__item2_'
+
+                    thisItem += ['%(', slot2Name, ')s ']
+                    params[slot2Name] = filterValue[1]
+
+                ret += ''.join(thisItem)
+
+            elif issubclass(filterValue.__class__, QueryStr):
+                # NOTE: This should never be reached, should be caught in first conditional
+                ret += filterValue + " "
+            else:
+                # Unknown what we got here
+                raise ValueError('Unexpected value for "BETWEEN" operator: <%s> %s.\nShould either be a 2-element array/tuple or a QueryStr.' %(str(type(filterValue)), repr(filterValue)))
 
         elif not isMultiOperator(self.operator):
             # If not a multi operator, insert one parameterized value

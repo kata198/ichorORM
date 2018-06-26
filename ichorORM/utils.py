@@ -44,6 +44,8 @@ def convertFilterTypeToOperator(filterType):
         return 'is'
     elif ft in ('isnot', 'is_not', 'is not'):
         return 'is not'
+    elif ft == 'between':
+        return 'between'
 
     raise ValueError('Unknown filter type: %s' %(repr(filterType), ))
 
@@ -57,7 +59,7 @@ def isMultiOperator(operator):
     '''
     operator = operator.lower()
 
-    if operator in ('in', 'not in'):
+    if operator in ('in', 'not in', 'between'):
         return True
 
     return False
