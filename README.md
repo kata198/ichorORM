@@ -3,6 +3,8 @@ A python library for postgresql focused on performance and supporting ORM and qu
 
 ichorORM uses psycopg2 to interact with a configured SQL database and provides an easy and efficient abstraction layer.
 
+The default mode handles SQL parameterization to automatically protect against SQL-injection attacks.
+
 
 Connecting to the Database
 ==========================
@@ -635,5 +637,38 @@ Or the entire condition value can be a QueryStr:
 Or a tuple of two items (range start, range end), either as "date-like" objects or QueryStr, or a mix thereof
 
 	upQWhere.addCondition('birthday', 'BETWEEN', [ QueryStr("""date_trunc('day', CURRENT_TIMESTAMP)"""), today + datetime.timedelta(days=1)] )
+
+
+Embedded Queries
+----------------
+
+You may embed subqueries directly using the QueryStr object, or you can embed a SelectQuery you have created.
+
+
+	# Create the UpdateQuery object on a Person
+    upQ = UpdateQuery(Person)
+    # Increment age + 1 for people whose ate birthday cake today
+    upQ.setFieldValue('age', QueryStr('age + 1'))
+
+	# Create a subqery that will select the id_person from a Meal object with matching critera
+    mealIdSelQ = SelectQuery(Meal, selectFields=['id_person'])
+    mealIdSelQWhere = mealIdSelQ.addStage()
+    mealIdSelQWhere.addCondition('food_name', 'LIKE', '%Cake')
+    mealIdSelQWhere.addCondition('consumed_date', datetime.date.today() )
+
+	# Create the WHERE query to embed
+    upQWhere = upQ.addStage()
+	# select id from the subquery
+    upQWhere.addCondition('id', 'in', mealIdSelQ)
+    
+    try:
+        upQ.execute()
+    except Exception as e:
+        print ( "Failed to increment age of birthday people. Error is %s  %s" %(str(type(e)), str(e)) )
+
+
+This will generate a query like:
+
+	UPDATE Person SET age = age + 1 WHERE id in (SELECT id_person FROM Meal WHERE food_name LIKE '%Cake' AND consumed_date = '2018-07-04'::date )
 
 
