@@ -14,6 +14,8 @@ import copy
 import datetime
 import re
 
+from psycopg2.extensions import adapt as psycopg2_adapt
+
 from .constants import WHERE_AND, WHERE_OR, WHERE_ALL_TYPES, ALL_JOINS, SQL_NULL
 from .utils import convertFilterTypeToOperator, isMultiOperator
 from .objs import DictObj
@@ -69,7 +71,7 @@ class FilterField(FilterType):
 
                 @param filterType <str> - Operation ( like "=" )
 
-                @param filterValue <str> - The value to match
+                @param filterValue <str/QueryStr/SelectQuery> - The value to match, or a query to embed to fetch value
 
                 @param operator <str/None> default None - If provided, will use
                     
@@ -106,10 +108,12 @@ class FilterField(FilterType):
         '''
         filterValue = self.filterValue
 
-        if isinstance(filterValue, QueryStr):
+        if issubclass(filterValue.__class__, QueryStr):
             filterValue = filterValue
         elif filterValue == SQL_NULL:
             filterValue = 'NULL'
+        elif issubclass(filterValue.__class__, SelectQuery):
+            filterValue = filterValue.asQueryStr()
         else:
             filterValue = ''.join(["'", filterValue, "'"])
 
@@ -171,6 +175,13 @@ class FilterField(FilterType):
                 # Unknown what we got here
                 raise ValueError('Unexpected value for "BETWEEN" operator: <%s> %s.\nShould either be a 2-element array/tuple or a QueryStr.' %(str(type(filterValue)), repr(filterValue)))
 
+
+        elif issubclass(filterValue.__class__, SelectQuery):
+            (_queryStr, _selectParams) = filterValue.asQueryStrParams(paramPrefix=paramName)
+
+            ret += " " + _queryStr
+            params.update(_selectParams)
+            
         elif not isMultiOperator(self.operator):
             # If not a multi operator, insert one parameterized value
             ret += ' %(' + paramName + ')s '
@@ -286,8 +297,16 @@ class FilterStage(FilterType):
 
         whereType = self.whereType
 
-        expressions = [ _filterEm.toStr() for _filterEm in self.filters ]
-        expressions = [ x for x in expressions if x.strip() ]
+        expressions = []
+        for _filterEm in self.filters:
+            if issubclass(_filterEm.__class__, SelectQuery):
+                filterStr = _filterEm.asQueryStr()
+            else:
+                filterStr = _filterEm.toStr()
+            
+            filterStr = filterStr.strip()
+            if filterStr:
+                expressions.append(filterStr)
 
         if not expressions:
             return ''
@@ -323,6 +342,11 @@ class FilterStage(FilterType):
 
             if issubclass(_filterEm.__class__, FilterStage):
                 (expression, filterParams) = _filterEm.toStrParam(paramName)
+                if not expression:
+                    continue
+                params.update(filterParams)
+            elif issubclass(_filterEm.__class__, SelectQuery):
+                (expression, filterParams) = _filterEm.asQueryStrParams(paramPrefix=paramName)
                 if not expression:
                     continue
                 params.update(filterParams)
@@ -869,6 +893,81 @@ class SelectQuery(QueryBase):
             ret.append( Model(**fieldMap) )
 
         return ret
+
+    def asQueryStr(self):
+        '''
+            asQueryStr - Return this SELECT as an embedded group
+                    (for use in setting field values based on selected values and similar endeavours
+
+                  @return <QueryStr> -
+                                A QueryStr representing this SELECT, with values inline
+        '''
+
+        
+        retQS = QueryStr()
+        retParams = {}
+
+        ( selectSqlStr, retParams ) = self.getSqlParameterizedValues()
+
+        selectSqlStr = selectSqlStr.strip()
+
+        # If this select is not grouped, make it into a group
+        if not selectSqlStr.startswith('('):
+            selectSqlStr = ''.join(['( ', selectSqlStr, ' )'])
+
+        for paramName, paramValue in retParams.items():
+            selectSqlStr = selectSqlStr.replace('%(' + paramName + ')s', str(psycopg2_adapt(paramValue)) )
+
+        retQS = QueryStr( selectSqlStr )
+        return retQS
+
+    toStr = asQueryStr
+
+    def asQueryStrParams(self, paramPrefix=''):
+        '''
+            asQueryStrParams - Return this SELECT as an embedded group, paramertized version
+                    (for use in setting field values based on selected values and similar endeavours
+
+                  @param paramPrefix <str> - If provided, will prefix the parameters with this string + '_'
+
+                  @return tuple( <QueryStr>, <dict> ) - A tuple containing:
+                                0 - A QueryStr representing this SELECT
+                                1 - A dict containing any params (to be added to param list)
+        '''
+
+        
+        retQS = QueryStr()
+        retParams = {}
+
+        # TODO: Update getSqlParameterizedValues to take a paramPrefix isntead of below hack
+        ( selectSqlStr, retParams ) = self.getSqlParameterizedValues()
+
+        # If this select is not grouped, make it into a group
+        if not selectSqlStr.startswith('('):
+            selectSqlStr = ''.join(['( ', selectSqlStr, ' )'])
+
+        # TODO: Remove this hack once getSqlParameterizedValues refactored to take paramPrefix
+        if paramPrefix and retParams:
+            paramPrefix = paramPrefix + '_'
+
+            newRetParams = {}
+            for _paramName, _paramValue in retParams.items():
+                
+                _newParamName = paramPrefix + _paramName
+
+                selectSqlStr = selectSqlStr.replace('%(' + _paramName + ')s', '%(' + _newParamName + ')s')
+                newRetParams[_newParamName] = _paramValue
+
+            retParams = newRetParams
+        # END HACK
+
+        retQS = QueryStr( selectSqlStr )
+        return ( retQS, retParams )
+
+    def toStrParam(self, prefix):
+        (selectSqlStr, retParams) = self.asQueryStrParams(paramPrefix=prefix)
+
+        return (selectSqlStr, retParams)
 
 
 class SelectInnerJoinQuery(SelectQuery):
@@ -1575,7 +1674,11 @@ class UpdateQuery(QueryBase):
             useNewFieldValues = self.newFieldValues
 
         for fieldName, newValue in useNewFieldValues.items():
-            if isinstance(newValue, QueryStr):
+
+            if issubclass(newValue.__class__, SelectQuery):
+                newValue = newValue.asQueryStr()
+
+            if issubclass(newValue.__class__, QueryStr):
                 newValueStr = newValue
             elif newValue == SQL_NULL:
                 newValueStr = 'NULL'
@@ -1613,6 +1716,10 @@ class UpdateQuery(QueryBase):
             identifier = 'arg' + str(argNum)
             argNum += 1
 
+            if issubclass(fieldValue.__class__, SelectQuery):
+                (fieldValue, extraRetParams) = fieldValue.asQueryStrParams(paramPrefix=identifier)
+                retValues.update(extraRetParams)
+                
             if isinstance(fieldValue, QueryStr):
                 retParams.append( fieldName + ' = ' + fieldValue + " " )
             elif fieldValue == SQL_NULL:
@@ -1787,10 +1894,16 @@ class InsertQuery(QueryBase):
             useSetFieldValues = self.setFieldValues
 
         for fieldName, fieldValue in useSetFieldValues.items():
-            if isinstance(fieldValue, QueryStr):
+            if issubclass(fieldValue.__class__, QueryStr):
                 retParams.append(fieldValue)
             elif fieldValue == SQL_NULL:
                 retParams.append('NULL')
+            elif issubclass(fieldValue.__class__, SelectQuery):
+                # TODO: Investigate prefixing here
+                (selParams, selValues) = fieldValue.asQueryStrParams()
+                
+                retParams += selParams
+                retValues.update(selValues)
             else:
                 retParams.append( ' %(' + fieldName + ')s ' )
                 retValues[fieldName] = fieldValue
