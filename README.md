@@ -17,10 +17,10 @@ The first is the "global" connection info. This is the default used for everythi
 
 Set these fields via the *setGlobalConnectionParams* method
 
-	setGlobalConnectionParams(host='localhost', dbname='my_db', user='Super User', password='cheese')
+	setGlobalConnectionParams(host='localhost', port=5432, dbname='my_db', user='Super User', password='cheese')
 
 
-Fields can be omitted and they will not be sent. For example, if your ident specifies a default user to be your system user, or if you don't have a password for localhost accounts, etc. , then don't set those fields.
+Fields can be omitted and they will not be sent, or default will be used. For example, if your ident specifies a default user to be your system user, or if you don't have a password for localhost accounts, etc. , then don't set those fields.
 
 **Individual Connections**
 
