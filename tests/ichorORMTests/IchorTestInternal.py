@@ -5,6 +5,15 @@
 '''
 
 def ensureTestSetup():
+    '''
+        ensureTestSetup - Call this in your setup_class method to ensure
+            global schema is all setup.
+    '''
+
+    # _TEST_DATA_STATE_NUM - This marks the "state" of the database.
+    #    Increment this number if a table is added or modified
+    #     to ensure schema is recreated next run
+    _TEST_DATA_STATE_NUM = 1
 
     import ichorORM
     import sys
@@ -34,8 +43,6 @@ def ensureTestSetup():
     del _testResult
     del _testCanConnectDatabase
 
-    # _TEST_DATA_STATE_NUM - This marks the "state" of the database
-    _TEST_DATA_STATE_NUM = 5
 
     def _ensureDatabaseSetup():
 
