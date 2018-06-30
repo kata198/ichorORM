@@ -22,17 +22,19 @@ from .objs import IgnoreParameter, UseGlobalSetting
 __all__ = ('setGlobalConnectionParams', 'getDatabaseConnection', 'DatabaseConnection', 'DatabaseConnectionFailure')
 
 global DEFAULT_HOST
+global DEFAULT_PORT
+global DEFAULT_DBNAME
 global DEFAULT_USER
 global DEFAULT_PASS
-global DEFAULT_DBNAME
 
 DEFAULT_HOST = None
+DEFAULT_PORT = None
+DEFAULT_DBNAME = None
 DEFAULT_USER = None
 DEFAULT_PASS = None
-DEFAULT_DBNAME = None
 
 
-def setGlobalConnectionParams(host=IgnoreParameter, dbname=IgnoreParameter, user=IgnoreParameter, password=IgnoreParameter):
+def setGlobalConnectionParams(host=IgnoreParameter, port=IgnoreParameter, dbname=IgnoreParameter, user=IgnoreParameter, password=IgnoreParameter):
     '''
         setGlobalConnectionParams - Sets the global connection parameters which will be used by default
                                       for connections to postgresql.
@@ -48,6 +50,8 @@ def setGlobalConnectionParams(host=IgnoreParameter, dbname=IgnoreParameter, user
 
                             @param host <str> default IgnoreParameter - The hostname/ip with which to connect
 
+                            @param port <int> default IgnoreParameter - If alternate port than 5432, specify here.
+
                             @param dbname <str> default IgnoreParameter - The database name with which to USE
 
                             @param user <str/None> default IgnoreParameter - The username with which to use.
@@ -57,12 +61,15 @@ def setGlobalConnectionParams(host=IgnoreParameter, dbname=IgnoreParameter, user
                                                     Use None (the default state) to not provide a password.
     '''
     global DEFAULT_HOST
+    global DEFAULT_PORT
     global DEFAULT_USER
     global DEFAULT_PASS
     global DEFAULT_DBNAME
 
     if host != IgnoreParameter:
         DEFAULT_HOST = host
+    if port != IgnoreParameter:
+        DEFAULT_PORT = port
     if dbname != IgnoreParameter:
         DEFAULT_DBNAME = dbname
     if user != IgnoreParameter:
@@ -71,7 +78,7 @@ def setGlobalConnectionParams(host=IgnoreParameter, dbname=IgnoreParameter, user
         DEFAULT_PASS = password
 
 
-def resolveConnectionParamsTuple(host=UseGlobalSetting, dbname=UseGlobalSetting, user=UseGlobalSetting, password=UseGlobalSetting):
+def resolveConnectionParamsTuple(host=UseGlobalSetting, port=UseGlobalSetting, dbname=UseGlobalSetting, user=UseGlobalSetting, password=UseGlobalSetting):
     '''
         resolveConnectionParamsTuple - Return a tuple of connection parameters based off provided parameters
                                         and global defaults.
@@ -90,6 +97,10 @@ def resolveConnectionParamsTuple(host=UseGlobalSetting, dbname=UseGlobalSetting,
                                                 - If provided, use this hostname, if None don't provide host,
                                                     if UseGlobalSetting use the global setting.
 
+                  @param port <str/None/UseGlobalSetting> default UseGlobalSetting
+                                                - If provided, use this as the port. If None, use default [5432].
+                                                    if UseGlobalSetting use the global setting.
+
                   @param dbname <str/None/UseGlobalSetting> default UseGlobalSetting
                                                 - If provided, use this dbname, if None don't provide dbname,
                                                     if UseGlobalSetting use the global setting.
@@ -103,16 +114,19 @@ def resolveConnectionParamsTuple(host=UseGlobalSetting, dbname=UseGlobalSetting,
                                                     if UseGlobalSetting use the global setting.
 
 
-                  @return < tuple<str/None> > - A tuple of (host, dbname, username, password)
+                  @return < tuple<str/None> > - A tuple of (host, port, dbname, username, password)
     '''
 
     global DEFAULT_HOST
     global DEFAULT_USER
     global DEFAULT_PASS
     global DEFAULT_DBNAME
+    global DEFAULT_PORT
 
     if host == UseGlobalSetting:
         host = DEFAULT_HOST
+    if port == UseGlobalSetting:
+        port = DEFAULT_PORT
     if dbname == UseGlobalSetting:
         dbname = DEFAULT_DBNAME
     if user == UseGlobalSetting:
@@ -120,7 +134,7 @@ def resolveConnectionParamsTuple(host=UseGlobalSetting, dbname=UseGlobalSetting,
     if password == UseGlobalSetting:
         password = DEFAULT_PASS
 
-    return (host, dbname, user, password)
+    return (host, port, dbname, user, password)
 
 
 def resolveConnectionParamsDict(host=UseGlobalSetting, dbname=UseGlobalSetting, user=UseGlobalSetting, password=UseGlobalSetting):
@@ -162,9 +176,12 @@ def resolveConnectionParamsDict(host=UseGlobalSetting, dbname=UseGlobalSetting, 
     global DEFAULT_USER
     global DEFAULT_PASS
     global DEFAULT_DBNAME
+    global DEFAULT_PORT
 
     if host == UseGlobalSetting:
         host = DEFAULT_HOST
+    if port == UseGlobalSetting:
+        port = DEFAULT_PORT
     if dbname == UseGlobalSetting:
         dbname = DEFAULT_DBNAME
     if user == UseGlobalSetting:
@@ -172,13 +189,13 @@ def resolveConnectionParamsDict(host=UseGlobalSetting, dbname=UseGlobalSetting, 
     if password == UseGlobalSetting:
         password = DEFAULT_PASS
 
-    return { 'host' : host, 'dbname' : dbname, 'user' : user, 'password' : password }
+    return { 'host' : host, 'port' : port, 'dbname' : dbname, 'user' : user, 'password' : password }
 
 # TODO: Make this info come from a config file
 MAX_LOCK_TIMEOUT = 10.0
 
 
-def getDatabaseConnection(host=UseGlobalSetting, dbname=UseGlobalSetting, user=UseGlobalSetting, password=UseGlobalSetting, isTransactionMode=False):
+def getDatabaseConnection(host=UseGlobalSetting, port=UseGlobalSetting, dbname=UseGlobalSetting, user=UseGlobalSetting, password=UseGlobalSetting, isTransactionMode=False):
     '''
         getDatabaseConnection - Gets a database connection.
 
@@ -189,9 +206,9 @@ def getDatabaseConnection(host=UseGlobalSetting, dbname=UseGlobalSetting, user=U
 
         @return DatabaseConnection object
     '''
-    (host, dbname, user, password) = resolveConnectionParamsTuple(host, dbname, user, password)
+    (host, port, dbname, user, password) = resolveConnectionParamsTuple(host, port, dbname, user, password)
 
-    return DatabaseConnection(host=host, dbname=dbname, user=user, password=password, isTransactionMode=isTransactionMode)
+    return DatabaseConnection(host=host, port=port, dbname=dbname, user=user, password=password, isTransactionMode=isTransactionMode)
 
 
 class DatabaseConnection(object):
@@ -199,7 +216,7 @@ class DatabaseConnection(object):
         DatabaseConnection - Manages connections to the postgresql database
     '''
 
-    def __init__(self, host=UseGlobalSetting, dbname=UseGlobalSetting, user=UseGlobalSetting, password=UseGlobalSetting, isTransactionMode=False):
+    def __init__(self, host=UseGlobalSetting, port=UseGlobalSetting, dbname=UseGlobalSetting, user=UseGlobalSetting, password=UseGlobalSetting, isTransactionMode=False):
         '''
             __init__ - Create a DatabaseConnection object
 
@@ -208,6 +225,12 @@ class DatabaseConnection(object):
                                       If left at default UseGlobalSetting, the global value
                                         will be used. Use "None" to not provide this element when connecting,
                                         otherwise give a value to use.
+
+              @param port <int/None/UseGlobalSetting> Default UseGlobalSetting -
+                                    Port number to access postgresql on.
+                                      If left at default UseGlobalSetting, the global value
+                                        will be used. Use "None" to use the default [5432],
+                                        otherwise provide an alternate port
 
               @param dbname <str/None/UseGlobalSetting> Default UseGlobalSetting -
                                     Name of database to use
@@ -232,9 +255,10 @@ class DatabaseConnection(object):
 
         '''
 
-        (host, dbname, user, password) = resolveConnectionParamsTuple(host, dbname, user, password)
+        (host, port, dbname, user, password) = resolveConnectionParamsTuple(host, port, dbname, user, password)
 
         self.host = host
+        self.port = port
         self.user = user
         self.dbname = dbname
         self.password = password
@@ -258,6 +282,9 @@ class DatabaseConnection(object):
             connectParts.append("password='%s'" %(self.password, ))
         if self.host:
             connectParts.append("host='%s'" %(self.host, ))
+        if self.port:
+            connectParts.append("port='%s'" %(str(self.port), ))
+
         #print ( "Returning connection string: %s" %( " ".join(connectParts), ))
         return " ".join(connectParts)
 #        return "dbname='%s' user='%s' host='%s'" %(self.dbname, self.user, self.host)
