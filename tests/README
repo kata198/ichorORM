@@ -1,0 +1,5 @@
+These tests are written as GoodTests (https://github.com/kata198/GoodTests)
+
+The provided script ./runTests.py will download GoodTests to the current directory (if not installed) and will run the test suite.
+
+If you cannot reach the internet from your machine, manually download "GoodTests.py" from the above url and place it in this directory (or /usr/bin , or anywhere in your PATH ).
