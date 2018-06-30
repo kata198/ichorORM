@@ -6,6 +6,10 @@
 import subprocess
 import sys
 
+
+import LocalConfig
+
+
 import ichorORM
 
 
@@ -14,10 +18,13 @@ class TestDummy(object):
         A dummy test
     '''
 
+    def setup_class(self):
+        LocalConfig.ensureTestSetup()
+
     def test_Connect(self):
         
         dbConn = ichorORM.getDatabaseConnection()
-        import pdb; pdb.set_trace()
+        
         pass
         pass
         b = 1
