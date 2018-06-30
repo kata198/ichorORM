@@ -111,7 +111,7 @@ Class methods defined here:<br />
 &nbsp;<br />
 &nbsp;&nbsp;&nbsp;&nbsp;@return&nbsp;list&lt;<a href="#DatabaseModel" >DatabaseModel</a>&gt;&nbsp;-&nbsp;A&nbsp;list&nbsp;of&nbsp;all&nbsp;objects&nbsp;in&nbsp;the&nbsp;database&nbsp;for&nbsp;this&nbsp;model</tt></dd></dl>
 
-<dl ><dt ><a name="DatabaseModel-createAndSave" ><strong >createAndSave</strong></a>(replaceSpecialValues=True, dbConn=None, **kwargs)<font color="#909090" ><font face="helvetica, arial" > from <a href="builtins.html#type" >builtins.type</a></font></font></dt><dd ><tt >createAndSave&nbsp;-&nbsp;Creates&nbsp;an&nbsp;<a href="builtins.html#object" >object</a>&nbsp;of&nbsp;this&nbsp;type&nbsp;and&nbsp;saves&nbsp;it.<br />
+<dl ><dt ><a name="DatabaseModel-createAndSave" ><strong >createAndSave</strong></a>(replaceSpecialValues=True, dbConn=None, doCommit=True, **kwargs)<font color="#909090" ><font face="helvetica, arial" > from <a href="builtins.html#type" >builtins.type</a></font></font></dt><dd ><tt >createAndSave&nbsp;-&nbsp;Creates&nbsp;an&nbsp;<a href="builtins.html#object" >object</a>&nbsp;of&nbsp;this&nbsp;type&nbsp;and&nbsp;saves&nbsp;it.<br />
 &nbsp;<br />
 Parameters&nbsp;are&nbsp;the&nbsp;fieldName=fieldValue&nbsp;for&nbsp;this&nbsp;model.<br />
 &nbsp;<br />
@@ -125,6 +125,10 @@ At&nbsp;least&nbsp;all&nbsp;entries&nbsp;in&nbsp;REQUIRED_FIELDS&nbsp;must&nbsp;
 @param&nbsp;dbConn&nbsp;&lt;None/DatabaseConnection&gt;&nbsp;Default&nbsp;None-&nbsp;A&nbsp;specific&nbsp;DatabaseConnection&nbsp;to&nbsp;use,<br />
 &nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;None&nbsp;generate&nbsp;a&nbsp;new&nbsp;connection&nbsp;with&nbsp;global&nbsp;settings<br />
 &nbsp;<br />
+@param&nbsp;doCommit&nbsp;&lt;bool&gt;&nbsp;default&nbsp;True&nbsp;-&nbsp;If&nbsp;True,&nbsp;will&nbsp;commit&nbsp;upon&nbsp;insert.<br />
+&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;False,&nbsp;you&nbsp;must&nbsp;call&nbsp;dbConn.commitTransaction&nbsp;yourself&nbsp;when&nbsp;ready.<br />
+&nbsp;&nbsp;&nbsp;&nbsp;Primary&nbsp;key&nbsp;is&nbsp;set&nbsp;either&nbsp;way.<br />
+&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;doCommit&nbsp;is&nbsp;False,&nbsp;dbConn&nbsp;must&nbsp;be&nbsp;specified&nbsp;(obviously,&nbsp;so&nbsp;you&nbsp;can&nbsp;commit&nbsp;later)<br />
 &nbsp;<br />
 @return&nbsp;-&nbsp;An&nbsp;<a href="builtins.html#object" >object</a>&nbsp;of&nbsp;this&nbsp;model's&nbsp;type</tt></dd></dl>
 
