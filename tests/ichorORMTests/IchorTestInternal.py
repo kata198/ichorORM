@@ -13,7 +13,7 @@ def ensureTestSetup():
     # _TEST_DATA_STATE_NUM - This marks the "state" of the database.
     #    Increment this number if a table is added or modified
     #     to ensure schema is recreated next run
-    _TEST_DATA_STATE_NUM = 1
+    _TEST_DATA_STATE_NUM = 2
 
     import ichorORM
     import sys
