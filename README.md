@@ -251,6 +251,8 @@ You can trigger a rollback by calling "rollback" on the connection method during
 
 	dbConn.rollback()
 
+This is required to be called if the transaction fails (throws an exception) and you want to use this connection again (as this will signify the end of the transaction block)
+
 
 **For use in query builders**
 
