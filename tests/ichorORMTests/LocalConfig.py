@@ -17,6 +17,9 @@
 #         or leave as None for the default "localhost"
 _CONFIG_HOSTNAME = None
 
+# _CONFIG_PORT - Set this to an alternate port if not using default 5432
+_CONFIG_PORT = None
+
 # _CONFIG_USERNAME - Set this to a username to connect with,
 #         or leave as None for the default ( will use system account based on current user )
 _CONFIG_USERNAME = None
@@ -48,7 +51,7 @@ __all__ = ( 'ensureTestSetup', )
 import ichorORM
 
 # Set connection params
-ichorORM.setGlobalConnectionParams(host=_CONFIG_HOSTNAME, dbname=_CONFIG_DBNAME, user=_CONFIG_USERNAME, password=_CONFIG_PASSWORD)
+ichorORM.setGlobalConnectionParams(host=_CONFIG_HOSTNAME, port=_CONFIG_PORT, dbname=_CONFIG_DBNAME, user=_CONFIG_USERNAME, password=_CONFIG_PASSWORD)
 
 from IchorTestInternal import ensureTestSetup
 

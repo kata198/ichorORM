@@ -26,6 +26,7 @@ def ensureTestSetup():
             results = dbConn.doSelect("SELECT 'Hello World'")
         except Exception as e:
             failed = True
+            results = []
 
         if not len(results) or results[0][0] != 'Hello World':
             sys.stderr.write("WARNING: Seemed to be able to connect but database could not process command.\n")
