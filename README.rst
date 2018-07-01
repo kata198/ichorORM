@@ -751,4 +751,24 @@ This will generate a query like:
 	UPDATE Person SET age = age + 1 WHERE id in (SELECT id\_person FROM Meal WHERE food\_name LIKE '%Cake' AND consumed\_date = '2018\-07\-04'::date )
 
 
+Additional Libraries
+--------------------
+
+You may find it useful to combine ichorORM with QueryableList ( https://github.com/kata198/QueryableList )
+
+This will allow you to further refine query results client-side (after data has been received from the postgresql database) ORM-style.
+
+For example:
+
+	import QueryableList
+
+	adultPeople = People.filter(age\_\_gte=18)
+
+	adultPeople = QueryableList.QueryableListObjs(adultPeople)
+
+	adultTims = adultPeople.filter(first\_name='Tim')
+
+In this simple example, we query the database for any People that have an age >= 18. Then, client-side using QueryableList, we further refine the results to filter out only those whose first name is 'Tim'
+
+
 
