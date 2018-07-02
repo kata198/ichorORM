@@ -69,6 +69,12 @@ If&nbsp;<a href="builtins.html#object" >object</a>&nbsp;is&nbsp;already&nbsp;del
 &nbsp;<br />
 @return&nbsp;-&nbsp;Old&nbsp;ID</tt></dd></dl>
 
+<dl ><dt ><a name="DatabaseModel-getRelated" ><strong >getRelated</strong></a>(self, relationKey)</dt><dd ><tt >getRelated&nbsp;-&nbsp;Returns&nbsp;the&nbsp;objects&nbsp;following&nbsp;the&nbsp;relation&nbsp;assigned&nbsp;to&nbsp;#relationKey<br />
+&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;@param&nbsp;relationKey&nbsp;&lt;str/???&gt;&nbsp;-&nbsp;The&nbsp;key&nbsp;used&nbsp;in&nbsp;#getModelRelations&nbsp;to&nbsp;describe&nbsp;this&nbsp;relation<br />
+&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;@return&nbsp;-&nbsp;If&nbsp;OneToOneRelation,&nbsp;a&nbsp;single&nbsp;<a href="builtins.html#object" >object</a>&nbsp;or&nbsp;None,&nbsp;if&nbsp;ManyToOne&nbsp;or&nbsp;OneToMany&nbsp;a&nbsp;list&nbsp;of&nbsp;objs</tt></dd></dl>
+
 <dl ><dt ><a name="DatabaseModel-insertObject" ><strong >insertObject</strong></a>(self, dbConn=None, doCommit=True)</dt><dd ><tt >insertObject&nbsp;-&nbsp;Inserts&nbsp;current&nbsp;<a href="builtins.html#object" >object</a><br />
 &nbsp;<br />
 &nbsp;&nbsp;&nbsp;&nbsp;@param&nbsp;dbConn&nbsp;&lt;None/DatabaseConnection&gt;&nbsp;Default&nbsp;None-&nbsp;A&nbsp;specific&nbsp;DatabaseConnection&nbsp;to&nbsp;use,<br />
@@ -162,6 +168,19 @@ At&nbsp;least&nbsp;all&nbsp;entries&nbsp;in&nbsp;REQUIRED_FIELDS&nbsp;must&nbsp;
 &nbsp;<br />
 @return&nbsp;<a href="builtins.html#object" >object</a>&nbsp;of&nbsp;this&nbsp;type&nbsp;with&nbsp;all&nbsp;fields&nbsp;populated</tt></dd></dl>
 
+<dl ><dt ><a name="DatabaseModel-getModelRelations" ><strong >getModelRelations</strong></a>()<font color="#909090" ><font face="helvetica, arial" > from <a href="builtins.html#type" >builtins.type</a></font></font></dt><dd ><tt >getModelRelations&nbsp;-&nbsp;This&nbsp;method&nbsp;should&nbsp;return&nbsp;a&nbsp;list&nbsp;of&nbsp;relations.ForeignRelation&nbsp;objects<br />
+&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;any&nbsp;relations&nbsp;on&nbsp;this&nbsp;<a href="builtins.html#object" >object</a>.<br />
+&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;is&nbsp;a&nbsp;method&nbsp;instead&nbsp;of&nbsp;a&nbsp;property&nbsp;so&nbsp;that&nbsp;you&nbsp;can&nbsp;import&nbsp;models&nbsp;within&nbsp;this&nbsp;function<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;without&nbsp;creating&nbsp;circular&nbsp;references.<br />
+&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;method&nbsp;will&nbsp;be&nbsp;called&nbsp;once&nbsp;per&nbsp;class&nbsp;and&nbsp;the&nbsp;value&nbsp;cached.<br />
+&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@return&nbsp;dict&nbsp;&lt;&nbsp;&lt;str&gt;&nbsp;:&nbsp;relations.ForeignRelations&gt;&nbsp;-&nbsp;Foreign&nbsp;relations&nbsp;on&nbsp;this&nbsp;model<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;key&nbsp;could&nbsp;be&nbsp;a&nbsp;string&nbsp;of&nbsp;a&nbsp;name,&nbsp;could&nbsp;be&nbsp;a&nbsp;model&nbsp;class,&nbsp;whatever.&nbsp;You&nbsp;will&nbsp;pass<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this&nbsp;key&nbsp;to&nbsp;"<a href="#DatabaseModel-getRelated" >getRelated</a>(#key)"</tt></dd></dl>
+
 <hr />
 Data descriptors defined here:<br />
 <dl ><dt ><strong >__dict__</strong></dt>
@@ -175,6 +194,8 @@ Data and other attributes defined here:<br />
 <dl ><dt ><strong >DEFAULT_FIELD_VALUES</strong> = {}</dt></dl>
 
 <dl ><dt ><strong >FIELDS</strong> = []</dt></dl>
+
+<dl ><dt ><strong >MODEL_RELATIONS</strong> = []</dt></dl>
 
 <dl ><dt ><strong >PRIMARY_KEY</strong> = 'id'</dt></dl>
 
