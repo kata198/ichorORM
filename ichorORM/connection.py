@@ -137,7 +137,7 @@ def resolveConnectionParamsTuple(host=UseGlobalSetting, port=UseGlobalSetting, d
     return (host, port, dbname, user, password)
 
 
-def resolveConnectionParamsDict(host=UseGlobalSetting, dbname=UseGlobalSetting, user=UseGlobalSetting, password=UseGlobalSetting):
+def resolveConnectionParamsDict(host=UseGlobalSetting, port=UseGlobalSetting, dbname=UseGlobalSetting, user=UseGlobalSetting, password=UseGlobalSetting):
     '''
         resolveConnectionParamsDict - Return a dict of connection parameters based off provided parameters
                                         and global defaults.
@@ -154,6 +154,10 @@ def resolveConnectionParamsDict(host=UseGlobalSetting, dbname=UseGlobalSetting, 
 
                   @param host <str/None/UseGlobalSetting> default UseGlobalSetting
                                                 - If provided, use this hostname, if None don't provide host,
+                                                    if UseGlobalSetting use the global setting.
+
+                  @param port <str/None/UseGlobalSetting> default UseGlobalSetting
+                                                - If provided, use this as the port. If None, use default [5432].
                                                     if UseGlobalSetting use the global setting.
 
                   @param dbname <str/None/UseGlobalSetting> default UseGlobalSetting
