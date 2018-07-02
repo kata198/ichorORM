@@ -1401,7 +1401,6 @@ class SelectGenericJoinQuery(SelectQuery):
 
         (whereClause, whereParams) = self.getWhereClauseParams(paramPrefix=paramPrefix)
 
-        # TODO: Modify this to take paramPrefix as well
         (joinClauses, joinParams) = self.getJoinClausesParams(paramPrefix=paramPrefix)
 
         orderByClause = self.getOrderByStr()
@@ -1965,8 +1964,7 @@ class InsertQuery(QueryBase):
             elif fieldValue == SQL_NULL:
                 retParams.append('NULL')
             elif issubclass(fieldValue.__class__, SelectQuery):
-                # TODO: Investigate prefixing here
-                (selParams, selValues) = fieldValue.asQueryStrParams()
+                (selParams, selValues) = fieldValue.asQueryStrParams(paramPrefix=fieldName + '_')
                 
                 retParams += selParams
                 retValues.update(selValues)
