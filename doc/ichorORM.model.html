@@ -119,15 +119,11 @@ Class methods defined here:<br />
 &nbsp;<br />
 &nbsp;&nbsp;&nbsp;&nbsp;@return&nbsp;list&lt;<a href="#DatabaseModel" >DatabaseModel</a>&gt;&nbsp;-&nbsp;A&nbsp;list&nbsp;of&nbsp;all&nbsp;objects&nbsp;in&nbsp;the&nbsp;database&nbsp;for&nbsp;this&nbsp;model</tt></dd></dl>
 
-<dl ><dt ><a name="DatabaseModel-createAndSave" ><strong >createAndSave</strong></a>(replaceSpecialValues=True, dbConn=None, doCommit=True, **kwargs)<font color="#909090" ><font face="helvetica, arial" > from <a href="builtins.html#type" >builtins.type</a></font></font></dt><dd ><tt >createAndSave&nbsp;-&nbsp;Creates&nbsp;an&nbsp;<a href="builtins.html#object" >object</a>&nbsp;of&nbsp;this&nbsp;type&nbsp;and&nbsp;saves&nbsp;it.<br />
+<dl ><dt ><a name="DatabaseModel-createAndSave" ><strong >createAndSave</strong></a>(dbConn=None, doCommit=True, **kwargs)<font color="#909090" ><font face="helvetica, arial" > from <a href="builtins.html#type" >builtins.type</a></font></font></dt><dd ><tt >createAndSave&nbsp;-&nbsp;Creates&nbsp;an&nbsp;<a href="builtins.html#object" >object</a>&nbsp;of&nbsp;this&nbsp;type&nbsp;and&nbsp;saves&nbsp;it.<br />
 &nbsp;<br />
 Parameters&nbsp;are&nbsp;the&nbsp;fieldName=fieldValue&nbsp;for&nbsp;this&nbsp;model.<br />
 &nbsp;<br />
 At&nbsp;least&nbsp;all&nbsp;entries&nbsp;in&nbsp;REQUIRED_FIELDS&nbsp;must&nbsp;be&nbsp;present!<br />
-&nbsp;<br />
-&nbsp;<br />
-@param&nbsp;replaceSpecialValues&nbsp;&lt;bool,&nbsp;default&nbsp;True&gt;&nbsp;-&nbsp;If&nbsp;True,&nbsp;will&nbsp;replace&nbsp;special&nbsp;values&nbsp;(&nbsp;like&nbsp;NOW()&nbsp;)<br />
-&nbsp;&nbsp;with&nbsp;their&nbsp;calculated&nbsp;value.&nbsp;@see&nbsp;QueryBase.replaceSpecialValues&nbsp;for&nbsp;more&nbsp;info.<br />
 &nbsp;<br />
 &nbsp;<br />
 @param&nbsp;dbConn&nbsp;&lt;None/DatabaseConnection&gt;&nbsp;Default&nbsp;None-&nbsp;A&nbsp;specific&nbsp;DatabaseConnection&nbsp;to&nbsp;use,<br />

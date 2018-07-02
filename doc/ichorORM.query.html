@@ -171,15 +171,6 @@ Methods inherited from <a href="ichorORM.query.html#QueryBase" >QueryBase</a>:<b
 &nbsp;&nbsp;@see&nbsp;getWhereClause</tt></dd></dl>
 
 <hr />
-Static methods inherited from <a href="ichorORM.query.html#QueryBase" >QueryBase</a>:<br />
-<dl ><dt ><a name="DeleteQuery-replaceSpecialValues" ><strong >replaceSpecialValues</strong></a>(fieldValues)</dt><dd ><tt >replaceSpecialValues&nbsp;-&nbsp;Replace&nbsp;special&nbsp;values&nbsp;(like&nbsp;NOW()&nbsp;)&nbsp;with&nbsp;a&nbsp;fixed&nbsp;value.<br />
-&nbsp;<br />
-&nbsp;&nbsp;&nbsp;&nbsp;They&nbsp;are&nbsp;supported&nbsp;as&nbsp;values&nbsp;in&nbsp;parameterized&nbsp;input,&nbsp;BUT&nbsp;they&nbsp;won't&nbsp;make&nbsp;it&nbsp;back&nbsp;onto&nbsp;the&nbsp;<a href="builtins.html#object" >object</a><br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;without&nbsp;some&nbsp;sort&nbsp;of&nbsp;special&nbsp;RETURNING&nbsp;clause&nbsp;(which&nbsp;isn't&nbsp;implemented.)<br />
-&nbsp;<br />
-&nbsp;&nbsp;&nbsp;&nbsp;May&nbsp;be&nbsp;changed&nbsp;in&nbsp;the&nbsp;future.</tt></dd></dl>
-
-<hr />
 Data descriptors inherited from <a href="ichorORM.query.html#QueryBase" >QueryBase</a>:<br />
 <dl ><dt ><strong >__dict__</strong></dt>
 <dd ><tt >dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
@@ -461,7 +452,7 @@ Methods defined here:<br />
 &nbsp;<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;#dbConn&nbsp;must&nbsp;be&nbsp;specified&nbsp;if&nbsp;doCommit=False</tt></dd></dl>
 
-<dl ><dt ><a name="InsertQuery-executeInsert" ><strong >executeInsert</strong></a>(self, dbConn=None, doCommit=True, replaceSpecialValues=True, returnPk=True)</dt><dd ><tt >executeInsert&nbsp;-&nbsp;Insert&nbsp;records&nbsp;(parameterized)<br />
+<dl ><dt ><a name="InsertQuery-executeInsert" ><strong >executeInsert</strong></a>(self, dbConn=None, doCommit=True, returnPk=True)</dt><dd ><tt >executeInsert&nbsp;-&nbsp;Insert&nbsp;records&nbsp;(parameterized)<br />
 &nbsp;<br />
 &nbsp;&nbsp;&nbsp;&nbsp;May&nbsp;potentially&nbsp;use&nbsp;an&nbsp;existing&nbsp;DatabaseConnection&nbsp;(for&nbsp;transaction)<br />
 &nbsp;<br />
@@ -470,13 +461,10 @@ Methods defined here:<br />
 &nbsp;<br />
 @param&nbsp;doCommit&nbsp;&lt;bool&gt;&nbsp;default&nbsp;True&nbsp;-&nbsp;Whether&nbsp;to&nbsp;commit&nbsp;immediately<br />
 &nbsp;<br />
-@param&nbsp;replaceSpecialValues&nbsp;&lt;bool,&nbsp;default&nbsp;True&gt;&nbsp;-&nbsp;If&nbsp;True,&nbsp;will&nbsp;replace&nbsp;special&nbsp;values&nbsp;(&nbsp;like&nbsp;NOW()&nbsp;)<br />
-&nbsp;&nbsp;with&nbsp;their&nbsp;calculated&nbsp;value.&nbsp;@see&nbsp;<a href="#QueryBase" >QueryBase</a>.replaceSpecialValues&nbsp;for&nbsp;more&nbsp;info.<br />
-&nbsp;<br />
 &nbsp;<br />
 @see&nbsp;executeInsert&nbsp;for&nbsp;the&nbsp;non-parameterized&nbsp;version.</tt></dd></dl>
 
-<dl ><dt ><a name="InsertQuery-executeInsertRawValues" ><strong >executeInsertRawValues</strong></a>(self, dbConn=None, doCommit=True, replaceSpecialValues=True)</dt><dd ><tt >executeInsertRawValues&nbsp;-&nbsp;Insert&nbsp;records&nbsp;&nbsp;(non-parameterized)<br />
+<dl ><dt ><a name="InsertQuery-executeInsertRawValues" ><strong >executeInsertRawValues</strong></a>(self, dbConn=None, doCommit=True)</dt><dd ><tt >executeInsertRawValues&nbsp;-&nbsp;Insert&nbsp;records&nbsp;&nbsp;(non-parameterized)<br />
 &nbsp;<br />
 &nbsp;&nbsp;May&nbsp;potentially&nbsp;use&nbsp;an&nbsp;existing&nbsp;DatabaseConnection&nbsp;(for&nbsp;transaction)<br />
 &nbsp;<br />
@@ -485,33 +473,18 @@ Methods defined here:<br />
 &nbsp;<br />
 @param&nbsp;doCommit&nbsp;&lt;bool&gt;&nbsp;default&nbsp;True&nbsp;-&nbsp;Whether&nbsp;to&nbsp;commit&nbsp;immediately<br />
 &nbsp;<br />
-&nbsp;&nbsp;@param&nbsp;replaceSpecialValues&nbsp;&lt;bool,&nbsp;default&nbsp;True&gt;&nbsp;-&nbsp;If&nbsp;True,&nbsp;will&nbsp;replace&nbsp;special&nbsp;values&nbsp;(&nbsp;like&nbsp;NOW()&nbsp;)<br />
-&nbsp;&nbsp;&nbsp;&nbsp;with&nbsp;their&nbsp;calculated&nbsp;value.&nbsp;@see&nbsp;<a href="#QueryBase" >QueryBase</a>.replaceSpecialValues&nbsp;for&nbsp;more&nbsp;info.<br />
 &nbsp;<br />
 @see&nbsp;executeInsertParameterized&nbsp;for&nbsp;the&nbsp;parameterized&nbsp;version.</tt></dd></dl>
 
-<dl ><dt ><a name="InsertQuery-getInsertValuesStr" ><strong >getInsertValuesStr</strong></a>(self, replaceSpecialValues=True)</dt><dd ><tt >getInsertValuesStr&nbsp;-&nbsp;Get&nbsp;the&nbsp;portion&nbsp;following&nbsp;VALUES&nbsp;with&nbsp;values&nbsp;directly&nbsp;within&nbsp;(not&nbsp;parameterized)<br />
-&nbsp;<br />
-&nbsp;<br />
-&nbsp;&nbsp;@param&nbsp;replaceSpecialValues&nbsp;&lt;bool,&nbsp;default&nbsp;True&gt;&nbsp;-&nbsp;If&nbsp;True,&nbsp;will&nbsp;replace&nbsp;special&nbsp;values&nbsp;(&nbsp;like&nbsp;NOW()&nbsp;)<br />
-&nbsp;&nbsp;&nbsp;&nbsp;with&nbsp;their&nbsp;calculated&nbsp;value.&nbsp;@see&nbsp;<a href="#QueryBase" >QueryBase</a>.replaceSpecialValues&nbsp;for&nbsp;more&nbsp;info.</tt></dd></dl>
+<dl ><dt ><a name="InsertQuery-getInsertValuesStr" ><strong >getInsertValuesStr</strong></a>(self)</dt><dd ><tt >getInsertValuesStr&nbsp;-&nbsp;Get&nbsp;the&nbsp;portion&nbsp;following&nbsp;VALUES&nbsp;with&nbsp;values&nbsp;directly&nbsp;within&nbsp;(not&nbsp;parameterized)</tt></dd></dl>
 
-<dl ><dt ><a name="InsertQuery-getSql" ><strong >getSql</strong></a>(self, replaceSpecialValues=True)</dt><dd ><tt >getSql&nbsp;-&nbsp;Get&nbsp;the&nbsp;SQL&nbsp;to&nbsp;execute,&nbsp;non-parameterized<br />
-&nbsp;<br />
-&nbsp;&nbsp;@param&nbsp;replaceSpecialValues&nbsp;&lt;bool,&nbsp;default&nbsp;True&gt;&nbsp;-&nbsp;If&nbsp;True,&nbsp;will&nbsp;replace&nbsp;special&nbsp;values&nbsp;(&nbsp;like&nbsp;NOW()&nbsp;)<br />
-&nbsp;&nbsp;&nbsp;&nbsp;with&nbsp;their&nbsp;calculated&nbsp;value.&nbsp;@see&nbsp;<a href="#QueryBase" >QueryBase</a>.replaceSpecialValues&nbsp;for&nbsp;more&nbsp;info.<br />
+<dl ><dt ><a name="InsertQuery-getSql" ><strong >getSql</strong></a>(self)</dt><dd ><tt >getSql&nbsp;-&nbsp;Get&nbsp;the&nbsp;SQL&nbsp;to&nbsp;execute,&nbsp;non-parameterized<br />
 &nbsp;<br />
 @see&nbsp;getSqlParameterizedValues&nbsp;for&nbsp;parameterized&nbsp;version</tt></dd></dl>
 
-<dl ><dt ><a name="InsertQuery-getSqlParameterizedValues" ><strong >getSqlParameterizedValues</strong></a>(self, replaceSpecialValues=True)</dt><dd ><tt >getSqlParameterizedValues&nbsp;-&nbsp;Get&nbsp;the&nbsp;SQL&nbsp;to&nbsp;execute,&nbsp;parameterized&nbsp;version<br />
-&nbsp;<br />
-&nbsp;&nbsp;@param&nbsp;replaceSpecialValues&nbsp;&lt;bool,&nbsp;default&nbsp;True&gt;&nbsp;-&nbsp;If&nbsp;True,&nbsp;will&nbsp;replace&nbsp;special&nbsp;values&nbsp;(&nbsp;like&nbsp;NOW()&nbsp;)<br />
-&nbsp;&nbsp;&nbsp;&nbsp;with&nbsp;their&nbsp;calculated&nbsp;value.&nbsp;@see&nbsp;<a href="#QueryBase" >QueryBase</a>.replaceSpecialValues&nbsp;for&nbsp;more&nbsp;info.</tt></dd></dl>
+<dl ><dt ><a name="InsertQuery-getSqlParameterizedValues" ><strong >getSqlParameterizedValues</strong></a>(self)</dt><dd ><tt >getSqlParameterizedValues&nbsp;-&nbsp;Get&nbsp;the&nbsp;SQL&nbsp;to&nbsp;execute,&nbsp;parameterized&nbsp;version</tt></dd></dl>
 
-<dl ><dt ><a name="InsertQuery-getTableFieldParamsAndValues" ><strong >getTableFieldParamsAndValues</strong></a>(self, replaceSpecialValues=True)</dt><dd ><tt >getTableFieldParamsAndValues&nbsp;-&nbsp;For&nbsp;parameterized&nbsp;values,<br />
-&nbsp;<br />
-&nbsp;&nbsp;@param&nbsp;replaceSpecialValues&nbsp;&lt;bool,&nbsp;default&nbsp;True&gt;&nbsp;-&nbsp;If&nbsp;True,&nbsp;will&nbsp;replace&nbsp;special&nbsp;values&nbsp;(&nbsp;like&nbsp;NOW()&nbsp;)<br />
-&nbsp;&nbsp;&nbsp;&nbsp;with&nbsp;their&nbsp;calculated&nbsp;value.&nbsp;@see&nbsp;<a href="#QueryBase" >QueryBase</a>.replaceSpecialValues&nbsp;for&nbsp;more&nbsp;info.<br />
+<dl ><dt ><a name="InsertQuery-getTableFieldParamsAndValues" ><strong >getTableFieldParamsAndValues</strong></a>(self)</dt><dd ><tt >getTableFieldParamsAndValues&nbsp;-&nbsp;For&nbsp;parameterized&nbsp;values,<br />
 &nbsp;<br />
 &nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;returns&nbsp;a&nbsp;tuple&nbsp;of&nbsp;two&nbsp;values,&nbsp;the&nbsp;first&nbsp;is&nbsp;the&nbsp;paramertized&nbsp;marker&nbsp;to&nbsp;be&nbsp;used&nbsp;in&nbsp;the&nbsp;query,<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;second&nbsp;is&nbsp;a&nbsp;list&nbsp;of&nbsp;values&nbsp;which&nbsp;should&nbsp;be&nbsp;passed&nbsp;alongside</tt></dd></dl>
@@ -571,15 +544,6 @@ Methods inherited from <a href="ichorORM.query.html#QueryBase" >QueryBase</a>:<b
 &nbsp;&nbsp;&nbsp;&nbsp;@param&nbsp;paramPrefix&nbsp;&lt;<a href="builtins.html#str" >str</a>&gt;&nbsp;Default&nbsp;''&nbsp;-&nbsp;If&nbsp;not&nbsp;empty&nbsp;string,&nbsp;paramPrefix&nbsp;+&nbsp;"_"&nbsp;will&nbsp;be&nbsp;prepended&nbsp;to&nbsp;all&nbsp;parameters<br />
 &nbsp;<br />
 &nbsp;&nbsp;@see&nbsp;getWhereClause</tt></dd></dl>
-
-<hr />
-Static methods inherited from <a href="ichorORM.query.html#QueryBase" >QueryBase</a>:<br />
-<dl ><dt ><a name="InsertQuery-replaceSpecialValues" ><strong >replaceSpecialValues</strong></a>(fieldValues)</dt><dd ><tt >replaceSpecialValues&nbsp;-&nbsp;Replace&nbsp;special&nbsp;values&nbsp;(like&nbsp;NOW()&nbsp;)&nbsp;with&nbsp;a&nbsp;fixed&nbsp;value.<br />
-&nbsp;<br />
-&nbsp;&nbsp;&nbsp;&nbsp;They&nbsp;are&nbsp;supported&nbsp;as&nbsp;values&nbsp;in&nbsp;parameterized&nbsp;input,&nbsp;BUT&nbsp;they&nbsp;won't&nbsp;make&nbsp;it&nbsp;back&nbsp;onto&nbsp;the&nbsp;<a href="builtins.html#object" >object</a><br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;without&nbsp;some&nbsp;sort&nbsp;of&nbsp;special&nbsp;RETURNING&nbsp;clause&nbsp;(which&nbsp;isn't&nbsp;implemented.)<br />
-&nbsp;<br />
-&nbsp;&nbsp;&nbsp;&nbsp;May&nbsp;be&nbsp;changed&nbsp;in&nbsp;the&nbsp;future.</tt></dd></dl>
 
 <hr />
 Data descriptors inherited from <a href="ichorORM.query.html#QueryBase" >QueryBase</a>:<br />
@@ -664,15 +628,6 @@ Data descriptors inherited from <a href="ichorORM.query.html#QueryBase" >QueryBa
 &nbsp;&nbsp;&nbsp;&nbsp;@param&nbsp;paramPrefix&nbsp;&lt;<a href="builtins.html#str" >str</a>&gt;&nbsp;Default&nbsp;''&nbsp;-&nbsp;If&nbsp;not&nbsp;empty&nbsp;string,&nbsp;paramPrefix&nbsp;+&nbsp;"_"&nbsp;will&nbsp;be&nbsp;prepended&nbsp;to&nbsp;all&nbsp;parameters<br />
 &nbsp;<br />
 &nbsp;&nbsp;@see&nbsp;getWhereClause</tt></dd></dl>
-
-<hr />
-Static methods defined here:<br />
-<dl ><dt ><a name="QueryBase-replaceSpecialValues" ><strong >replaceSpecialValues</strong></a>(fieldValues)</dt><dd ><tt >replaceSpecialValues&nbsp;-&nbsp;Replace&nbsp;special&nbsp;values&nbsp;(like&nbsp;NOW()&nbsp;)&nbsp;with&nbsp;a&nbsp;fixed&nbsp;value.<br />
-&nbsp;<br />
-&nbsp;&nbsp;&nbsp;&nbsp;They&nbsp;are&nbsp;supported&nbsp;as&nbsp;values&nbsp;in&nbsp;parameterized&nbsp;input,&nbsp;BUT&nbsp;they&nbsp;won't&nbsp;make&nbsp;it&nbsp;back&nbsp;onto&nbsp;the&nbsp;<a href="builtins.html#object" >object</a><br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;without&nbsp;some&nbsp;sort&nbsp;of&nbsp;special&nbsp;RETURNING&nbsp;clause&nbsp;(which&nbsp;isn't&nbsp;implemented.)<br />
-&nbsp;<br />
-&nbsp;&nbsp;&nbsp;&nbsp;May&nbsp;be&nbsp;changed&nbsp;in&nbsp;the&nbsp;future.</tt></dd></dl>
 
 <hr />
 Data descriptors defined here:<br />
@@ -1233,15 +1188,6 @@ Methods inherited from <a href="ichorORM.query.html#QueryBase" >QueryBase</a>:<b
 &nbsp;&nbsp;@see&nbsp;getWhereClause</tt></dd></dl>
 
 <hr />
-Static methods inherited from <a href="ichorORM.query.html#QueryBase" >QueryBase</a>:<br />
-<dl ><dt ><a name="SelectGenericJoinQuery-replaceSpecialValues" ><strong >replaceSpecialValues</strong></a>(fieldValues)</dt><dd ><tt >replaceSpecialValues&nbsp;-&nbsp;Replace&nbsp;special&nbsp;values&nbsp;(like&nbsp;NOW()&nbsp;)&nbsp;with&nbsp;a&nbsp;fixed&nbsp;value.<br />
-&nbsp;<br />
-&nbsp;&nbsp;&nbsp;&nbsp;They&nbsp;are&nbsp;supported&nbsp;as&nbsp;values&nbsp;in&nbsp;parameterized&nbsp;input,&nbsp;BUT&nbsp;they&nbsp;won't&nbsp;make&nbsp;it&nbsp;back&nbsp;onto&nbsp;the&nbsp;<a href="builtins.html#object" >object</a><br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;without&nbsp;some&nbsp;sort&nbsp;of&nbsp;special&nbsp;RETURNING&nbsp;clause&nbsp;(which&nbsp;isn't&nbsp;implemented.)<br />
-&nbsp;<br />
-&nbsp;&nbsp;&nbsp;&nbsp;May&nbsp;be&nbsp;changed&nbsp;in&nbsp;the&nbsp;future.</tt></dd></dl>
-
-<hr />
 Data descriptors inherited from <a href="ichorORM.query.html#QueryBase" >QueryBase</a>:<br />
 <dl ><dt ><strong >__dict__</strong></dt>
 <dd ><tt >dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
@@ -1443,15 +1389,6 @@ Methods inherited from <a href="ichorORM.query.html#QueryBase" >QueryBase</a>:<b
 &nbsp;&nbsp;@see&nbsp;getWhereClause</tt></dd></dl>
 
 <hr />
-Static methods inherited from <a href="ichorORM.query.html#QueryBase" >QueryBase</a>:<br />
-<dl ><dt ><a name="SelectInnerJoinQuery-replaceSpecialValues" ><strong >replaceSpecialValues</strong></a>(fieldValues)</dt><dd ><tt >replaceSpecialValues&nbsp;-&nbsp;Replace&nbsp;special&nbsp;values&nbsp;(like&nbsp;NOW()&nbsp;)&nbsp;with&nbsp;a&nbsp;fixed&nbsp;value.<br />
-&nbsp;<br />
-&nbsp;&nbsp;&nbsp;&nbsp;They&nbsp;are&nbsp;supported&nbsp;as&nbsp;values&nbsp;in&nbsp;parameterized&nbsp;input,&nbsp;BUT&nbsp;they&nbsp;won't&nbsp;make&nbsp;it&nbsp;back&nbsp;onto&nbsp;the&nbsp;<a href="builtins.html#object" >object</a><br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;without&nbsp;some&nbsp;sort&nbsp;of&nbsp;special&nbsp;RETURNING&nbsp;clause&nbsp;(which&nbsp;isn't&nbsp;implemented.)<br />
-&nbsp;<br />
-&nbsp;&nbsp;&nbsp;&nbsp;May&nbsp;be&nbsp;changed&nbsp;in&nbsp;the&nbsp;future.</tt></dd></dl>
-
-<hr />
 Data descriptors inherited from <a href="ichorORM.query.html#QueryBase" >QueryBase</a>:<br />
 <dl ><dt ><strong >__dict__</strong></dt>
 <dd ><tt >dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
@@ -1611,15 +1548,6 @@ Methods inherited from <a href="ichorORM.query.html#QueryBase" >QueryBase</a>:<b
 &nbsp;&nbsp;@see&nbsp;getWhereClause</tt></dd></dl>
 
 <hr />
-Static methods inherited from <a href="ichorORM.query.html#QueryBase" >QueryBase</a>:<br />
-<dl ><dt ><a name="SelectQuery-replaceSpecialValues" ><strong >replaceSpecialValues</strong></a>(fieldValues)</dt><dd ><tt >replaceSpecialValues&nbsp;-&nbsp;Replace&nbsp;special&nbsp;values&nbsp;(like&nbsp;NOW()&nbsp;)&nbsp;with&nbsp;a&nbsp;fixed&nbsp;value.<br />
-&nbsp;<br />
-&nbsp;&nbsp;&nbsp;&nbsp;They&nbsp;are&nbsp;supported&nbsp;as&nbsp;values&nbsp;in&nbsp;parameterized&nbsp;input,&nbsp;BUT&nbsp;they&nbsp;won't&nbsp;make&nbsp;it&nbsp;back&nbsp;onto&nbsp;the&nbsp;<a href="builtins.html#object" >object</a><br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;without&nbsp;some&nbsp;sort&nbsp;of&nbsp;special&nbsp;RETURNING&nbsp;clause&nbsp;(which&nbsp;isn't&nbsp;implemented.)<br />
-&nbsp;<br />
-&nbsp;&nbsp;&nbsp;&nbsp;May&nbsp;be&nbsp;changed&nbsp;in&nbsp;the&nbsp;future.</tt></dd></dl>
-
-<hr />
 Data descriptors inherited from <a href="ichorORM.query.html#QueryBase" >QueryBase</a>:<br />
 <dl ><dt ><strong >__dict__</strong></dt>
 <dd ><tt >dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
@@ -1670,44 +1598,33 @@ Methods defined here:<br />
 &nbsp;<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;#dbConn&nbsp;must&nbsp;be&nbsp;specified&nbsp;if&nbsp;doCommit=False</tt></dd></dl>
 
-<dl ><dt ><a name="UpdateQuery-executeUpdate" ><strong >executeUpdate</strong></a>(self, dbConn=None, doCommit=True, replaceSpecialValues=True)</dt><dd ><tt >executeUpdate&nbsp;-&nbsp;Upate&nbsp;records&nbsp;(parameterized)<br />
+<dl ><dt ><a name="UpdateQuery-executeUpdate" ><strong >executeUpdate</strong></a>(self, dbConn=None, doCommit=True)</dt><dd ><tt >executeUpdate&nbsp;-&nbsp;Upate&nbsp;records&nbsp;(parameterized)<br />
 &nbsp;<br />
 &nbsp;&nbsp;&nbsp;&nbsp;May&nbsp;potentially&nbsp;use&nbsp;an&nbsp;existing&nbsp;DatabaseConnection&nbsp;(for&nbsp;transaction)<br />
 &nbsp;<br />
 @param&nbsp;dbConn&nbsp;&lt;None/DatabaseConnection&gt;&nbsp;-&nbsp;If&nbsp;None,&nbsp;will&nbsp;use&nbsp;a&nbsp;fresh&nbsp;connection&nbsp;and&nbsp;auto-commit.<br />
 &nbsp;&nbsp;&nbsp;Otherwise,&nbsp;will&nbsp;use&nbsp;the&nbsp;provided&nbsp;connection&nbsp;(which&nbsp;may&nbsp;be&nbsp;linked&nbsp;to&nbsp;a&nbsp;transaction<br />
 &nbsp;<br />
-@param&nbsp;doCommit&nbsp;&lt;bool&gt;&nbsp;default&nbsp;True&nbsp;-&nbsp;Whether&nbsp;to&nbsp;commit&nbsp;immediately<br />
-&nbsp;<br />
-@param&nbsp;replaceSpecialValues&nbsp;&lt;bool,&nbsp;default&nbsp;True&gt;&nbsp;-&nbsp;If&nbsp;True,&nbsp;will&nbsp;replace&nbsp;special&nbsp;values&nbsp;(&nbsp;like&nbsp;NOW()&nbsp;)<br />
-&nbsp;&nbsp;with&nbsp;their&nbsp;calculated&nbsp;value.&nbsp;@see&nbsp;<a href="#QueryBase" >QueryBase</a>.replaceSpecialValues&nbsp;for&nbsp;more&nbsp;info.</tt></dd></dl>
+@param&nbsp;doCommit&nbsp;&lt;bool&gt;&nbsp;default&nbsp;True&nbsp;-&nbsp;Whether&nbsp;to&nbsp;commit&nbsp;immediately</tt></dd></dl>
 
-<dl ><dt ><a name="UpdateQuery-executeUpdateRawValues" ><strong >executeUpdateRawValues</strong></a>(self, dbConn=None, doCommit=False, replaceSpecialValues=True)</dt><dd ><tt >executeUpdate&nbsp;-&nbsp;Update&nbsp;some&nbsp;records<br />
+<dl ><dt ><a name="UpdateQuery-executeUpdateRawValues" ><strong >executeUpdateRawValues</strong></a>(self, dbConn=None, doCommit=False)</dt><dd ><tt >executeUpdate&nbsp;-&nbsp;Update&nbsp;some&nbsp;records<br />
 &nbsp;<br />
 &nbsp;&nbsp;@param&nbsp;dbConn&nbsp;&lt;None/DatabaseConnection&gt;&nbsp;-&nbsp;If&nbsp;None,&nbsp;will&nbsp;get&nbsp;a&nbsp;new&nbsp;connection&nbsp;with&nbsp;autocmommit.<br />
 &nbsp;<br />
 &nbsp;&nbsp;@param&nbsp;doCommit&nbsp;&lt;bool&gt;&nbsp;Default&nbsp;True&nbsp;-&nbsp;If&nbsp;True,&nbsp;will&nbsp;commit&nbsp;right&nbsp;away.&nbsp;If&nbsp;False,&nbsp;you&nbsp;must&nbsp;commit.<br />
 &nbsp;<br />
-&nbsp;&nbsp;@param&nbsp;replaceSpecialValues&nbsp;&lt;bool&gt;&nbsp;-&nbsp;True&nbsp;to&nbsp;replace&nbsp;special&nbsp;values&nbsp;before&nbsp;sending&nbsp;to&nbsp;SQL<br />
-&nbsp;<br />
 &nbsp;&nbsp;&nbsp;&nbsp;Nay&nbsp;be&nbsp;passed&nbsp;a&nbsp;transaction-connection,&nbsp;to&nbsp;do&nbsp;update&nbsp;within&nbsp;a&nbsp;transaction</tt></dd></dl>
 
-<dl ><dt ><a name="UpdateQuery-getSetFieldParamsAndValues" ><strong >getSetFieldParamsAndValues</strong></a>(self, replaceSpecialValues=True)</dt><dd ><tt >getSetFieldParamsAndValues&nbsp;-&nbsp;For&nbsp;parameterized&nbsp;values,<br />
-&nbsp;<br />
-&nbsp;&nbsp;@param&nbsp;replaceSpecialValues&nbsp;&lt;bool,&nbsp;default&nbsp;True&gt;&nbsp;-&nbsp;If&nbsp;True,&nbsp;will&nbsp;replace&nbsp;special&nbsp;values&nbsp;(&nbsp;like&nbsp;NOW()&nbsp;)<br />
-&nbsp;&nbsp;&nbsp;&nbsp;with&nbsp;their&nbsp;calculated&nbsp;value.&nbsp;@see&nbsp;<a href="#QueryBase" >QueryBase</a>.replaceSpecialValues&nbsp;for&nbsp;more&nbsp;info.<br />
+<dl ><dt ><a name="UpdateQuery-getSetFieldParamsAndValues" ><strong >getSetFieldParamsAndValues</strong></a>(self)</dt><dd ><tt >getSetFieldParamsAndValues&nbsp;-&nbsp;For&nbsp;parameterized&nbsp;values,<br />
 &nbsp;<br />
 &nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;returns&nbsp;a&nbsp;tuple&nbsp;of&nbsp;two&nbsp;values,&nbsp;the&nbsp;first&nbsp;is&nbsp;the&nbsp;paramertized&nbsp;marker&nbsp;to&nbsp;be&nbsp;used&nbsp;in&nbsp;the&nbsp;query,<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;second&nbsp;is&nbsp;a&nbsp;list&nbsp;of&nbsp;values&nbsp;which&nbsp;should&nbsp;be&nbsp;passed&nbsp;alongside</tt></dd></dl>
 
-<dl ><dt ><a name="UpdateQuery-getSetFieldsStr" ><strong >getSetFieldsStr</strong></a>(self, replaceSpecialValues=True)</dt><dd ><tt >getSetFieldsStr&nbsp;-&nbsp;Get&nbsp;the&nbsp;&nbsp;X&nbsp;=&nbsp;"VALUE"&nbsp;,&nbsp;Y&nbsp;=&nbsp;"OTHER"&nbsp;portion&nbsp;of&nbsp;the&nbsp;SQL&nbsp;query</tt></dd></dl>
+<dl ><dt ><a name="UpdateQuery-getSetFieldsStr" ><strong >getSetFieldsStr</strong></a>(self)</dt><dd ><tt >getSetFieldsStr&nbsp;-&nbsp;Get&nbsp;the&nbsp;&nbsp;X&nbsp;=&nbsp;"VALUE"&nbsp;,&nbsp;Y&nbsp;=&nbsp;"OTHER"&nbsp;portion&nbsp;of&nbsp;the&nbsp;SQL&nbsp;query</tt></dd></dl>
 
-<dl ><dt ><a name="UpdateQuery-getSql" ><strong >getSql</strong></a>(self, replaceSpecialValues=True)</dt><dd ><tt >getSql&nbsp;-&nbsp;Get&nbsp;sql&nbsp;command&nbsp;to&nbsp;execute</tt></dd></dl>
+<dl ><dt ><a name="UpdateQuery-getSql" ><strong >getSql</strong></a>(self)</dt><dd ><tt >getSql&nbsp;-&nbsp;Get&nbsp;sql&nbsp;command&nbsp;to&nbsp;execute</tt></dd></dl>
 
-<dl ><dt ><a name="UpdateQuery-getSqlParameterizedValues" ><strong >getSqlParameterizedValues</strong></a>(self, replaceSpecialValues=True, paramPrefix='')</dt><dd ><tt >getSqlParameterizedValues&nbsp;-&nbsp;Get&nbsp;the&nbsp;SQL&nbsp;to&nbsp;execute,&nbsp;parameterized&nbsp;version<br />
-&nbsp;<br />
-&nbsp;&nbsp;@param&nbsp;replaceSpecialValues&nbsp;&lt;bool,&nbsp;default&nbsp;True&gt;&nbsp;-&nbsp;If&nbsp;True,&nbsp;will&nbsp;replace&nbsp;special&nbsp;values&nbsp;(&nbsp;like&nbsp;NOW()&nbsp;)<br />
-&nbsp;&nbsp;&nbsp;&nbsp;with&nbsp;their&nbsp;calculated&nbsp;value.&nbsp;@see&nbsp;<a href="#QueryBase" >QueryBase</a>.replaceSpecialValues&nbsp;for&nbsp;more&nbsp;info.<br />
+<dl ><dt ><a name="UpdateQuery-getSqlParameterizedValues" ><strong >getSqlParameterizedValues</strong></a>(self, paramPrefix='')</dt><dd ><tt >getSqlParameterizedValues&nbsp;-&nbsp;Get&nbsp;the&nbsp;SQL&nbsp;to&nbsp;execute,&nbsp;parameterized&nbsp;version<br />
 &nbsp;<br />
 &nbsp;&nbsp;@param&nbsp;paramPrefix&nbsp;&lt;<a href="builtins.html#str" >str</a>&gt;&nbsp;Default&nbsp;''&nbsp;-&nbsp;If&nbsp;provided,&nbsp;will&nbsp;prefix&nbsp;params&nbsp;with&nbsp;paramPrefix&nbsp;+&nbsp;"_"</tt></dd></dl>
 
@@ -1771,15 +1688,6 @@ Methods inherited from <a href="ichorORM.query.html#QueryBase" >QueryBase</a>:<b
 &nbsp;&nbsp;&nbsp;&nbsp;@param&nbsp;paramPrefix&nbsp;&lt;<a href="builtins.html#str" >str</a>&gt;&nbsp;Default&nbsp;''&nbsp;-&nbsp;If&nbsp;not&nbsp;empty&nbsp;string,&nbsp;paramPrefix&nbsp;+&nbsp;"_"&nbsp;will&nbsp;be&nbsp;prepended&nbsp;to&nbsp;all&nbsp;parameters<br />
 &nbsp;<br />
 &nbsp;&nbsp;@see&nbsp;getWhereClause</tt></dd></dl>
-
-<hr />
-Static methods inherited from <a href="ichorORM.query.html#QueryBase" >QueryBase</a>:<br />
-<dl ><dt ><a name="UpdateQuery-replaceSpecialValues" ><strong >replaceSpecialValues</strong></a>(fieldValues)</dt><dd ><tt >replaceSpecialValues&nbsp;-&nbsp;Replace&nbsp;special&nbsp;values&nbsp;(like&nbsp;NOW()&nbsp;)&nbsp;with&nbsp;a&nbsp;fixed&nbsp;value.<br />
-&nbsp;<br />
-&nbsp;&nbsp;&nbsp;&nbsp;They&nbsp;are&nbsp;supported&nbsp;as&nbsp;values&nbsp;in&nbsp;parameterized&nbsp;input,&nbsp;BUT&nbsp;they&nbsp;won't&nbsp;make&nbsp;it&nbsp;back&nbsp;onto&nbsp;the&nbsp;<a href="builtins.html#object" >object</a><br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;without&nbsp;some&nbsp;sort&nbsp;of&nbsp;special&nbsp;RETURNING&nbsp;clause&nbsp;(which&nbsp;isn't&nbsp;implemented.)<br />
-&nbsp;<br />
-&nbsp;&nbsp;&nbsp;&nbsp;May&nbsp;be&nbsp;changed&nbsp;in&nbsp;the&nbsp;future.</tt></dd></dl>
 
 <hr />
 Data descriptors inherited from <a href="ichorORM.query.html#QueryBase" >QueryBase</a>:<br />
