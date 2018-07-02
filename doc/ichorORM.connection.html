@@ -58,7 +58,7 @@ connection&nbsp;-&nbsp;Database&nbsp;access&nbsp;stuff</tt></p>
 <td colspan="2" ><tt ><a href="#DatabaseConnection" >DatabaseConnection</a>&nbsp;-&nbsp;Manages&nbsp;connections&nbsp;to&nbsp;the&nbsp;postgresql&nbsp;database<br />&nbsp;</tt></td></tr>
 <tr ><td >&nbsp;</td>
 <td width="100%" >Methods defined here:<br />
-<dl ><dt ><a name="DatabaseConnection-__init__" ><strong >__init__</strong></a>(self, host=&lt;ichorORM.objs.IgnoreParameterType object at 0x7f68361b9cf8&gt;, port=&lt;ichorORM.objs.IgnoreParameterType object at 0x7f68361b9cf8&gt;, dbname=&lt;ichorORM.objs.IgnoreParameterType object at 0x7f68361b9cf8&gt;, user=&lt;ichorORM.objs.IgnoreParameterType object at 0x7f68361b9cf8&gt;, password=&lt;ichorORM.objs.IgnoreParameterType object at 0x7f68361b9cf8&gt;, isTransactionMode=False)</dt><dd ><tt >__init__&nbsp;-&nbsp;Create&nbsp;a&nbsp;<a href="#DatabaseConnection" >DatabaseConnection</a>&nbsp;<a href="builtins.html#object" >object</a><br />
+<dl ><dt ><a name="DatabaseConnection-__init__" ><strong >__init__</strong></a>(self, host=UseGlobalSetting, port=UseGlobalSetting, dbname=UseGlobalSetting, user=UseGlobalSetting, password=UseGlobalSetting, isTransactionMode=False)</dt><dd ><tt >__init__&nbsp;-&nbsp;Create&nbsp;a&nbsp;<a href="#DatabaseConnection" >DatabaseConnection</a>&nbsp;<a href="builtins.html#object" >object</a><br />
 &nbsp;<br />
 &nbsp;&nbsp;@param&nbsp;host&nbsp;&lt;str/None/UseGlobalSetting&gt;&nbsp;Default&nbsp;UseGlobalSetting&nbsp;-<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IP&nbsp;or&nbsp;hostname&nbsp;to&nbsp;postgresql&nbsp;server.<br />
@@ -257,7 +257,7 @@ Data descriptors inherited from <a href="builtins.html#BaseException" >builtins.
 <font color="#ffffff" face="helvetica, arial" ><big ><strong >Functions</strong></big></font></td></tr>
     
 <tr ><td bgcolor="#eeaa77" ><tt >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td >&nbsp;</td>
-<td width="100%" ><dl ><dt ><a name="-getDatabaseConnection" ><strong >getDatabaseConnection</strong></a>(host=&lt;ichorORM.objs.IgnoreParameterType object at 0x7f68361b9cf8&gt;, port=&lt;ichorORM.objs.IgnoreParameterType object at 0x7f68361b9cf8&gt;, dbname=&lt;ichorORM.objs.IgnoreParameterType object at 0x7f68361b9cf8&gt;, user=&lt;ichorORM.objs.IgnoreParameterType object at 0x7f68361b9cf8&gt;, password=&lt;ichorORM.objs.IgnoreParameterType object at 0x7f68361b9cf8&gt;, isTransactionMode=False)</dt><dd ><tt >getDatabaseConnection&nbsp;-&nbsp;Gets&nbsp;a&nbsp;database&nbsp;connection.<br />
+<td width="100%" ><dl ><dt ><a name="-getDatabaseConnection" ><strong >getDatabaseConnection</strong></a>(host=UseGlobalSetting, port=UseGlobalSetting, dbname=UseGlobalSetting, user=UseGlobalSetting, password=UseGlobalSetting, isTransactionMode=False)</dt><dd ><tt >getDatabaseConnection&nbsp;-&nbsp;Gets&nbsp;a&nbsp;database&nbsp;connection.<br />
 &nbsp;<br />
 &nbsp;&nbsp;&nbsp;&nbsp;Should&nbsp;use&nbsp;this&nbsp;instead&nbsp;of&nbsp;creating&nbsp;a&nbsp;<a href="#DatabaseConnection" >DatabaseConnection</a>&nbsp;manually,&nbsp;to&nbsp;ensure&nbsp;ease&nbsp;of&nbsp;refactoring<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(like&nbsp;if&nbsp;we&nbsp;introduce&nbsp;connection&nbsp;pooling,&nbsp;global&nbsp;connections,&nbsp;etc)<br />
@@ -265,7 +265,7 @@ Data descriptors inherited from <a href="builtins.html#BaseException" >builtins.
 @see&nbsp;<a href="#DatabaseConnection" >DatabaseConnection</a>.__init__&nbsp;for&nbsp;arguments<br />
 &nbsp;<br />
 @return&nbsp;<a href="#DatabaseConnection" >DatabaseConnection</a>&nbsp;<a href="builtins.html#object" >object</a></tt></dd></dl>
- <dl ><dt ><a name="-setGlobalConnectionParams" ><strong >setGlobalConnectionParams</strong></a>(host=&lt;ichorORM.objs.IgnoreParameterType object at 0x7f68361b9908&gt;, port=&lt;ichorORM.objs.IgnoreParameterType object at 0x7f68361b9908&gt;, dbname=&lt;ichorORM.objs.IgnoreParameterType object at 0x7f68361b9908&gt;, user=&lt;ichorORM.objs.IgnoreParameterType object at 0x7f68361b9908&gt;, password=&lt;ichorORM.objs.IgnoreParameterType object at 0x7f68361b9908&gt;)</dt><dd ><tt >setGlobalConnectionParams&nbsp;-&nbsp;Sets&nbsp;the&nbsp;global&nbsp;connection&nbsp;parameters&nbsp;which&nbsp;will&nbsp;be&nbsp;used&nbsp;by&nbsp;default<br />
+ <dl ><dt ><a name="-setGlobalConnectionParams" ><strong >setGlobalConnectionParams</strong></a>(host=IgnoreParameter, port=IgnoreParameter, dbname=IgnoreParameter, user=IgnoreParameter, password=IgnoreParameter)</dt><dd ><tt >setGlobalConnectionParams&nbsp;-&nbsp;Sets&nbsp;the&nbsp;global&nbsp;connection&nbsp;parameters&nbsp;which&nbsp;will&nbsp;be&nbsp;used&nbsp;by&nbsp;default<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;connections&nbsp;to&nbsp;postgresql.<br />
 &nbsp;<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Every&nbsp;parameter&nbsp;defaults&nbsp;to&nbsp;"IgnoreParameter"&nbsp;and&nbsp;will&nbsp;thus&nbsp;not&nbsp;be&nbsp;set&nbsp;unless<br />

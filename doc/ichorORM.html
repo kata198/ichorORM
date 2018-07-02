@@ -61,7 +61,7 @@ ichorORM&nbsp;-&nbsp;An&nbsp;ORM&nbsp;and&nbsp;query-builder&nbsp;for&nbsp;postg
 <td colspan="2" ><tt ><a href="#DatabaseConnection" >DatabaseConnection</a>&nbsp;-&nbsp;Manages&nbsp;connections&nbsp;to&nbsp;the&nbsp;postgresql&nbsp;database<br />&nbsp;</tt></td></tr>
 <tr ><td >&nbsp;</td>
 <td width="100%" >Methods defined here:<br />
-<dl ><dt ><a name="DatabaseConnection-__init__" ><strong >__init__</strong></a>(self, host=&lt;ichorORM.objs.IgnoreParameterType object at 0x7f68361b9cf8&gt;, port=&lt;ichorORM.objs.IgnoreParameterType object at 0x7f68361b9cf8&gt;, dbname=&lt;ichorORM.objs.IgnoreParameterType object at 0x7f68361b9cf8&gt;, user=&lt;ichorORM.objs.IgnoreParameterType object at 0x7f68361b9cf8&gt;, password=&lt;ichorORM.objs.IgnoreParameterType object at 0x7f68361b9cf8&gt;, isTransactionMode=False)</dt><dd ><tt >__init__&nbsp;-&nbsp;Create&nbsp;a&nbsp;<a href="#DatabaseConnection" >DatabaseConnection</a>&nbsp;<a href="builtins.html#object" >object</a><br />
+<dl ><dt ><a name="DatabaseConnection-__init__" ><strong >__init__</strong></a>(self, host=UseGlobalSetting, port=UseGlobalSetting, dbname=UseGlobalSetting, user=UseGlobalSetting, password=UseGlobalSetting, isTransactionMode=False)</dt><dd ><tt >__init__&nbsp;-&nbsp;Create&nbsp;a&nbsp;<a href="#DatabaseConnection" >DatabaseConnection</a>&nbsp;<a href="builtins.html#object" >object</a><br />
 &nbsp;<br />
 &nbsp;&nbsp;@param&nbsp;host&nbsp;&lt;str/None/UseGlobalSetting&gt;&nbsp;Default&nbsp;UseGlobalSetting&nbsp;-<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IP&nbsp;or&nbsp;hostname&nbsp;to&nbsp;postgresql&nbsp;server.<br />
@@ -263,6 +263,8 @@ Data descriptors inherited from <a href="builtins.html#BaseException" >builtins.
 <td colspan="2" ><tt ><a href="#DatabaseModel" >DatabaseModel</a>&nbsp;-&nbsp;Models&nbsp;should&nbsp;extend&nbsp;this<br />&nbsp;</tt></td></tr>
 <tr ><td >&nbsp;</td>
 <td width="100%" >Methods defined here:<br />
+<dl ><dt ><a name="DatabaseModel-__getattribute__" ><strong >__getattribute__</strong></a>(self, attrName)</dt><dd ><tt >Return&nbsp;getattr(self,&nbsp;name).</tt></dd></dl>
+
 <dl ><dt ><a name="DatabaseModel-__init__" ><strong >__init__</strong></a>(self, **kwargs)</dt><dd ><tt >__init__&nbsp;-&nbsp;Create&nbsp;an&nbsp;<a href="builtins.html#object" >object</a>&nbsp;of&nbsp;this&nbsp;type.<br />
 &nbsp;<br />
 &nbsp;&nbsp;Arguments&nbsp;are&nbsp;in&nbsp;form&nbsp;of&nbsp;fieldName=fieldValue</tt></dd></dl>
@@ -394,8 +396,16 @@ At&nbsp;least&nbsp;all&nbsp;entries&nbsp;in&nbsp;REQUIRED_FIELDS&nbsp;must&nbsp;
 &nbsp;<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@return&nbsp;dict&nbsp;&lt;&nbsp;&lt;str&gt;&nbsp;:&nbsp;relations.ForeignRelations&gt;&nbsp;-&nbsp;Foreign&nbsp;relations&nbsp;on&nbsp;this&nbsp;model<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;key&nbsp;could&nbsp;be&nbsp;a&nbsp;string&nbsp;of&nbsp;a&nbsp;name,&nbsp;could&nbsp;be&nbsp;a&nbsp;model&nbsp;class,&nbsp;whatever.&nbsp;You&nbsp;will&nbsp;pass<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this&nbsp;key&nbsp;to&nbsp;"<a href="#DatabaseModel-getRelated" >getRelated</a>(#key)"</tt></dd></dl>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;the&nbsp;key&nbsp;is&nbsp;a&nbsp;string,&nbsp;this&nbsp;model&nbsp;will&nbsp;gain&nbsp;an&nbsp;attribute&nbsp;with&nbsp;that&nbsp;name&nbsp;which&nbsp;will<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;the&nbsp;related&nbsp;model&nbsp;when&nbsp;accessed.<br />
+&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;For&nbsp;example,&nbsp;{&nbsp;'person'&nbsp;:&nbsp;OneToManyRelation('id_person',&nbsp;Person,&nbsp;'id')&nbsp;}<br />
+&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;you&nbsp;access&nbsp;myModelObj.person&nbsp;it&nbsp;will&nbsp;return&nbsp;the&nbsp;Person&nbsp;<a href="builtins.html#object" >object</a>&nbsp;related&nbsp;by&nbsp;Person.id&nbsp;=&nbsp;myModel.id_person<br />
+&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;key&nbsp;could&nbsp;also&nbsp;be&nbsp;a&nbsp;model&nbsp;class&nbsp;or&nbsp;whatever,&nbsp;and&nbsp;you&nbsp;can&nbsp;get&nbsp;the&nbsp;related&nbsp;<a href="builtins.html#object" >object</a>(s)&nbsp;<br />
+&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;by&nbsp;calling&nbsp;myModelObj.<a href="#DatabaseModel-getRelated" >getRelated</a>(#key)</tt></dd></dl>
 
 <hr />
 Data descriptors defined here:<br />
@@ -428,7 +438,7 @@ Data and other attributes defined here:<br />
 <font color="#ffffff" face="helvetica, arial" ><big ><strong >Functions</strong></big></font></td></tr>
     
 <tr ><td bgcolor="#eeaa77" ><tt >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td >&nbsp;</td>
-<td width="100%" ><dl ><dt ><a name="-getDatabaseConnection" ><strong >getDatabaseConnection</strong></a>(host=&lt;ichorORM.objs.IgnoreParameterType object at 0x7f68361b9cf8&gt;, port=&lt;ichorORM.objs.IgnoreParameterType object at 0x7f68361b9cf8&gt;, dbname=&lt;ichorORM.objs.IgnoreParameterType object at 0x7f68361b9cf8&gt;, user=&lt;ichorORM.objs.IgnoreParameterType object at 0x7f68361b9cf8&gt;, password=&lt;ichorORM.objs.IgnoreParameterType object at 0x7f68361b9cf8&gt;, isTransactionMode=False)</dt><dd ><tt >getDatabaseConnection&nbsp;-&nbsp;Gets&nbsp;a&nbsp;database&nbsp;connection.<br />
+<td width="100%" ><dl ><dt ><a name="-getDatabaseConnection" ><strong >getDatabaseConnection</strong></a>(host=UseGlobalSetting, port=UseGlobalSetting, dbname=UseGlobalSetting, user=UseGlobalSetting, password=UseGlobalSetting, isTransactionMode=False)</dt><dd ><tt >getDatabaseConnection&nbsp;-&nbsp;Gets&nbsp;a&nbsp;database&nbsp;connection.<br />
 &nbsp;<br />
 &nbsp;&nbsp;&nbsp;&nbsp;Should&nbsp;use&nbsp;this&nbsp;instead&nbsp;of&nbsp;creating&nbsp;a&nbsp;<a href="#DatabaseConnection" >DatabaseConnection</a>&nbsp;manually,&nbsp;to&nbsp;ensure&nbsp;ease&nbsp;of&nbsp;refactoring<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(like&nbsp;if&nbsp;we&nbsp;introduce&nbsp;connection&nbsp;pooling,&nbsp;global&nbsp;connections,&nbsp;etc)<br />
@@ -436,7 +446,7 @@ Data and other attributes defined here:<br />
 @see&nbsp;<a href="#DatabaseConnection" >DatabaseConnection</a>.__init__&nbsp;for&nbsp;arguments<br />
 &nbsp;<br />
 @return&nbsp;<a href="#DatabaseConnection" >DatabaseConnection</a>&nbsp;<a href="builtins.html#object" >object</a></tt></dd></dl>
- <dl ><dt ><a name="-setGlobalConnectionParams" ><strong >setGlobalConnectionParams</strong></a>(host=&lt;ichorORM.objs.IgnoreParameterType object at 0x7f68361b9908&gt;, port=&lt;ichorORM.objs.IgnoreParameterType object at 0x7f68361b9908&gt;, dbname=&lt;ichorORM.objs.IgnoreParameterType object at 0x7f68361b9908&gt;, user=&lt;ichorORM.objs.IgnoreParameterType object at 0x7f68361b9908&gt;, password=&lt;ichorORM.objs.IgnoreParameterType object at 0x7f68361b9908&gt;)</dt><dd ><tt >setGlobalConnectionParams&nbsp;-&nbsp;Sets&nbsp;the&nbsp;global&nbsp;connection&nbsp;parameters&nbsp;which&nbsp;will&nbsp;be&nbsp;used&nbsp;by&nbsp;default<br />
+ <dl ><dt ><a name="-setGlobalConnectionParams" ><strong >setGlobalConnectionParams</strong></a>(host=IgnoreParameter, port=IgnoreParameter, dbname=IgnoreParameter, user=IgnoreParameter, password=IgnoreParameter)</dt><dd ><tt >setGlobalConnectionParams&nbsp;-&nbsp;Sets&nbsp;the&nbsp;global&nbsp;connection&nbsp;parameters&nbsp;which&nbsp;will&nbsp;be&nbsp;used&nbsp;by&nbsp;default<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;connections&nbsp;to&nbsp;postgresql.<br />
 &nbsp;<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Every&nbsp;parameter&nbsp;defaults&nbsp;to&nbsp;"IgnoreParameter"&nbsp;and&nbsp;will&nbsp;thus&nbsp;not&nbsp;be&nbsp;set&nbsp;unless<br />

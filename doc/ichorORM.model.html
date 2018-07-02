@@ -47,6 +47,8 @@ model.py&nbsp;-&nbsp;ORM&nbsp;model&nbsp;base</tt></p>
 <td colspan="2" ><tt ><a href="#DatabaseModel" >DatabaseModel</a>&nbsp;-&nbsp;Models&nbsp;should&nbsp;extend&nbsp;this<br />&nbsp;</tt></td></tr>
 <tr ><td >&nbsp;</td>
 <td width="100%" >Methods defined here:<br />
+<dl ><dt ><a name="DatabaseModel-__getattribute__" ><strong >__getattribute__</strong></a>(self, attrName)</dt><dd ><tt >Return&nbsp;getattr(self,&nbsp;name).</tt></dd></dl>
+
 <dl ><dt ><a name="DatabaseModel-__init__" ><strong >__init__</strong></a>(self, **kwargs)</dt><dd ><tt >__init__&nbsp;-&nbsp;Create&nbsp;an&nbsp;<a href="builtins.html#object" >object</a>&nbsp;of&nbsp;this&nbsp;type.<br />
 &nbsp;<br />
 &nbsp;&nbsp;Arguments&nbsp;are&nbsp;in&nbsp;form&nbsp;of&nbsp;fieldName=fieldValue</tt></dd></dl>
@@ -178,8 +180,16 @@ At&nbsp;least&nbsp;all&nbsp;entries&nbsp;in&nbsp;REQUIRED_FIELDS&nbsp;must&nbsp;
 &nbsp;<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@return&nbsp;dict&nbsp;&lt;&nbsp;&lt;str&gt;&nbsp;:&nbsp;relations.ForeignRelations&gt;&nbsp;-&nbsp;Foreign&nbsp;relations&nbsp;on&nbsp;this&nbsp;model<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;key&nbsp;could&nbsp;be&nbsp;a&nbsp;string&nbsp;of&nbsp;a&nbsp;name,&nbsp;could&nbsp;be&nbsp;a&nbsp;model&nbsp;class,&nbsp;whatever.&nbsp;You&nbsp;will&nbsp;pass<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this&nbsp;key&nbsp;to&nbsp;"<a href="#DatabaseModel-getRelated" >getRelated</a>(#key)"</tt></dd></dl>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;the&nbsp;key&nbsp;is&nbsp;a&nbsp;string,&nbsp;this&nbsp;model&nbsp;will&nbsp;gain&nbsp;an&nbsp;attribute&nbsp;with&nbsp;that&nbsp;name&nbsp;which&nbsp;will<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;the&nbsp;related&nbsp;model&nbsp;when&nbsp;accessed.<br />
+&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;For&nbsp;example,&nbsp;{&nbsp;'person'&nbsp;:&nbsp;OneToManyRelation('id_person',&nbsp;Person,&nbsp;'id')&nbsp;}<br />
+&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;you&nbsp;access&nbsp;myModelObj.person&nbsp;it&nbsp;will&nbsp;return&nbsp;the&nbsp;Person&nbsp;<a href="builtins.html#object" >object</a>&nbsp;related&nbsp;by&nbsp;Person.id&nbsp;=&nbsp;myModel.id_person<br />
+&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;key&nbsp;could&nbsp;also&nbsp;be&nbsp;a&nbsp;model&nbsp;class&nbsp;or&nbsp;whatever,&nbsp;and&nbsp;you&nbsp;can&nbsp;get&nbsp;the&nbsp;related&nbsp;<a href="builtins.html#object" >object</a>(s)&nbsp;<br />
+&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;by&nbsp;calling&nbsp;myModelObj.<a href="#DatabaseModel-getRelated" >getRelated</a>(#key)</tt></dd></dl>
 
 <hr />
 Data descriptors defined here:<br />
