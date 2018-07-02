@@ -3,7 +3,7 @@ from ichorORM.model import DatabaseModel
 
 class Person(DatabaseModel):
 
-    FIELDS = ['id', 'first_name', 'last_name', 'eye_color', 'age', 'birth_day', 'birth_month', 'datasetUid']
+    FIELDS = ['id', 'first_name', 'last_name', 'eye_color', 'age', 'birth_day', 'birth_month', 'datasetuid']
 
     REQUIRED_FIELDS = ['last_name']
 
