@@ -19,6 +19,16 @@ from .WhereClause import WhereClause
 
 __all__ = ('DatabaseModel', )
 
+# Compat: class property decorator
+try:
+	classproperty
+except NameError:
+	class classproperty(object):
+		def __init__(self, getter):
+			self.getter = getter
+		def __get__(self, instance, owner):
+			return self.getter(owner)
+    
 class DatabaseModel(object):
     '''
         DatabaseModel - Models should extend this
@@ -45,6 +55,45 @@ class DatabaseModel(object):
     #   It is HIGHLY recommended that every table have an "id serial primary key" for
     #     simplified/streamlined ORM usage
     PRIMARY_KEY = 'id'
+
+    @classmethod
+    def getModelRelations(cls):
+        '''
+            getModelRelations - This method should return a list of relations.ForeignRelation objects
+                for any relations on this object.
+
+                This is a method instead of a property so that you can import models within this function
+                    without creating circular references.
+
+                This method will be called once per class and the value cached.
+
+                    @return dict < <str> : relations.ForeignRelations> - Foreign relations on this model
+                        
+                        The key could be a string of a name, could be a model class, whatever. You will pass
+                         this key to "getRelated(#key)"
+        '''
+
+        return []
+
+    # _MODEL_RELATIONS - DO NOT SET THIS OR USE DIRECTLY!!
+    #      This stores the cached late-binding result of #getModelRelations .
+    #      Use .MODEL_RELATIONS (without leading underscore) for access instead.
+    _MODEL_RELATIONS = None
+
+    @classproperty
+    def MODEL_RELATIONS(cls):
+        '''
+            MODEL_RELATIONS - A property which will use the cached _MODEL_RELATIONS
+                or generate it via #getModelRelations if not yet set on this class.
+
+                @return dict < <str> : relations.ForeignRelations> - Foreign relations on this model
+                    
+                    Key should be a string of a name, or could be a model, whatever. You will pass this to "getRelated(#key)"
+        '''
+        if cls._MODEL_RELATIONS is None:
+            cls._MODEL_RELATIONS = cls.getModelRelations()
+        return cls._MODEL_RELATIONS
+
 
     def __init__(self, **kwargs):
         '''
@@ -373,6 +422,23 @@ class DatabaseModel(object):
 
         objs = q.executeGetObjs(dbConn=dbConn)
         return objs
+
+
+    def getRelated(self, relationKey):
+        '''
+            getRelated - Returns the objects following the relation assigned to #relationKey
+
+                @param relationKey <str/???> - The key used in #getModelRelations to describe this relation
+
+                @return - If OneToOneRelation, a single object or None, if ManyToOne or OneToMany a list of objs
+        '''
+
+        try:
+            relationObj = self.MODEL_RELATIONS[relationKey]
+        except KeyError:
+            raise KeyError("No such relation defined by: %s . Options are: %s" %(repr(relationKey), repr( list(self.MODEL_RELATIONS.keys()) )))
+
+        return relationObj.getRelated(self)
 
 
     def __repr__(self):
