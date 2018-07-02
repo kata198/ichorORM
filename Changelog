@@ -1,3 +1,49 @@
+2.0.0 - ??? ?? ????
+
+* Update DatabaseModel.createAndSave to have "doCommit" and "dbConn" params to allow use within a transaction
+
+* Write README documenting usage
+
+* Some code cleanups / bugfixes / refactors
+
+* Add an internal _setupModel function which validates and "sets up" a model -- called once per model class
+
+* Add the BETWEEN operator, and handle giving it passed 2 items (before, after) as either date-l
+ike objects (datetime.datetime, datetime.date), or a QueryString (like CURRENT_TIMESTAMP). The entire value for the BETWEEN condit
+ion may also be a QueryString
+
+* Allow SelectQuery to be used as filter values ( such as in FilterStage.addCondition )
+
+* Implement SelectQuery.asQueryStr and SelectQuery.asQueryStrParams to convert a SelectQuery into a QueryStr with direct values or with parameterized values
+
+* Replace internal conversion methods with psycopg2's "adapt" method ( such as for converting a datetime object into a value usable by SQL e.x. '2018-06-28'::date )
+
+* Allow specifying an alternate port in the connection ( default if unspecified remains 5432 )
+
+* Rename "setFieldValues" in InsertQuery.__init__ to "initialFieldValues"
+
+* Implement "setFieldValues" for setting multiple values within a single call, which takes a map of fieldName -> fieldValue to UpdateQuery and InsertQuery. This works the same as calling setFieldValue(fieldName, fieldValue) for each item in the passed map
+
+* Fix dbConnection.doInsert method to properly return all primary keys when multiple "valueDicts" are passed (one valueDict for each record). Previously a bug caused only the last id to be returned when this function was used directly
+
+* Allow dbConnection.doInsert to be called without specifying a list of valueDicts (for when query has all values inline, aka non-parameterized)
+
+* Copy the values out of "initialFieldValues" on InsertQuery.__init__ and "newFieldValues" on UpdateQuery.__init__ if provided instead of using passed argument as the internal reference. This can prevent unintentional side-effects if that argument is modified after passing to the constructor
+
+* Allow specifying a "paramPrefix" on any function which generates a query string and parameters to support nesting multiple queries (like a parameterized select query within an update query)
+
+* Remove "replaceSpecialValues" method and all arguments which made reference to it. This was an old old method from an implementation a long time ago which would replace NOW() and current_timestamp with datetime.datetime.now() within parameterized values. This is no longer needed as functionality is handled elsewhere now. You may also use QueryStr('NOW()') as a value which will pass NOW() along within the query and note the time at execution rather than a timestamp slightly prior (because it was being unrolled within the query building process).
+  This function was already not used by anything internal at this point and shouldn't break anything by being removed
+
+* Implement foreign relations. Right now supports OneToOne relations and OneToMany. ManyToOne should be covered within the OneToMany impl, but may get its own implementation later.
+  Your model may specify its foreign relations in a classmethod called getModelRelations. This is called once per model, and returns a dict of key -> relations.ForeignRelation obj. If key is a string, like "person", then calling myModel.person will follow the relation and return the object(s) referenced. Alternately, you can call myModel.getRelated(key) to return the related object(s)
+
+* Implement __repr__ on UseGlobalValue and IgnoreParameter so that the display within pydoc and help is sane and constant
+
+* Add a GoodTests (https://github.com/kata198/GoodTests) unit test framework, with the majority of usage covered in unit tests.
+  Within the tests/ichorORMTests directory is a module LocalConfig.py wherein you can set configuration options to point to a postgresql server to use for testing
+
+
 1.0.2 - May 31 2018
 -------------------
 
