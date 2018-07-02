@@ -424,7 +424,7 @@ Data descriptors inherited from <a href="ichorORM.query.html#FilterType" >Filter
 <font color="#000000" face="helvetica, arial" ><a name="InsertQuery" >class <strong >InsertQuery</strong></a>(<a href="ichorORM.query.html#QueryBase" >QueryBase</a>)</font></td></tr>
     
 <tr bgcolor="#ffc8d8" ><td rowspan="2" ><tt >&nbsp;&nbsp;&nbsp;</tt></td>
-<td colspan="2" ><tt ><a href="#InsertQuery" >InsertQuery</a>&nbsp;-&nbsp;A&nbsp;query&nbsp;for&nbsp;doing&nbsp;inserts<br />&nbsp;</tt></td></tr>
+<td colspan="2" ><tt ><a href="#InsertQuery" >InsertQuery</a>&nbsp;-&nbsp;A&nbsp;query&nbsp;builder&nbsp;class&nbsp;for&nbsp;doing&nbsp;inserts<br />&nbsp;</tt></td></tr>
 <tr ><td >&nbsp;</td>
 <td width="100%" ><dl ><dt >Method resolution order:</dt>
 <dd ><a href="ichorORM.query.html#InsertQuery" >InsertQuery</a></dd>
@@ -433,11 +433,16 @@ Data descriptors inherited from <a href="ichorORM.query.html#FilterType" >Filter
 </dl>
 <hr />
 Methods defined here:<br />
-<dl ><dt ><a name="InsertQuery-__init__" ><strong >__init__</strong></a>(self, model, setFieldValues=None, filterStages=None)</dt><dd ><tt >__init__&nbsp;-&nbsp;Create&nbsp;an&nbsp;insert&nbsp;query<br />
+<dl ><dt ><a name="InsertQuery-__init__" ><strong >__init__</strong></a>(self, model, initialFieldValues=None, filterStages=None)</dt><dd ><tt >__init__&nbsp;-&nbsp;Create&nbsp;an&nbsp;insert&nbsp;query<br />
 &nbsp;<br />
-&nbsp;&nbsp;@param&nbsp;model&nbsp;-&nbsp;The&nbsp;model&nbsp;to&nbsp;use<br />
+&nbsp;&nbsp;@param&nbsp;model&nbsp;&lt;DatabaseModel&gt;&nbsp;-&nbsp;The&nbsp;model&nbsp;to&nbsp;use<br />
 &nbsp;<br />
-&nbsp;&nbsp;@param&nbsp;setFieldValues&nbsp;-&nbsp;A&nbsp;dict&nbsp;of&nbsp;fieldName&nbsp;:&nbsp;fieldValue,&nbsp;or&nbsp;None&nbsp;to&nbsp;set&nbsp;later</tt></dd></dl>
+&nbsp;&nbsp;@param&nbsp;initialFieldValues&nbsp;&lt;None&nbsp;/&nbsp;dict&lt;&nbsp;<a href="builtins.html#str" >str</a>&nbsp;:&nbsp;???&nbsp;&gt;&nbsp;&gt;&nbsp;Default&nbsp;None&nbsp;-&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;provided,&nbsp;must&nbsp;be&nbsp;a&nbsp;map&nbsp;to&nbsp;fieldName&nbsp;:&nbsp;fieldValue,&nbsp;and&nbsp;this&nbsp;will&nbsp;become&nbsp;the<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;initial&nbsp;set&nbsp;of&nbsp;fields&nbsp;to&nbsp;be&nbsp;set&nbsp;on&nbsp;the&nbsp;inserted&nbsp;<a href="builtins.html#object" >object</a>.<br />
+&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Providing&nbsp;this&nbsp;is&nbsp;the&nbsp;same&nbsp;as&nbsp;calling&nbsp;#<a href="#InsertQuery-setFieldValues" >setFieldValues</a>(initialFieldValues)</tt></dd></dl>
 
 <dl ><dt ><a name="InsertQuery-execute" ><strong >execute</strong></a>(self, dbConn=None, doCommit=True)</dt><dd ><tt >execute&nbsp;-&nbsp;Execute&nbsp;this&nbsp;action,&nbsp;generic&nbsp;method.<br />
 &nbsp;<br />
@@ -510,9 +515,17 @@ Methods defined here:<br />
 <dl ><dt ><a name="InsertQuery-getTableFieldsStr" ><strong >getTableFieldsStr</strong></a>(self)</dt><dd ><tt >getTableFieldsStr&nbsp;-&nbsp;Get&nbsp;the&nbsp;portion&nbsp;following&nbsp;the&nbsp;table&nbsp;name&nbsp;in&nbsp;an&nbsp;INSERT&nbsp;query&nbsp;which&nbsp;specifies<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;fields&nbsp;that&nbsp;will&nbsp;be&nbsp;set</tt></dd></dl>
 
-<dl ><dt ><a name="InsertQuery-setFieldValue" ><strong >setFieldValue</strong></a>(self, fieldName, newValue)</dt><dd ><tt >setFieldValue&nbsp;-&nbsp;Set&nbsp;a&nbsp;field&nbsp;to&nbsp;a&nbsp;value&nbsp;to&nbsp;be&nbsp;inserted</tt></dd></dl>
+<dl ><dt ><a name="InsertQuery-setFieldValue" ><strong >setFieldValue</strong></a>(self, fieldName, newValue)</dt><dd ><tt >setFieldValue&nbsp;-&nbsp;Set&nbsp;a&nbsp;field&nbsp;to&nbsp;a&nbsp;value&nbsp;to&nbsp;be&nbsp;inserted<br />
+&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;@param&nbsp;fieldName&nbsp;&lt;<a href="builtins.html#str" >str</a>&gt;&nbsp;-&nbsp;The&nbsp;name&nbsp;of&nbsp;the&nbsp;field&nbsp;to&nbsp;set&nbsp;(should&nbsp;be&nbsp;in&nbsp;FIELDS&nbsp;array)<br />
+&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;@param&nbsp;newValue&nbsp;&lt;???&gt;&nbsp;-&nbsp;The&nbsp;value&nbsp;to&nbsp;insert.&nbsp;Can&nbsp;be&nbsp;a&nbsp;<a href="builtins.html#str" >str</a>,&nbsp;number,&nbsp;datetime&nbsp;<a href="builtins.html#object" >object</a>,&nbsp;etc.&nbsp;depending&nbsp;on&nbsp;schema</tt></dd></dl>
 
-<dl ><dt ><a name="InsertQuery-setNewFieldValues" ><strong >setNewFieldValues</strong></a>(self, setFieldValues)</dt><dd ><tt >setNewFieldValues&nbsp;-&nbsp;Set&nbsp;the&nbsp;mapping&nbsp;of&nbsp;field&nbsp;names&nbsp;to&nbsp;values</tt></dd></dl>
+<dl ><dt ><a name="InsertQuery-setFieldValues" ><strong >setFieldValues</strong></a>(self, fieldNameToValueMap)</dt><dd ><tt >setFieldValues&nbsp;-&nbsp;Set&nbsp;multiple&nbsp;field&nbsp;values<br />
+&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;@param&nbsp;fieldNameToValueMap&nbsp;dict&lt;<a href="builtins.html#str" >str</a>&nbsp;:&nbsp;???&gt;&nbsp;-&nbsp;A&nbsp;map&nbsp;of&nbsp;field&nbsp;name&nbsp;-&gt;&nbsp;field&nbsp;value<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;will&nbsp;define&nbsp;the&nbsp;values&nbsp;of&nbsp;the&nbsp;fields&nbsp;upon&nbsp;insert</tt></dd></dl>
 
 <hr />
 Methods inherited from <a href="ichorORM.query.html#QueryBase" >QueryBase</a>:<br />
@@ -582,9 +595,15 @@ Data descriptors inherited from <a href="ichorORM.query.html#QueryBase" >QueryBa
 &nbsp;<br />
 &nbsp;&nbsp;&nbsp;&nbsp;@param&nbsp;model&nbsp;&lt;DatabaseModel&gt;&nbsp;-&nbsp;The&nbsp;DatabaseModel&nbsp;to&nbsp;use&nbsp;for&nbsp;this&nbsp;query<br />
 &nbsp;<br />
-&nbsp;&nbsp;&nbsp;&nbsp;@param&nbsp;filterStages&nbsp;&lt;None/list&lt;<a href="#FilterType" >FilterType</a>&nbsp;objs&gt;&gt;&nbsp;-&nbsp;Use&nbsp;this&nbsp;list&nbsp;of&nbsp;WHERE&nbsp;filter&nbsp;stages,&nbsp;or&nbsp;None&nbsp;to&nbsp;start<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;with&nbsp;an&nbsp;empty&nbsp;list.&nbsp;Call&nbsp;#addStage&nbsp;to&nbsp;add&nbsp;a&nbsp;stage&nbsp;to&nbsp;the&nbsp;WHERE</tt></dd></dl>
+&nbsp;&nbsp;&nbsp;&nbsp;@param&nbsp;filterStages&nbsp;&lt;None/list&lt;<a href="#FilterType" >FilterType</a>&nbsp;objs&gt;&gt;&nbsp;Default&nbsp;None&nbsp;-&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;You&nbsp;may&nbsp;past&nbsp;a&nbsp;list&nbsp;of&nbsp;initial&nbsp;filter&nbsp;stages&nbsp;to&nbsp;use&nbsp;in&nbsp;the&nbsp;WHERE&nbsp;portion&nbsp;of&nbsp;the&nbsp;query,&nbsp;or&nbsp;leave&nbsp;as&nbsp;None&nbsp;and&nbsp;add&nbsp;them&nbsp;indivdiualy&nbsp;with&nbsp;#addStage&nbsp;(preferred).<br />
+&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;list&nbsp;will&nbsp;be&nbsp;copied,&nbsp;but&nbsp;the&nbsp;stages&nbsp;themselves&nbsp;will&nbsp;not<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(so&nbsp;if&nbsp;you&nbsp;add&nbsp;a&nbsp;condition&nbsp;to&nbsp;one&nbsp;of&nbsp;these&nbsp;stages,&nbsp;that&nbsp;will&nbsp;carry&nbsp;over,<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;but&nbsp;if&nbsp;you&nbsp;append&nbsp;to&nbsp;the&nbsp;list&nbsp;you&nbsp;provided&nbsp;here&nbsp;that&nbsp;will&nbsp;not.<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Use&nbsp;#addStage&nbsp;instead.<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)</tt></dd></dl>
 
 <dl ><dt ><a name="QueryBase-addStage" ><strong >addStage</strong></a>(self, _filter='AND')</dt><dd ><tt >addStage&nbsp;-&nbsp;Add&nbsp;a&nbsp;"stage"&nbsp;to&nbsp;the&nbsp;WHERE&nbsp;condition.&nbsp;A&nbsp;stage&nbsp;is&nbsp;a&nbsp;collection&nbsp;of&nbsp;conditional&nbsp;expressions.<br />
 &nbsp;<br />
@@ -1594,7 +1613,17 @@ Methods defined here:<br />
 &nbsp;<br />
 &nbsp;&nbsp;@param&nbsp;model&nbsp;-&nbsp;The&nbsp;model&nbsp;class<br />
 &nbsp;<br />
-&nbsp;&nbsp;@param&nbsp;newFieldValues&nbsp;&lt;dict/None&gt;&nbsp;-&nbsp;Either&nbsp;a&nbsp;dict&nbsp;of&nbsp;field&nbsp;name&nbsp;:&nbsp;newValue,&nbsp;or&nbsp;None&nbsp;to&nbsp;set&nbsp;later</tt></dd></dl>
+&nbsp;&nbsp;@param&nbsp;newFieldValues&nbsp;&lt;dict/None&gt;&nbsp;Default&nbsp;None.<br />
+&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;provided,&nbsp;will&nbsp;use&nbsp;these&nbsp;as&nbsp;initial&nbsp;field&nbsp;values&nbsp;for&nbsp;update.<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Providing&nbsp;this&nbsp;is&nbsp;the&nbsp;same&nbsp;as&nbsp;calling&nbsp;#<a href="#UpdateQuery-setFieldValues" >setFieldValues</a>(newFieldValues)<br />
+&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;You&nbsp;can&nbsp;set&nbsp;the&nbsp;value&nbsp;of&nbsp;specific&nbsp;fields&nbsp;using&nbsp;either&nbsp;the&nbsp;#setFieldValue&nbsp;or&nbsp;#setFieldValues<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;methods&nbsp;after&nbsp;constructing&nbsp;the&nbsp;<a href="builtins.html#object" >object</a>.<br />
+&nbsp;<br />
+&nbsp;&nbsp;@param&nbsp;filterStages&nbsp;&lt;None/list&lt;<a href="#FilterStage" >FilterStage</a>&gt;&gt;&nbsp;Default&nbsp;None&nbsp;-&nbsp;Provide&nbsp;a&nbsp;list&nbsp;of<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;filter&nbsp;stages&nbsp;to&nbsp;use.&nbsp;A&nbsp;copy&nbsp;of&nbsp;this&nbsp;list&nbsp;will&nbsp;be&nbsp;made&nbsp;internally</tt></dd></dl>
 
 <dl ><dt ><a name="UpdateQuery-execute" ><strong >execute</strong></a>(self, dbConn=None, doCommit=True)</dt><dd ><tt >execute&nbsp;-&nbsp;Execute&nbsp;this&nbsp;action,&nbsp;generic&nbsp;method.<br />
 &nbsp;<br />
@@ -1646,13 +1675,27 @@ Methods defined here:<br />
 &nbsp;&nbsp;@param&nbsp;replaceSpecialValues&nbsp;&lt;bool,&nbsp;default&nbsp;True&gt;&nbsp;-&nbsp;If&nbsp;True,&nbsp;will&nbsp;replace&nbsp;special&nbsp;values&nbsp;(&nbsp;like&nbsp;NOW()&nbsp;)<br />
 &nbsp;&nbsp;&nbsp;&nbsp;with&nbsp;their&nbsp;calculated&nbsp;value.&nbsp;@see&nbsp;<a href="#QueryBase" >QueryBase</a>.replaceSpecialValues&nbsp;for&nbsp;more&nbsp;info.</tt></dd></dl>
 
-<dl ><dt ><a name="UpdateQuery-setFieldValue" ><strong >setFieldValue</strong></a>(self, fieldName, newValue)</dt><dd ><tt >setFieldValue&nbsp;-&nbsp;Update&nbsp;a&nbsp;field&nbsp;to&nbsp;a&nbsp;new&nbsp;value</tt></dd></dl>
+<dl ><dt ><a name="UpdateQuery-setFieldValue" ><strong >setFieldValue</strong></a>(self, fieldName, newValue)</dt><dd ><tt >setFieldValue&nbsp;-&nbsp;Update&nbsp;a&nbsp;field&nbsp;to&nbsp;a&nbsp;new&nbsp;value<br />
+&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;@param&nbsp;fieldName&nbsp;&lt;<a href="builtins.html#str" >str</a>&gt;&nbsp;-&nbsp;The&nbsp;field&nbsp;name&nbsp;(should&nbsp;be&nbsp;in&nbsp;FIELDS&nbsp;array&nbsp;on&nbsp;model&nbsp;class)<br />
+&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;@param&nbsp;newValue&nbsp;&lt;???&gt;&nbsp;-&nbsp;The&nbsp;new&nbsp;value&nbsp;for&nbsp;the&nbsp;field.&nbsp;This&nbsp;can&nbsp;be&nbsp;a&nbsp;string,&nbsp;integer,&nbsp;datetime&nbsp;<a href="builtins.html#object" >object</a>,&nbsp;etc.&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;depending&nbsp;on&nbsp;the&nbsp;schema&nbsp;for&nbsp;this&nbsp;field</tt></dd></dl>
 
-<dl ><dt ><a name="UpdateQuery-setNewFieldValues" ><strong >setNewFieldValues</strong></a>(self, newFieldValues)</dt><dd ><tt >setNewFieldValues&nbsp;-&nbsp;Set&nbsp;the&nbsp;dict&nbsp;of&nbsp;all&nbsp;field&nbsp;updates</tt></dd></dl>
+<dl ><dt ><a name="UpdateQuery-setFieldValues" ><strong >setFieldValues</strong></a>(self, fieldNameToValueMap)</dt><dd ><tt >setFieldValues&nbsp;-&nbsp;Sets&nbsp;one&nbsp;or&nbsp;more&nbsp;field&nbsp;-&gt;&nbsp;value&nbsp;associations&nbsp;for&nbsp;the&nbsp;insert&nbsp;operation.<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;"Bulk&nbsp;mode"<br />
+&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;@param&nbsp;fieldNameToValueMap&nbsp;dict&lt;<a href="builtins.html#str" >str</a>&nbsp;:&nbsp;???&gt;&nbsp;-&nbsp;A&nbsp;map&nbsp;of&nbsp;field&nbsp;name&nbsp;-&gt;&nbsp;field&nbsp;value</tt></dd></dl>
 
 <hr />
 Data descriptors defined here:<br />
 <dl ><dt ><strong >hasAnyUpdates</strong></dt>
+<dd ><tt >hasAnyUpdates&nbsp;-&nbsp;Property&nbsp;reflecting&nbsp;whether&nbsp;any&nbsp;fields&nbsp;have&nbsp;been&nbsp;set&nbsp;thus&nbsp;far<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;this&nbsp;update&nbsp;query.<br />
+&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;@return&nbsp;&lt;bool&gt;&nbsp;-&nbsp;True&nbsp;if&nbsp;any&nbsp;fields&nbsp;have&nbsp;been&nbsp;configured&nbsp;to&nbsp;be&nbsp;updated,&nbsp;otherwise&nbsp;False</tt></dd>
 </dl>
 <hr />
 Methods inherited from <a href="ichorORM.query.html#QueryBase" >QueryBase</a>:<br />
