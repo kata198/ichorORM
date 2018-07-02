@@ -559,20 +559,29 @@ class DatabaseConnection(object):
                 which would cause the insert line to be executed twice,
                   once for each row to be inserted (element in the list)
 
-             @param autoCommit - If True, will commit after this transaction.
+             @param autoCommit - If True, will commit transaction after these inserts
 
              @param returnPk <bool> - If True, will return the primary key(s) inserted
 
              @return list<int> - if returnPk is True, otherwise None
         '''
 
-        (cursor, result) = self._sendSqlCommand ( query, lambda _cursor : _cursor.executemany(query, valueDicts), )
         if returnPk:
-            cursor.execute('SELECT LASTVAL();')
+            ret = []
 
-            ret = [ res[0] for res in cursor.fetchall() ]
+            # TODO: investigate if we can lower overhead by using cursor.executemany with returnPk=True
+            #   Calling executemany and then SELECT LASTVAL(); on the cursor only returns the pk of the
+            #   last entry. So at the expense of slightly higher overhead here, we use a cursor per valueDict (per record)
+            #    and select the id from each.
+            for valueDict in valueDicts:
+                (cursor, result) = self._sendSqlCommand ( query, lambda _cursor : _cursor.execute(query, valueDict), )
+                if returnPk:
+                    cursor.execute('SELECT LASTVAL();')
+                    ret += [res[0] for res in cursor.fetchall()]
         else:
             ret = None
+            (cursor, result) = self._sendSqlCommand ( query, lambda _cursor : _cursor.executemany(query, valueDicts), )
+
 
         if autoCommit is True:
             self.commit()
