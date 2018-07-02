@@ -1649,12 +1649,6 @@ class UpdateQuery(QueryBase):
         '''
         self.newFieldValues[fieldName] = newValue
 
-    def setNewFieldValues(self, newFieldValues):
-        '''
-            setNewFieldValues - Set the dict of all field updates
-        '''
-        self.newFieldValues = newFieldValues
-
     @property
     def hasAnyUpdates(self):
         return bool(self.newFieldValues)
@@ -1867,11 +1861,6 @@ class InsertQuery(QueryBase):
         '''
         self.setFieldValues[fieldName] = newValue
 
-    def setNewFieldValues(self, setFieldValues):
-        '''
-            setNewFieldValues - Set the mapping of field names to values
-        '''
-        self.setFieldValues = setFieldValues
 
     def getTableFieldParamsAndValues(self, replaceSpecialValues=True):
         '''
