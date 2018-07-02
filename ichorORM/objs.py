@@ -43,6 +43,9 @@ class IgnoreParameterType(object):
              IgnoreParameterType only equals other IgnoreParameterType objects (or the type itself)
     '''
 
+    def __init__(self, reprName='IgnoreParameter'):
+        self.reprName = reprName
+
     def __eq__(self, other):
         '''
             __eq__ - Test equality. Comparing against any other IgnoreParameterType object
@@ -74,8 +77,11 @@ class IgnoreParameterType(object):
         '''
         return False
 
+    def __repr__(self):
+        return self.reprName
+
 # IgnoreParameter - Singleton instance of IgnoreParameterType
-IgnoreParameter = IgnoreParameterType()
+IgnoreParameter = IgnoreParameterType('IgnoreParameter')
 
 # UseGlobalSetting - Singleton instance of IgnoreParameterType but with a different name
-UseGlobalSetting = IgnoreParameterType()
+UseGlobalSetting = IgnoreParameterType('UseGlobalSetting')
