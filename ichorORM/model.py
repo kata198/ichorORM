@@ -135,7 +135,7 @@ class DatabaseModel(object):
             useSetDict = setDict
 
 
-        q = InsertQuery(cls, setFieldValues=useSetDict)
+        q = InsertQuery(cls, initialFieldValues=useSetDict)
 
         # Set replaceSpecialValues to False here, as we already handled it above.
         _pk = q.executeInsert(doCommit=doCommit, replaceSpecialValues=False, dbConn=dbConn)
@@ -177,7 +177,7 @@ class DatabaseModel(object):
             if reqField not in setDict:
                 raise ValueError('%s missing required field: %s' %(self.__class__.__name__, repr(reqField)) )
 
-        q = InsertQuery(self.__class__, setFieldValues=setDict)
+        q = InsertQuery(self.__class__, initialFieldValues=setDict)
 
         # returnPk works here whether in a transaction or not because of isolation level,
         #   the select from sequence is executed outside of the transaction

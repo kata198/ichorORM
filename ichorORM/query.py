@@ -512,20 +512,34 @@ class QueryBase(object):
 
                 @param model <DatabaseModel> - The DatabaseModel to use for this query
 
-                @param filterStages <None/list<FilterType objs>> - Use this list of WHERE filter stages, or None to start
-                    
-                    with an empty list. Call #addStage to add a stage to the WHERE
+                @param filterStages <None/list<FilterType objs>> Default None - 
+                
+                    You may past a list of initial filter stages to use in the WHERE portion of the query, or leave as None and add them indivdiualy with #addStage (preferred).
+
+                    This list will be copied, but the stages themselves will not
+                      (so if you add a condition to one of these stages, that will carry over,
+                       but if you append to the list you provided here that will not.
+                       Use #addStage instead.
+                      )
+
         '''
         self.model = model
 
         # Ensure model is init and valid
         self.model._setupModel()
 
-        if filterStages is None:
-            filterStages = []
+        self.filterStages = []
 
-        self.filterStages = filterStages
-
+        if filterStages:
+            # Copy only the list here, but keep reference to objects
+            for filterStage in filterStages:
+                # TODO: Confirm that FilterType is good enough, maybe should enforce FilterStage?
+                if not isFilterType(filterStage):
+                    raise ValueError('Non-subclass of FilterType provided as a FilterStage. Type was: ' + 
+                        filterStage.__class__.__name__
+                    )
+                self.filterStages.append(filterStage)
+                
 
     def addStage(self, _filter=WHERE_AND):
         '''
@@ -1633,24 +1647,57 @@ class UpdateQuery(QueryBase):
 
               @param model - The model class
 
-              @param newFieldValues <dict/None> - Either a dict of field name : newValue, or None to set later
+              @param newFieldValues <dict/None> Default None.
+ 
+                    If provided, will use these as initial field values for update.
+                    Providing this is the same as calling #setFieldValues(newFieldValues)
+
+                    You can set the value of specific fields using either the #setFieldValue or #setFieldValues
+                        methods after constructing the object.
+
+              @param filterStages <None/list<FilterStage>> Default None - Provide a list of
+                    
+                    filter stages to use. A copy of this list will be made internally
         '''
         QueryBase.__init__(self, model, filterStages)
 
-        if newFieldValues is None:
-            newFieldValues = {}
-
-        self.newFieldValues = newFieldValues
+        self.newFieldValues = {}
+        if newFieldValues:
+            # Copy values but not the reference
+            self.newFieldValues.update(newFieldValues)
 
 
     def setFieldValue(self, fieldName, newValue):
         '''
             setFieldValue - Update a field to a new value
+
+                @param fieldName <str> - The field name (should be in FIELDS array on model class)
+
+                @param newValue <???> - The new value for the field. This can be a string, integer, datetime object, etc. 
+                      depending on the schema for this field  
         '''
+
         self.newFieldValues[fieldName] = newValue
+
+    def setFieldValues(self, fieldNameToValueMap):
+        '''
+            setFieldValues - Sets one or more field -> value associations for the insert operation.
+                
+                "Bulk mode"
+
+                @param fieldNameToValueMap dict<str : ???> - A map of field name -> field value
+        '''
+        self.newFieldValues.update(fieldNameToValueMap)
 
     @property
     def hasAnyUpdates(self):
+        '''
+            hasAnyUpdates - Property reflecting whether any fields have been set thus far
+                
+                in this update query.
+
+                @return <bool> - True if any fields have been configured to be updated, otherwise False
+        '''
         return bool(self.newFieldValues)
 
     def getSetFieldsStr(self, replaceSpecialValues=True):
@@ -1837,29 +1884,49 @@ class UpdateQuery(QueryBase):
 
 class InsertQuery(QueryBase):
     '''
-        InsertQuery - A query for doing inserts
+        InsertQuery - A query builder class for doing inserts
     '''
 
-    def __init__(self, model, setFieldValues=None, filterStages=None):
+    def __init__(self, model, initialFieldValues=None, filterStages=None):
         '''
             __init__ - Create an insert query
 
-              @param model - The model to use
+              @param model <DatabaseModel> - The model to use
 
-              @param setFieldValues - A dict of fieldName : fieldValue, or None to set later
+              @param initialFieldValues <None / dict< str : ??? > > Default None - 
+                
+                If provided, must be a map to fieldName : fieldValue, and this will become the
+                 initial set of fields to be set on the inserted object.
+
+                 Providing this is the same as calling #setFieldValues(initialFieldValues)
         '''
         QueryBase.__init__(self, model, filterStages)
 
-        if setFieldValues is None:
-            setFieldValues = {}
+        self.fieldValues = {}
+        if initialFieldValues:
+            self.setFieldValues(initialFieldValues)
 
-        self.setFieldValues = setFieldValues
 
     def setFieldValue(self, fieldName, newValue):
         '''
             setFieldValue - Set a field to a value to be inserted
+
+                @param fieldName <str> - The name of the field to set (should be in FIELDS array)
+
+                @param newValue <???> - The value to insert. Can be a str, number, datetime object, etc. depending on schema
         '''
-        self.setFieldValues[fieldName] = newValue
+        self.fieldValues[fieldName] = newValue
+
+
+    def setFieldValues(self, fieldNameToValueMap):
+        '''
+            setFieldValues - Set multiple field values
+
+                @param fieldNameToValueMap dict<str : ???> - A map of field name -> field value
+                    
+                    This will define the values of the fields upon insert
+        '''
+        self.fieldValues.update(fieldNameToValueMap)
 
 
     def getTableFieldParamsAndValues(self, replaceSpecialValues=True):
@@ -1876,11 +1943,11 @@ class InsertQuery(QueryBase):
         retValues = {}
 
         if replaceSpecialValues:
-            useSetFieldValues = copy.deepcopy(self.setFieldValues)
+            useSetFieldValues = copy.deepcopy(self.fieldValues)
 
             self.replaceSpecialValues(useSetFieldValues)
         else:
-            useSetFieldValues = self.setFieldValues
+            useSetFieldValues = self.fieldValues
 
         for fieldName, fieldValue in useSetFieldValues.items():
             if issubclass(fieldValue.__class__, QueryStr):
@@ -1903,7 +1970,7 @@ class InsertQuery(QueryBase):
         '''
             getTableFields - Get a list of the fields that are going to be set
         '''
-        return list(self.setFieldValues.keys())
+        return list(self.fieldValues.keys())
 
     def getTableFieldsStr(self):
         '''
@@ -1911,11 +1978,11 @@ class InsertQuery(QueryBase):
                                     the fields that will be set
         '''
 
-        if not self.setFieldValues:
+        if not self.fieldValues:
             # Should not be valid for an insert.. think about this
             return ''
 
-        return ' ( %s ) ' %(', '.join( list(self.setFieldValues.keys()) ), )
+        return ' ( %s ) ' %(', '.join( list(self.fieldValues.keys()) ), )
 
     def getInsertValuesStr(self, replaceSpecialValues=True):
         '''
@@ -1927,16 +1994,16 @@ class InsertQuery(QueryBase):
 
         '''
 
-        if not self.setFieldValues:
+        if not self.fieldValues:
             # Should not be valid for an insert.. think about this
             return ''
 
         if replaceSpecialValues:
-            useSetFieldValues = copy.deepcopy(self.setFieldValues)
+            useSetFieldValues = copy.deepcopy(self.fieldValues)
 
             self.replaceSpecialValues(useSetFieldValues)
         else:
-            useSetFieldValues = self.setFieldValues
+            useSetFieldValues = self.fieldValues
 
 
         return ' ( %s ) ' %( ', '.join( [ not isinstance(val, QueryStr) and repr(val) or str(val) for val in useSetFieldValues.values() ] ), )
