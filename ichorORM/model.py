@@ -69,16 +69,20 @@ class DatabaseModel(object):
 
                     @return dict < <str> : relations.ForeignRelations> - Foreign relations on this model
                         
-                        The key could be a string of a name, could be a model class, whatever. You will pass
-                         this key to "getRelated(#key)"
+                        If the key is a string, this model will gain an attribute with that name which will
+                          return the related model when accessed.
+
+                        For example, { 'person' : OneToManyRelation('id_person', Person, 'id') }
+
+                          If you access myModelObj.person it will return the Person object related by Person.id = myModel.id_person
+
+                        The key could also be a model class or whatever, and you can get the related object(s) 
+
+                          by calling myModelObj.getRelated(#key)
         '''
 
         return []
 
-    # _MODEL_RELATIONS - DO NOT SET THIS OR USE DIRECTLY!!
-    #      This stores the cached late-binding result of #getModelRelations .
-    #      Use .MODEL_RELATIONS (without leading underscore) for access instead.
-    _MODEL_RELATIONS = None
 
     @classproperty
     def MODEL_RELATIONS(cls):
@@ -478,6 +482,26 @@ class DatabaseModel(object):
     @classmethod
     def _setupModel_Finished(cls):
         pass
+
+
+    def __getattribute__(self, attrName):
+        try:
+            return object.__getattribute__(self, attrName)
+        except AttributeError as ae:
+            modelRelations = self.MODEL_RELATIONS
+            if attrName in modelRelations:
+                return self.getRelated(attrName)
+            raise ae
+
+    ################################################
+    # PRIVATE ATTRIBUTES - DO NOT MODIFY DIRECTLY:
+    ################################################
+
+
+    # _MODEL_RELATIONS - DO NOT SET THIS OR USE DIRECTLY!!
+    #      This stores the cached late-binding result of #getModelRelations .
+    #      Use .MODEL_RELATIONS (without leading underscore) for access instead.
+    _MODEL_RELATIONS = None
 
 
 # vim: set ts=4 sw=4 expandtab :

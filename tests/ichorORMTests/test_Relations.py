@@ -150,7 +150,7 @@ class TestRelations(object):
         for i in range(len(allPersons)):
             
             person = allPersons[i]
-            relatedMeals = person.getRelated(Meal)
+            relatedMeals = person.meals
 
             if person.id in self.personHasPizza:
                 assert len(relatedMeals) == 2 , 'Expected to get 2 meals for first and third person. Got: ' + repr(relatedMeals)
@@ -186,7 +186,7 @@ class TestRelations(object):
 
         for meal in allMeals:
             
-            relatedPerson = meal.getRelated('person')
+            relatedPerson = meal.person
 
             assert relatedPerson , 'Expected to get a person from this meal, but did not. Meal is: ' + repr(meal)
 

@@ -28,13 +28,6 @@ class Person(DatabaseModel):
         ret = ' '.join([x for x in (firstName, lastName) if x])
         return ret
 
-    @property
-    def meals(self):
-        '''
-            meals - Property that returns all meals associated with this person
-        '''
-        return self.getRelated('meal')
-
     @classmethod
     def getModelRelations(cls):
         
@@ -44,8 +37,7 @@ class Person(DatabaseModel):
 
 
         return {
-            'meal' : mealRelation,
-            'Meal' : mealRelation,
+            'meals' : mealRelation,
              Meal  : mealRelation
         }
 
