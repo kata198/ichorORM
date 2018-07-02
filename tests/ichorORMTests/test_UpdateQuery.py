@@ -15,7 +15,7 @@ import LocalConfig
 import ichorORM
 
 from ichorORM.model import DatabaseModel
-from ichorORM.query import UpdateQuery, SelectQuery
+from ichorORM.query import UpdateQuery, SelectQuery, QueryStr
 
 from ichor_test_models.all import Person, Meal
 
@@ -75,7 +75,7 @@ class TestUpdateQuery(object):
                 @param meth <built-in method> - The method being tested (compare meth == self.someMethod)
         '''
         
-        if meth in ( self.test_generalUpdate, self.test_updateTransaction):
+        if meth in ( self.test_generalUpdate, self.test_updateTransaction, self.test_updateWithQueryStr ):
 
             # self.DEFAULT_PERSON_DATASET - A sample dataset of field -> value for Person model
             self.DEFAULT_PERSON_DATASET = [
@@ -115,7 +115,7 @@ class TestUpdateQuery(object):
 
                 @param meth <built-in method> - The method being tested (compare meth == self.someMethod)
         '''
-        if meth in ( self.test_generalUpdate, self.test_updateTransaction):
+        if meth in ( self.test_generalUpdate, self.test_updateTransaction, self.test_updateWithQueryStr ):
             self._deleteGlobalDatasets()
 
 
@@ -308,6 +308,55 @@ class TestUpdateQuery(object):
                 assert fieldValue == expectedValue , 'Got unexpected value after update transaction commit. On person %s %s  field "%s" does not have expected value %s. Fetched value was %s' %( first_name, last_name, fieldName, repr(expectedValue), repr(fieldValue) ) 
 
 
+    def test_updateWithQueryStr(self):
+        '''
+            test_updateWithQueryStr - This will test an update which uses a QueryStr (inline SQL)
+        '''
+
+        # Increment everyone's age by 1
+        upQ = UpdateQuery(Person)
+
+        upQ.setFieldValue('age', QueryStr('age + 1'))
+
+        # Apply to all items in this dataset
+        upQWhere = upQ.addStage()
+        upQWhere.addCondition('datasetuid', '=', self.datasetUid)
+
+        gotException = False
+        try:
+            upQ.execute()
+        except Exception as e:
+            gotException = e
+
+        assert gotException == False , 'Got exception on update of all ages + 1: %s  %s' %( str(type(gotException)), str(gotException) )
+
+        # Check that the update occured, now that we have committed the update transaction
+        dbConn = ichorORM.getDatabaseConnection()
+
+        results = dbConn.doSelect("SELECT id, first_name, last_name, eye_color, age, birth_day, birth_month, datasetuid FROM Person WHERE datasetuid = '%s'" %( self.datasetUid, ))
+
+        assert results , 'Did not get results back from select.'
+
+        assert len(results) == len(self.DEFAULT_PERSON_DATASET) , 'Did not get expected number of results back. Expected %d but got %d' %( len(self.DEFAULT_PERSON_DATASET), len(results))
+
+        for resultRow in results:
+            
+            ( _id, first_name, last_name, eye_color, age, birth_day, birth_month, datasetuid ) = resultRow
+
+            myFetchedValues = { 'id' : _id, 'first_name' : first_name, 'last_name' : last_name, 'eye_color' : eye_color,
+                    'age' : age, 'birth_day' : birth_day, 'birth_month' : birth_month, 'datasetuid' : datasetuid,
+            }
+
+            testAgainstValues = self.personIdToDataset[_id]
+
+            for fieldName, fieldValue in myFetchedValues.items():
+                
+                expectedValue = testAgainstValues[fieldName]
+                # We incremented age, so check against orig age + 1
+                if fieldName == 'age':
+                    expectedValue += 1
+
+                assert fieldValue == expectedValue , 'Got unexpected value after update incrementing age. On person %s %s  field "%s" does not have expected value %s. Fetched value was %s' %( first_name, last_name, fieldName, repr(expectedValue), repr(fieldValue) ) 
 
 
 if __name__ == '__main__':
