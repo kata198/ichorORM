@@ -593,16 +593,24 @@ class QueryBase(object):
 
         return 'WHERE  ' + clauses
 
-    def getWhereClauseParams(self, whereJoin=WHERE_AND):
+    def getWhereClauseParams(self, whereJoin=WHERE_AND, paramPrefix=''):
         '''
             getWhereClauseParams - Gets the "WHERE" portion (including the string 'WHERE'), parameterized and the parameters
+
+                @param whereJoin <WHERE_AND/WHERE_OR> - Either 'AND' or 'OR', what will join the various conditions in this clause
+
+                @param paramPrefix <str> Default '' - If not empty string, paramPrefix + "_" will be prepended to all parameters
 
               @see getWhereClause
         '''
         if not self.filterStages:
             return ( '', [] )
 
-        paramPrefix = 'wh_stg'
+        if paramPrefix:
+            paramPrefix = paramPrefix + '_' + 'wh_stg'
+        else:
+            paramPrefix = 'wh_stg'
+            
         stageNum = 0
 
         stagesStrLst = []
@@ -827,14 +835,16 @@ class SelectQuery(QueryBase):
 
         return sql
 
-    def getSqlParameterizedValues(self):
+    def getSqlParameterizedValues(self, paramPrefix=''):
         '''
             getSqlParameterizedValues - Get the sql command parameterized
+
+                @param paramPrefix <str> Default '' - If provided, will prefix params with paramPrefix + "_"
 
                 @return tuple< sql<str>, whereParams <list<FilterStage obj>> >
         '''
 
-        (whereClause, whereParams) = self.getWhereClauseParams()
+        (whereClause, whereParams) = self.getWhereClauseParams(paramPrefix=paramPrefix)
         orderByClause = self.getOrderByStr()
         limitClause = self.getLimitStr()
 
@@ -953,27 +963,11 @@ class SelectQuery(QueryBase):
         retQS = QueryStr()
         retParams = {}
 
-        # TODO: Update getSqlParameterizedValues to take a paramPrefix isntead of below hack
-        ( selectSqlStr, retParams ) = self.getSqlParameterizedValues()
+        ( selectSqlStr, retParams ) = self.getSqlParameterizedValues(paramPrefix=paramPrefix)
 
         # If this select is not grouped, make it into a group
         if not selectSqlStr.startswith('('):
             selectSqlStr = ''.join(['( ', selectSqlStr, ' )'])
-
-        # TODO: Remove this hack once getSqlParameterizedValues refactored to take paramPrefix
-        if paramPrefix and retParams:
-            paramPrefix = paramPrefix + '_'
-
-            newRetParams = {}
-            for _paramName, _paramValue in retParams.items():
-                
-                _newParamName = paramPrefix + _paramName
-
-                selectSqlStr = selectSqlStr.replace('%(' + _paramName + ')s', '%(' + _newParamName + ')s')
-                newRetParams[_newParamName] = _paramValue
-
-            retParams = newRetParams
-        # END HACK
 
         retQS = QueryStr( selectSqlStr )
         return ( retQS, retParams )
@@ -1090,14 +1084,16 @@ class SelectInnerJoinQuery(SelectQuery):
         return sql
 
 
-    def getSqlParameterizedValues(self):
+    def getSqlParameterizedValues(self, paramPrefix=''):
         '''
             getSqlParameterizedValues - Gets the SQL command to execute using parameterized values
+
+                @param paramPrefix <str> Default '' - If provided, will prefix params with paramPrefix + "_"
 
                 @return tuple ( sql<str>, whereParams list<str> )
         '''
 
-        (whereClause, whereParams) = self.getWhereClauseParams()
+        (whereClause, whereParams) = self.getWhereClauseParams(paramPrefix=paramPrefix)
         orderByClause = self.getOrderByStr()
         limitClause = self.getLimitStr()
 
@@ -1262,9 +1258,11 @@ class SelectGenericJoinQuery(SelectQuery):
 
         return joinStage
 
-    def getJoinClausesParams(self):
+    def getJoinClausesParams(self, paramPrefix=''):
         '''
             getJoinClausesParams - Get the "join" clauses with paramertized parameters
+
+                @param paramPrefix <str> Default '' - If not empty string, paramPrefix + "_" will be prepended to all parameters
 
         '''
         if not self.joins:
@@ -1275,7 +1273,11 @@ class SelectGenericJoinQuery(SelectQuery):
 
         stageNum = 0
 
-        paramPrefix = 'join_stg'
+        if paramPrefix:
+            paramPrefix = paramPrefix + '_' + 'join_stg'
+        else:
+            paramPrefix = 'join_stg'
+
         #stagesStrLst = []  # XXX: unused
         #stagesParamValues = {} # XXX: unused
 
@@ -1388,16 +1390,19 @@ class SelectGenericJoinQuery(SelectQuery):
         return sql
 
 
-    def getSqlParameterizedValues(self):
+    def getSqlParameterizedValues(self, paramPrefix=''):
         '''
             getSqlParameterizedValues - Get the SQL with parameterized values
+
+                @param paramPrefix <str> Default '' - If provided, will prefix params with paramPrefix + "_"
 
                 @return tuple( sql<str>, params<list<str>>)
         '''
 
-        (whereClause, whereParams) = self.getWhereClauseParams()
+        (whereClause, whereParams) = self.getWhereClauseParams(paramPrefix=paramPrefix)
 
-        (joinClauses, joinParams) = self.getJoinClausesParams()
+        # TODO: Modify this to take paramPrefix as well
+        (joinClauses, joinParams) = self.getJoinClausesParams(paramPrefix=paramPrefix)
 
         orderByClause = self.getOrderByStr()
         limitClause = self.getLimitStr()
@@ -1541,12 +1546,15 @@ class DeleteQuery(QueryBase):
 
         return sql
 
-    def getSqlParameterizedValues(self):
+    def getSqlParameterizedValues(self, paramPrefix=''):
         '''
             getSqlParameterizedValues - Get SQL with parameterized values
+
+                @param paramPrefix <str> Default '' - If provided, will prefix params with paramPrefix + "_"
+
         '''
 
-        (whereClause, whereParams) = self.getWhereClauseParams()
+        (whereClause, whereParams) = self.getWhereClauseParams(paramPrefix=paramPrefix)
 
         sql = """DELETE FROM  %s  %s """ %(self.getTableName(), whereClause)
 
@@ -1784,17 +1792,19 @@ class UpdateQuery(QueryBase):
 
         return sql
 
-    def getSqlParameterizedValues(self, replaceSpecialValues=True):
+    def getSqlParameterizedValues(self, replaceSpecialValues=True, paramPrefix=''):
         '''
             getSqlParameterizedValues - Get the SQL to execute, parameterized version
 
               @param replaceSpecialValues <bool, default True> - If True, will replace special values ( like NOW() )
                 with their calculated value. @see QueryBase.replaceSpecialValues for more info.
+
+              @param paramPrefix <str> Default '' - If provided, will prefix params with paramPrefix + "_"
         '''
 
         paramValues = {}
 
-        ( whereClause, whereParams ) = self.getWhereClauseParams()
+        ( whereClause, whereParams ) = self.getWhereClauseParams(paramPrefix=paramPrefix)
 
         paramValues.update(whereParams)
 
