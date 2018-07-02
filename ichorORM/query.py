@@ -115,7 +115,8 @@ class FilterField(FilterType):
         elif issubclass(filterValue.__class__, SelectQuery):
             filterValue = filterValue.asQueryStr()
         else:
-            filterValue = ''.join(["'", filterValue, "'"])
+            # Convert complex types into proper representation
+            filterValue = str(psycopg2_adapt(filterValue))
 
         return " %s %s %s " %(self.filterName, self.operator, filterValue)
 
@@ -664,9 +665,15 @@ class QueryBase(object):
 
                 May be changed in the future.
         '''
+        # TODO: Remove this method altogether.
+
         # TODO: Special values like "NOW()" are supported, but they won't get set back
         #        on the model. Maybe we need like a RETURNING clause? For now, just unroll it on the client.
         for fieldName in fieldValues.keys():
+            fieldValue = fieldValues[fieldName]
+            # Skip QueryStr values
+            if issubclass(fieldValue.__class__, QueryStr):
+                continue
             if fieldValues[fieldName] in ('NOW()', 'current_timestamp'):
                 # NOTE: Right now we are able to translate these direct values.
                 #         If in the future we need to support things like  " NOW() + interval '1 day' "
@@ -1731,7 +1738,7 @@ class UpdateQuery(QueryBase):
             elif newValue == SQL_NULL:
                 newValueStr = 'NULL'
             else:
-                newValueStr = "'%s'" %(newValue, )
+                newValueStr = str(psycopg2_adapt(newValue))
 
             ret.append( " %s = %s " %(fieldName, newValueStr) )
 
