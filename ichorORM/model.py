@@ -145,17 +145,13 @@ class DatabaseModel(object):
 
 
     @classmethod
-    def createAndSave(cls, replaceSpecialValues=True, dbConn=None, doCommit=True, **kwargs):
+    def createAndSave(cls, dbConn=None, doCommit=True, **kwargs):
         '''
             createAndSave - Creates an object of this type and saves it.
 
             Parameters are the fieldName=fieldValue for this model.
 
             At least all entries in REQUIRED_FIELDS must be present!
-
-
-            @param replaceSpecialValues <bool, default True> - If True, will replace special values ( like NOW() )
-              with their calculated value. @see QueryBase.replaceSpecialValues for more info.
 
 
             @param dbConn <None/DatabaseConnection> Default None- A specific DatabaseConnection to use,
@@ -174,28 +170,20 @@ class DatabaseModel(object):
             if reqField not in kwargs and reqField not in cls.DEFAULT_FIELD_VALUES:
                 raise ValueError('%s missing required field: %s' %(cls.__name__, repr(reqField)) )
 
-        setDict = kwargs
+        setDict = copy.copy(kwargs)
 
         for defaultField in cls.DEFAULT_FIELD_VALUES.keys():
             if defaultField not in setDict:
                 setDict[defaultField] = cls.DEFAULT_FIELD_VALUES[defaultField]
 
-        if replaceSpecialValues is True:
-            useSetDict = copy.deepcopy(setDict)
 
-            InsertQuery.replaceSpecialValues(useSetDict)
-        else:
-            useSetDict = setDict
+        q = InsertQuery(cls, initialFieldValues=setDict)
 
+        _pk = q.executeInsert(doCommit=doCommit, dbConn=dbConn)
 
-        q = InsertQuery(cls, initialFieldValues=useSetDict)
+        setDict[cls.PRIMARY_KEY] = _pk
 
-        # Set replaceSpecialValues to False here, as we already handled it above.
-        _pk = q.executeInsert(doCommit=doCommit, replaceSpecialValues=False, dbConn=dbConn)
-
-        useSetDict[cls.PRIMARY_KEY] = _pk
-
-        return cls( **useSetDict )
+        return cls( **setDict )
 
 
     def insertObject(self, dbConn=None, doCommit=True):

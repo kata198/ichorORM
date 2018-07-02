@@ -655,32 +655,6 @@ class QueryBase(object):
         raise NotImplementedError('Must implement execute. Type %s does not.' %(self.__class__.__name__, ))
 
 
-    @staticmethod
-    def replaceSpecialValues(fieldValues):
-        '''
-            replaceSpecialValues - Replace special values (like NOW() ) with a fixed value.
-
-                They are supported as values in parameterized input, BUT they won't make it back onto the object
-                  without some sort of special RETURNING clause (which isn't implemented.)
-
-                May be changed in the future.
-        '''
-        # TODO: Remove this method altogether.
-
-        # TODO: Special values like "NOW()" are supported, but they won't get set back
-        #        on the model. Maybe we need like a RETURNING clause? For now, just unroll it on the client.
-        for fieldName in fieldValues.keys():
-            fieldValue = fieldValues[fieldName]
-            # Skip QueryStr values
-            if issubclass(fieldValue.__class__, QueryStr):
-                continue
-            if fieldValues[fieldName] in ('NOW()', 'current_timestamp'):
-                # NOTE: Right now we are able to translate these direct values.
-                #         If in the future we need to support things like  " NOW() + interval '1 day' "
-                #           we will need to parse with regex and work it like that.
-                fieldValues[fieldName] = datetime.datetime.now()
-
-
     def getTableName(self):
         '''
             getTableName - Get the name of the table associated with this model
@@ -1714,19 +1688,14 @@ class UpdateQuery(QueryBase):
         '''
         return bool(self.newFieldValues)
 
-    def getSetFieldsStr(self, replaceSpecialValues=True):
+    def getSetFieldsStr(self):
         '''
             getSetFieldsStr - Get the  X = "VALUE" , Y = "OTHER" portion of the SQL query
         '''
 
         ret = []
 
-        if replaceSpecialValues:
-            useNewFieldValues = copy.deepcopy(self.newFieldValues)
-
-            self.replaceSpecialValues(useNewFieldValues)
-        else:
-            useNewFieldValues = self.newFieldValues
+        useNewFieldValues = self.newFieldValues
 
         for fieldName, newValue in useNewFieldValues.items():
 
@@ -1744,12 +1713,9 @@ class UpdateQuery(QueryBase):
 
         return ' , '.join(ret)
 
-    def getSetFieldParamsAndValues(self, replaceSpecialValues=True):
+    def getSetFieldParamsAndValues(self):
         '''
             getSetFieldParamsAndValues - For parameterized values,
-
-              @param replaceSpecialValues <bool, default True> - If True, will replace special values ( like NOW() )
-                with their calculated value. @see QueryBase.replaceSpecialValues for more info.
 
                 This returns a tuple of two values, the first is the paramertized marker to be used in the query,
                   the second is a list of values which should be passed alongside
@@ -1757,12 +1723,7 @@ class UpdateQuery(QueryBase):
         retParams = []
         retValues = {}
 
-        if replaceSpecialValues:
-            useNewFieldValues = copy.deepcopy(self.newFieldValues)
-
-            self.replaceSpecialValues(useNewFieldValues)
-        else:
-            useNewFieldValues = self.newFieldValues
+        useNewFieldValues = self.newFieldValues
 
         argNum = 0
 
@@ -1786,24 +1747,21 @@ class UpdateQuery(QueryBase):
         return (retParams, retValues)
 
 
-    def getSql(self, replaceSpecialValues=True):
+    def getSql(self):
         '''
             getSql - Get sql command to execute
         '''
 
         whereClause = self.getWhereClause()
-        setFieldsStr = self.getSetFieldsStr(replaceSpecialValues=replaceSpecialValues)
+        setFieldsStr = self.getSetFieldsStr()
 
         sql = """UPDATE  %s  SET  %s   %s"""  %( self.getTableName(), setFieldsStr, whereClause )
 
         return sql
 
-    def getSqlParameterizedValues(self, replaceSpecialValues=True, paramPrefix=''):
+    def getSqlParameterizedValues(self, paramPrefix=''):
         '''
             getSqlParameterizedValues - Get the SQL to execute, parameterized version
-
-              @param replaceSpecialValues <bool, default True> - If True, will replace special values ( like NOW() )
-                with their calculated value. @see QueryBase.replaceSpecialValues for more info.
 
               @param paramPrefix <str> Default '' - If provided, will prefix params with paramPrefix + "_"
         '''
@@ -1814,7 +1772,7 @@ class UpdateQuery(QueryBase):
 
         paramValues.update(whereParams)
 
-        (setFieldParams, setFieldParamValues) = self.getSetFieldParamsAndValues(replaceSpecialValues=replaceSpecialValues)
+        (setFieldParams, setFieldParamValues) = self.getSetFieldParamsAndValues()
 
         paramValues.update(setFieldParamValues)
 
@@ -1823,15 +1781,13 @@ class UpdateQuery(QueryBase):
         return (sql, paramValues)
 
 
-    def executeUpdateRawValues(self, dbConn=None, doCommit=False, replaceSpecialValues=True):
+    def executeUpdateRawValues(self, dbConn=None, doCommit=False):
         '''
             executeUpdate - Update some records
 
               @param dbConn <None/DatabaseConnection> - If None, will get a new connection with autocmommit.
 
               @param doCommit <bool> Default True - If True, will commit right away. If False, you must commit.
-
-              @param replaceSpecialValues <bool> - True to replace special values before sending to SQL
 
                 Nay be passed a transaction-connection, to do update within a transaction
         '''
@@ -1841,7 +1797,7 @@ class UpdateQuery(QueryBase):
         if not doCommit and not dbConn:
             raise ValueError('doCommit=False but a dbConn not specified!')
 
-        sql = self.getSql(replaceSpecialValues=replaceSpecialValues)
+        sql = self.getSql()
 
         if not dbConn:
             dbConn = getDatabaseConnection()
@@ -1849,7 +1805,7 @@ class UpdateQuery(QueryBase):
         dbConn.executeSql(sql)
 
 
-    def executeUpdate(self, dbConn=None, doCommit=True, replaceSpecialValues=True):
+    def executeUpdate(self, dbConn=None, doCommit=True):
         '''
             executeUpdate - Upate records (parameterized)
 
@@ -1860,10 +1816,6 @@ class UpdateQuery(QueryBase):
 
             @param doCommit <bool> default True - Whether to commit immediately
 
-            @param replaceSpecialValues <bool, default True> - If True, will replace special values ( like NOW() )
-              with their calculated value. @see QueryBase.replaceSpecialValues for more info.
-
-
         '''
         if not self.hasAnyUpdates:
             return
@@ -1871,7 +1823,7 @@ class UpdateQuery(QueryBase):
         if not doCommit and not dbConn:
             raise ValueError('doCommit=False but a dbConn not specified!')
 
-        (sqlParam, paramValues) = self.getSqlParameterizedValues(replaceSpecialValues=replaceSpecialValues)
+        (sqlParam, paramValues) = self.getSqlParameterizedValues()
 
         if not dbConn:
             dbConn = getDatabaseConnection(isTransactionMode=True)
@@ -1945,12 +1897,9 @@ class InsertQuery(QueryBase):
         self.fieldValues.update(fieldNameToValueMap)
 
 
-    def getTableFieldParamsAndValues(self, replaceSpecialValues=True):
+    def getTableFieldParamsAndValues(self):
         '''
             getTableFieldParamsAndValues - For parameterized values,
-
-              @param replaceSpecialValues <bool, default True> - If True, will replace special values ( like NOW() )
-                with their calculated value. @see QueryBase.replaceSpecialValues for more info.
 
                 This returns a tuple of two values, the first is the paramertized marker to be used in the query,
                   the second is a list of values which should be passed alongside
@@ -1958,12 +1907,7 @@ class InsertQuery(QueryBase):
         retParams = []
         retValues = {}
 
-        if replaceSpecialValues:
-            useSetFieldValues = copy.deepcopy(self.fieldValues)
-
-            self.replaceSpecialValues(useSetFieldValues)
-        else:
-            useSetFieldValues = self.fieldValues
+        useSetFieldValues = self.fieldValues
 
         for fieldName, fieldValue in useSetFieldValues.items():
             if issubclass(fieldValue.__class__, QueryStr):
@@ -1999,13 +1943,10 @@ class InsertQuery(QueryBase):
 
         return ' ( %s ) ' %(', '.join( list(self.fieldValues.keys()) ), )
 
-    def getInsertValuesStr(self, replaceSpecialValues=True):
+    def getInsertValuesStr(self):
         '''
             getInsertValuesStr - Get the portion following VALUES with values directly within (not parameterized)
 
-
-              @param replaceSpecialValues <bool, default True> - If True, will replace special values ( like NOW() )
-                with their calculated value. @see QueryBase.replaceSpecialValues for more info.
 
         '''
 
@@ -2013,52 +1954,42 @@ class InsertQuery(QueryBase):
             # Should not be valid for an insert.. think about this
             return ''
 
-        if replaceSpecialValues:
-            useSetFieldValues = copy.deepcopy(self.fieldValues)
-
-            self.replaceSpecialValues(useSetFieldValues)
-        else:
-            useSetFieldValues = self.fieldValues
+        useSetFieldValues = self.fieldValues
 
 
         return ' ( %s ) ' %( ', '.join( [ not isinstance(val, QueryStr) and repr(val) or str(val) for val in useSetFieldValues.values() ] ), )
 
 
-    def getSql(self, replaceSpecialValues=True):
+    def getSql(self):
         '''
             getSql - Get the SQL to execute, non-parameterized
-
-              @param replaceSpecialValues <bool, default True> - If True, will replace special values ( like NOW() )
-                with their calculated value. @see QueryBase.replaceSpecialValues for more info.
 
             @see getSqlParameterizedValues for parameterized version
         '''
 
         tableFieldsStr = self.getTableFieldsStr()
-        insertValuesStr = self.getInsertValuesStr(replaceSpecialValues=replaceSpecialValues)
+        insertValuesStr = self.getInsertValuesStr()
         whereClause = self.getWhereClause()
 
         sql = """INSERT INTO  %s %s  VALUES %s %s"""  %( self.getTableName(), tableFieldsStr, insertValuesStr, whereClause )
 
         return sql
 
-    def getSqlParameterizedValues(self, replaceSpecialValues=True):
+    def getSqlParameterizedValues(self):
         '''
             getSqlParameterizedValues - Get the SQL to execute, parameterized version
 
-              @param replaceSpecialValues <bool, default True> - If True, will replace special values ( like NOW() )
-                with their calculated value. @see QueryBase.replaceSpecialValues for more info.
         '''
 
         tableFieldsStr = self.getTableFieldsStr()
-        tableFieldParams, tableFieldValues = self.getTableFieldParamsAndValues(replaceSpecialValues)
+        tableFieldParams, tableFieldValues = self.getTableFieldParamsAndValues()
 
         sql = """INSERT INTO  %s %s  VALUES ( %s ) """  %( self.getTableName(), tableFieldsStr, ', '.join(tableFieldParams) )
 
         return (sql, tableFieldValues)
 
 
-    def executeInsertRawValues(self, dbConn=None, doCommit=True, replaceSpecialValues=True):
+    def executeInsertRawValues(self, dbConn=None, doCommit=True):
         '''
             executeInsertRawValues - Insert records  (non-parameterized)
 
@@ -2069,12 +2000,10 @@ class InsertQuery(QueryBase):
 
             @param doCommit <bool> default True - Whether to commit immediately
 
-              @param replaceSpecialValues <bool, default True> - If True, will replace special values ( like NOW() )
-                with their calculated value. @see QueryBase.replaceSpecialValues for more info.
 
             @see executeInsertParameterized for the parameterized version.
         '''
-        sql = self.getSql(replaceSpecialValues=replaceSpecialValues)
+        sql = self.getSql()
 
         if not dbConn:
             dbConn = getDatabaseConnection(isTransactionMode=True)
@@ -2085,7 +2014,7 @@ class InsertQuery(QueryBase):
         if doCommit:
             dbConn.commit()
 
-    def executeInsert(self, dbConn=None, doCommit=True, replaceSpecialValues=True, returnPk=True):
+    def executeInsert(self, dbConn=None, doCommit=True, returnPk=True):
         '''
             executeInsert - Insert records (parameterized)
 
@@ -2096,14 +2025,11 @@ class InsertQuery(QueryBase):
 
             @param doCommit <bool> default True - Whether to commit immediately
 
-            @param replaceSpecialValues <bool, default True> - If True, will replace special values ( like NOW() )
-              with their calculated value. @see QueryBase.replaceSpecialValues for more info.
-
 
             @see executeInsert for the non-parameterized version.
         '''
 
-        sqlParam, paramValues = self.getSqlParameterizedValues(replaceSpecialValues=replaceSpecialValues)
+        sqlParam, paramValues = self.getSqlParameterizedValues()
 
         if not doCommit and not dbConn:
             raise ValueError('doCommit=False but a dbConn not specified!')
