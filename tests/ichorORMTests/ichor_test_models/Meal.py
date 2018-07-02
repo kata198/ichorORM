@@ -27,6 +27,13 @@ class Meal(DatabaseModel):
             Person : personRelation
         }
 
+    @property
+    def person(self):
+        '''
+            person - property which will return the Person object related to this Meal
+        '''
+        return self.getRelated('person')
+
 
 #    def getMeals(self):
 #        '''
