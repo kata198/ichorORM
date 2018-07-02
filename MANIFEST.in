@@ -5,3 +5,5 @@ include README.md
 include README.rst
 include MANIFEST.in
 include Changelog
+recursive-include tests runTests.py
+recursive-include tests/ichorORMTests *.py
