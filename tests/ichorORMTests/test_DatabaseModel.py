@@ -329,5 +329,23 @@ class TestDatabaseModel(object):
             assert getObj.asDict() == obj.asDict() , 'Expected .get to return idential object.\n%s   !=  %s\n' %( repr(obj), repr(getObj))
 
 
+    def test_createAndSave(self):
+        '''
+            test_createAndSave - Test the "create and save" method
+        '''
+
+        newObj = MyPersonModel.createAndSave(first_name='Jimmy', last_name='Hoffa', age=82)
+
+        assert newObj , 'Expected createAndSave to return an object'
+
+        assert issubclass(newObj.__class__, MyPersonModel) , 'Expected object returned to be of model type'
+
+        assert newObj.id , 'Expected id field to be set (meaning object was saved)'
+
+        # Fetch the inserted obect
+        objFetch = MyPersonModel.get(newObj.id)
+
+        assert objFetch.asDict() == newObj.asDict() , 'Expected fetched object to contain the same field values as inserted object'
+
 if __name__ == '__main__':
     sys.exit(subprocess.Popen('GoodTests.py -n1 "%s" %s' %(sys.argv[0], ' '.join(['"%s"' %(arg.replace('"', '\\"'), ) for arg in sys.argv[1:]]) ), shell=True).wait())
