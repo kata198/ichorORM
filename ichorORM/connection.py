@@ -537,7 +537,7 @@ class DatabaseConnection(object):
         rows = cursor.fetchall()
         return rows
 
-    def doInsert(self, query, valueDicts, autoCommit=True, returnPk=True):
+    def doInsert(self, query, valueDicts=None, autoCommit=True, returnPk=True):
         '''
             doInsert - Perform an INSERT query with a parameterized query
 
@@ -565,6 +565,8 @@ class DatabaseConnection(object):
 
              @return list<int> - if returnPk is True, otherwise None
         '''
+        if valueDicts is None:
+            valueDicts = [{}]
 
         if returnPk:
             ret = []
