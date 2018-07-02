@@ -1,5 +1,6 @@
 
 from ichorORM.model import DatabaseModel
+from ichorORM.relations import OneToManyRelation
 
 class Person(DatabaseModel):
 
@@ -26,3 +27,18 @@ class Person(DatabaseModel):
         #   otherwise make it "%s %s" %(firstName, lastName)
         ret = ' '.join([x for x in (firstName, lastName) if x])
         return ret
+
+    @classmethod
+    def getModelRelations(cls):
+        
+        from ichor_test_models.Meal import Meal
+
+        mealRelation = OneToManyRelation('id', Meal, 'id_person')
+
+
+        return {
+            'meal' : mealRelation,
+            'Meal' : mealRelation,
+             Meal  : mealRelation
+        }
+
