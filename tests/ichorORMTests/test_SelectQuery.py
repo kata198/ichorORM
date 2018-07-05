@@ -48,12 +48,44 @@ class TestSelectQuery(object):
         except:
             dbConn.executeSql("CREATE TABLE %s ( id serial primary key, first_name varchar(255) NOT NULL, last_name varchar(255) NOT NULL, age smallint, birth_day smallint, birth_month smallint )" %(MyPersonModel.TABLE_NAME, ))
 
-        
-        dbConn.executeSql("INSERT INTO %s (first_name, last_name, age, birth_day, birth_month) VALUES ('John', 'Smith', 43, 4, 11)" %(MyPersonModel.TABLE_NAME, ))
-        dbConn.executeSql("INSERT INTO %s (first_name, last_name, age, birth_day, birth_month) VALUES ('John', 'Doe', 38, 2, 12)" %(MyPersonModel.TABLE_NAME, ))
-        dbConn.executeSql("INSERT INTO %s (first_name, last_name, age, birth_day, birth_month) VALUES ('Jane', 'Doe', 25, 8, 5)" %(MyPersonModel.TABLE_NAME, ))
-        dbConn.executeSql("INSERT INTO %s (first_name, last_name, age, birth_day, birth_month) VALUES ('Cathy', 'Lawson', 14, 6, 8)" %(MyPersonModel.TABLE_NAME, ))
-        dbConn.executeSql("INSERT INTO %s (first_name, last_name, age, birth_day, birth_month) VALUES ('Tom', 'Brown', 65, 2, 9)" %(MyPersonModel.TABLE_NAME, ))
+
+    def setup_method(self, meth):
+        '''
+            setup_method - Called before every method call
+        '''
+
+        # TODO: These tests were written before this pattern of test data was being used.
+        #   Refactor the tests to replace the "magic numbers" to references to this test data
+        if meth in (self.test_whereOr, self.test_whereAnd, self.test_selectAllObjs, self.test_SelectWithWhere, self.test_SelectSpecificFields, self.test_selectOrderBy, self.test_limitNum):
+
+            self.dataSet = [
+                { "id" : None, "first_name" : 'John', 'last_name'  : 'Smith',  'age' : 43, 'birth_day' : 4, 'birth_month' : 11 },
+                { "id" : None, "first_name" : 'John', 'last_name'  : 'Doe',    'age' : 38, 'birth_day' : 2, 'birth_month' : 12 },
+                { "id" : None, "first_name" : 'Jane', 'last_name'  : 'Doe',    'age' : 25, 'birth_day' : 8, 'birth_month' : 5 },
+                { "id" : None, "first_name" : 'Cathy', 'last_name' : 'Lawson', 'age' : 14, 'birth_day' : 6, 'birth_month' : 8 },
+                { "id" : None, "first_name" : 'Tom',  'last_name'  : 'Brown',  'age' : 65, 'birth_day' : 2, 'birth_month' : 9 },
+            ]
+
+
+            dbConn = ichorORM.getDatabaseConnection(isTransactionMode=True)
+            pks = dbConn.doInsert("INSERT INTO " + MyPersonModel.TABLE_NAME + " (first_name, last_name, age, birth_day, birth_month) VALUES ( %(first_name)s, %(last_name)s, %(age)s, %(birth_day)s, %(birth_month)s )", valueDicts=self.dataSet, autoCommit=False, returnPk=True)
+
+            dbConn.commit()
+
+            for i in range(len(self.dataSet)):
+                self.dataSet[i]['id'] = pks[i]
+
+
+    def teardown_method(self, meth):
+        '''
+            teardown_method - Called after each method
+        '''
+        if meth in (self.test_whereOr, self.test_whereAnd, self.test_selectAllObjs, self.test_SelectWithWhere, self.test_SelectSpecificFields, self.test_selectOrderBy, self.test_limitNum):
+            try:
+                dbConn = ichorORM.getDatabaseConnection()
+                dbConn.executeSql("DELETE FROM %s" %(MyPersonModel.TABLE_NAME, ))
+            except Exception as e:
+                pass
 
     def teardown_class(self):
         '''
