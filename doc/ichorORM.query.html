@@ -1000,7 +1000,7 @@ Methods defined here:<br />
 &nbsp;<br />
 &nbsp;&nbsp;&nbsp;&nbsp;@param&nbsp;primaryModel&nbsp;-&nbsp;&lt;DatabaseModel&gt;&nbsp;-&nbsp;Primary&nbsp;Database&nbsp;model<br />
 &nbsp;<br />
-&nbsp;&nbsp;&nbsp;&nbsp;@param&nbsp;selectFields&nbsp;&lt;'ALL'&nbsp;or&nbsp;list&lt;<a href="builtins.html#str" >str</a>&gt;&gt;&nbsp;-&nbsp;Default&nbsp;ALL&nbsp;for&nbsp;all&nbsp;fields,&nbsp;or&nbsp;a&nbsp;list&nbsp;of&nbsp;fields&nbsp;to&nbsp;SELECT&nbsp;on&nbsp;primary&nbsp;table<br />
+&nbsp;&nbsp;&nbsp;&nbsp;@param&nbsp;selectFields&nbsp;&lt;'ALL'&nbsp;or&nbsp;list&lt;<a href="builtins.html#str" >str</a>&gt;&gt;&nbsp;-&nbsp;Default&nbsp;ALL&nbsp;for&nbsp;all&nbsp;fields&nbsp;on&nbsp;all&nbsp;joined&nbsp;models,&nbsp;or&nbsp;a&nbsp;list&nbsp;of&nbsp;fields&nbsp;to&nbsp;select&nbsp;(prefix&nbsp;with&nbsp;table&nbsp;name,&nbsp;like&nbsp;MyTable.myField)<br />
 &nbsp;<br />
 &nbsp;&nbsp;&nbsp;&nbsp;@param&nbsp;orderByField&nbsp;&lt;None/<a href="builtins.html#str" >str</a>&gt;&nbsp;-&nbsp;Default&nbsp;None,&nbsp;if&nbsp;provided&nbsp;ORDER&nbsp;BY&nbsp;this&nbsp;field<br />
 &nbsp;<br />
@@ -1038,7 +1038,7 @@ Methods defined here:<br />
 &nbsp;<br />
 @return&nbsp;list&lt;dict&gt;&nbsp;-&nbsp;List&nbsp;of&nbsp;rows,&nbsp;each&nbsp;row&nbsp;as&nbsp;a&nbsp;dict&nbsp;with&nbsp;named&nbsp;columns</tt></dd></dl>
 
-<dl ><dt ><a name="SelectGenericJoinQuery-executeGetObjs" ><strong >executeGetObjs</strong></a>(self, parameterized=True, dbConn=None)</dt><dd ><tt >executeGetObjs&nbsp;-&nbsp;Not&nbsp;supported&nbsp;on&nbsp;<a href="#SelectInnerJoinQuery" >SelectInnerJoinQuery</a></tt></dd></dl>
+<dl ><dt ><a name="SelectGenericJoinQuery-executeGetObjs" ><strong >executeGetObjs</strong></a>(self, parameterized=True, dbConn=None)</dt><dd ><tt >executeGetObjs&nbsp;-&nbsp;Not&nbsp;supported&nbsp;on&nbsp;<a href="#SelectGenericJoinQuery" >SelectGenericJoinQuery</a></tt></dd></dl>
 
 <dl ><dt ><a name="SelectGenericJoinQuery-getAllFieldNames" ><strong >getAllFieldNames</strong></a>(self)</dt><dd ><tt >getAllFieldNames&nbsp;-&nbsp;Get&nbsp;a&nbsp;list&nbsp;of&nbsp;all&nbsp;field&nbsp;names&nbsp;on&nbsp;the&nbsp;primary&nbsp;table<br />
 &nbsp;<br />
@@ -1220,7 +1220,7 @@ Methods defined here:<br />
 &nbsp;<br />
 &nbsp;&nbsp;&nbsp;&nbsp;@param&nbsp;models&nbsp;-&nbsp;list&lt;DatabaseModel&gt;&nbsp;-&nbsp;List&nbsp;of&nbsp;models&nbsp;to&nbsp;use<br />
 &nbsp;<br />
-&nbsp;&nbsp;&nbsp;&nbsp;@param&nbsp;selectFields&nbsp;&lt;&nbsp;'ALL'&nbsp;or&nbsp;list&lt;&nbsp;fieldName&lt;<a href="builtins.html#str" >str</a>&gt;&gt;&nbsp;Default&nbsp;"ALL"&nbsp;-&nbsp;ALL&nbsp;to&nbsp;do&nbsp;*&nbsp;or&nbsp;a&nbsp;list&nbsp;of&nbsp;field&nbsp;names&nbsp;to&nbsp;select.<br />
+&nbsp;&nbsp;&nbsp;&nbsp;@param&nbsp;selectFields&nbsp;&lt;'ALL'&nbsp;or&nbsp;list&lt;<a href="builtins.html#str" >str</a>&gt;&gt;&nbsp;-&nbsp;Default&nbsp;ALL&nbsp;for&nbsp;all&nbsp;fields&nbsp;on&nbsp;all&nbsp;joined&nbsp;models,&nbsp;or&nbsp;a&nbsp;list&nbsp;of&nbsp;fields&nbsp;to&nbsp;select&nbsp;(prefix&nbsp;with&nbsp;table&nbsp;name,&nbsp;like&nbsp;MyTable.myField)<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Should&nbsp;be&nbsp;prefixed&nbsp;with&nbsp;table&nbsp;name,&nbsp;like&nbsp;"tableName.fieldName"<br />
 &nbsp;<br />
