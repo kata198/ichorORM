@@ -8,7 +8,11 @@
     constants.py - Some constants
 '''
 
-__all__ = ('FETCH_ALL_FIELDS', 'WHERE_AND', 'WHERE_OR', 'WHERE_ALL_TYPES')
+__all__ = ('FETCH_ALL_FIELDS', 'WHERE_AND', 'WHERE_OR', 'WHERE_ALL_TYPES', 'SQL_NULL', 
+    'JOIN_INNER', 'JOIN_LEFT', 'JOIN_RIGHT', 'JOIN_OUTER_FULL'
+)
+
+from .special import SQL_NULL
 
 FETCH_ALL_FIELDS = 'ALL'
 
@@ -25,16 +29,4 @@ JOIN_RIGHT = 'RIGHT'
 JOIN_OUTER_FULL = 'OUTER FULL'
 
 ALL_JOINS = (JOIN_INNER, JOIN_LEFT, JOIN_RIGHT, JOIN_OUTER_FULL)
-
-# TODO: Change SQL_NULL to extend QueryStr to simplify logic in places
-class _SQL_NULL_TYPE(str):
-    '''
-        _SQL_NULL_TYPE - The type of the SQL_NULL singleton. Don't use this directly.
-    '''
-
-    def __new__(self):
-        return str.__new__(self, 'NULL')
-
-# SQL_NULL - Singleton represneting a NULL in SQL
-SQL_NULL = _SQL_NULL_TYPE()
 

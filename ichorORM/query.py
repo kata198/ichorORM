@@ -16,7 +16,8 @@ import re
 
 from psycopg2.extensions import adapt as psycopg2_adapt
 
-from .constants import WHERE_AND, WHERE_OR, WHERE_ALL_TYPES, ALL_JOINS, SQL_NULL
+from .special import QueryStr, SQL_NULL
+from .constants import WHERE_AND, WHERE_OR, WHERE_ALL_TYPES, ALL_JOINS
 from .utils import convertFilterTypeToOperator, isMultiOperator
 from .objs import DictObj
 
@@ -27,19 +28,7 @@ from . import getDatabaseConnection
 
 __all__ = ('QueryStr', 'QueryBase', 'FilterType', 'isFilterType', 'FilterField', 'FilterJoin', 'FilterStage',
             'SelectQuery', 'SelectInnerJoinQuery', 'SelectGenericJoinQuery',
-            'UpdateQuery', 'InsertQuery', 'DeleteQuery' )
-
-# TODO: Better handle stringing of potential filter values (like to addCondition),
-#         Currently we have QueryStr as a special type and SQL_NULL as a special singleton
-
-# TODO: Refactor SQL_NULL to extend QueryStr to simplify logic
-
-class QueryStr(str):
-    '''
-        QueryStr - A portion that should be treated like a raw string (Embedded sql),
-          and not a quoted value
-    '''
-    pass
+            'UpdateQuery', 'InsertQuery', 'DeleteQuery', 'SQL_NULL' )
 
 
 class FilterType(object):
