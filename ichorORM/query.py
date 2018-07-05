@@ -972,7 +972,8 @@ class SelectInnerJoinQuery(SelectQuery):
 
                 @param selectFields <'ALL' or list<str>> - Default ALL for all fields on all joined models, or a list of fields to select (prefix with table name, like MyTable.myField)
                     
-                    Should be prefixed with table name, like "tableName.fieldName"
+
+                    Use MyModel.TABLE_NAME + '.*' to select all fields on "MyModel"
 
                 @param orderByField <None/str> Default None - Order by this field, if provided
 
@@ -1046,7 +1047,27 @@ class SelectInnerJoinQuery(SelectQuery):
         if self.selectFields == 'ALL':
             selectFields = self.getAllFieldNamesIncludingTable()
         else:
-            selectFields = self.selectFields
+            selectFieldsByTable = None
+            selectFields = []
+
+            for selectField in self.selectFields:
+                if selectField.endswith('.*'):
+                    selectFieldSplit = selectField.split('.')
+                    if len(selectFieldSplit) != 2:
+                        raise ValueError('Unknown select field: ' + selectField)
+
+                    tableName = selectFieldSplit[0]
+
+                    if selectFieldsByTable is None:
+                        selectFieldsByTable = self.getAllFieldNamesByTable()
+
+                    if tableName not in selectFieldsByTable:
+                        raise ValueError('Unknown table "%s" in select field: %s. Available tables are: %s' %(tableName, selectField, repr(list(selectFieldsByTable.keys())) ) )
+
+                    selectFields += [ "%s.%s" %(tableName, fieldName) for fieldName in selectFieldsByTable[tableName] ]
+                else:
+                    selectFields.append(selectField)
+
 
         return selectFields
 
@@ -1196,7 +1217,9 @@ class SelectGenericJoinQuery(SelectQuery):
 
                 @param primaryModel - <DatabaseModel> - Primary Database model
 
-                @param selectFields <'ALL' or list<str>> - Default ALL for all fields on all joined models, or a list of fields to select (prefix with table name, like MyTable.myField)
+                @param selectFields <'ALL' or list<str>> - Default ALL for all fields on all joined models, or a list of fields to select (prefix with table name, like MyTable.myField).
+
+                    Use MyModel.TABLE_NAME + '.*' to select all fields on "MyModel"
 
                 @param orderByField <None/str> - Default None, if provided ORDER BY this field
 
@@ -1333,7 +1356,27 @@ class SelectGenericJoinQuery(SelectQuery):
         if self.selectFields == 'ALL':
             selectFields = self.getAllFieldNamesIncludingTable()
         else:
-            selectFields = self.selectFields
+            selectFieldsByTable = None
+            selectFields = []
+
+            for selectField in self.selectFields:
+                if selectField.endswith('.*'):
+                    selectFieldSplit = selectField.split('.')
+                    if len(selectFieldSplit) != 2:
+                        raise ValueError('Unknown select field: ' + selectField)
+
+                    tableName = selectFieldSplit[0]
+
+                    if selectFieldsByTable is None:
+                        selectFieldsByTable = self.getAllFieldNamesByTable()
+
+                    if tableName not in selectFieldsByTable:
+                        raise ValueError('Unknown table "%s" in select field: %s. Available tables are: %s' %(tableName, selectField, repr(list(selectFieldsByTable.keys())) ) )
+
+                    selectFields += [ "%s.%s" %(tableName, fieldName) for fieldName in selectFieldsByTable[tableName] ]
+                else:
+                    selectFields.append(selectField)
+
 
         return selectFields
 
