@@ -534,7 +534,44 @@ class QueryBase(object):
                         filterStage.__class__.__name__
                     )
                 self.filterStages.append(filterStage)
-                
+
+
+    def getModel(self):
+        '''
+            getModel - Gets the model <DatabaseModel> associated with this Query.
+            
+                NOTE: Not all queries have the same meaning here.
+                  For example, a SelectInnerJoinQuery
+                    has no "model" set but a list of "models" ( @see #getModels ).
+                  On a SelectGenericJoinQuery this returns the "primary" model, while #getModels returns all models.
+
+                  @return <DatabaseModel/None> - The "primary" model associated with this query if applicable
+        '''
+        return self.model
+
+
+    def getModels(self):
+        '''
+            getModels - Gets a list of the models <DatabaseModel> associated with this Query.
+
+                NOTE: The meaning of the query comes into play here.
+                  For example, an InsertQuery would return a list of [ self.getModel() ].
+                  A SelectGenericJoinQuery would return all the applicable models
+
+                  @return list<DatabaseModel> - A list of alll models associated with this query
+        '''
+        # Generic impl - some queries may need to override this.
+
+        # If we have a "self.models" attribute, return that
+        if hasattr(self, 'models'):
+            return self.models
+
+        # Otherwise, return a list containing just the primary model, or empty list as last resort.
+        model = self.getModel()
+        if model:
+            return [model]
+        return []
+
 
     def addStage(self, _filter=WHERE_AND):
         '''
@@ -707,7 +744,7 @@ class SelectQuery(QueryBase):
 
         self.limitNum = limitNum
 
-
+    
     def clearOrderBy(self):
         '''
             clearOrderBy - Clears the "ORDER BY" portion of this query
@@ -771,12 +808,48 @@ class SelectQuery(QueryBase):
         '''
             getFields - Get a list of the fields to select (will unroll the special, "ALL")
         '''
-        if self.selectFields == 'ALL':
+        if self.selectFields in ('ALL', '*'):
             selectFields = self.getAllFieldNames()
         else:
-            selectFields = self.selectFields
+            selectFields = self._resolveSpecialFields()
 
         return selectFields
+
+
+    def _resolveSpecialFields(self):
+        '''
+            _resolveSpecialFields - Resolves and validates special fields ( like TABLE_NAME.* )
+
+                @return list<str> - A list of fields to select
+        '''
+        allModels = self.getModels()
+
+        selectFieldsByTable = None
+        selectFields = []
+
+        for selectField in self.selectFields:
+            if selectField.endswith('.*'):
+                selectFieldSplit = selectField.split('.')
+                if len(selectFieldSplit) != 2:
+                    raise ValueError('Unknown select field: ' + selectField)
+
+                tableName = selectFieldSplit[0]
+
+                if selectFieldsByTable is None:
+
+                    selectFieldsByTable = {}
+                    for model in allModels:
+                        selectFieldsByTable[model.TABLE_NAME] = model.FIELDS
+
+                if tableName not in selectFieldsByTable:
+                    raise ValueError('Unknown table "%s" in select field: %s. Available tables are: %s' %(tableName, selectField, repr(list(selectFieldsByTable.keys())) ) )
+
+                selectFields += [ "%s.%s" %(tableName, fieldName) for fieldName in selectFieldsByTable[tableName] ]
+            else:
+                selectFields.append(selectField)
+
+        return selectFields
+
 
     def getFieldsStr(self):
         '''
@@ -1052,30 +1125,10 @@ class SelectInnerJoinQuery(SelectQuery):
 
                 @return list<str> - List of fields to select
         '''
-        if self.selectFields == 'ALL':
+        if self.selectFields in ('ALL', '*'):
             selectFields = self.getAllFieldNamesIncludingTable()
         else:
-            selectFieldsByTable = None
-            selectFields = []
-
-            for selectField in self.selectFields:
-                if selectField.endswith('.*'):
-                    selectFieldSplit = selectField.split('.')
-                    if len(selectFieldSplit) != 2:
-                        raise ValueError('Unknown select field: ' + selectField)
-
-                    tableName = selectFieldSplit[0]
-
-                    if selectFieldsByTable is None:
-                        selectFieldsByTable = self.getAllFieldNamesByTable()
-
-                    if tableName not in selectFieldsByTable:
-                        raise ValueError('Unknown table "%s" in select field: %s. Available tables are: %s' %(tableName, selectField, repr(list(selectFieldsByTable.keys())) ) )
-
-                    selectFields += [ "%s.%s" %(tableName, fieldName) for fieldName in selectFieldsByTable[tableName] ]
-                else:
-                    selectFields.append(selectField)
-
+            selectFields = self._resolveSpecialFields()
 
         return selectFields
 
@@ -1361,30 +1414,10 @@ class SelectGenericJoinQuery(SelectQuery):
 
                 @return list<str> - List of field names
         '''
-        if self.selectFields == 'ALL':
+        if self.selectFields in ('ALL', '*'):
             selectFields = self.getAllFieldNamesIncludingTable()
         else:
-            selectFieldsByTable = None
-            selectFields = []
-
-            for selectField in self.selectFields:
-                if selectField.endswith('.*'):
-                    selectFieldSplit = selectField.split('.')
-                    if len(selectFieldSplit) != 2:
-                        raise ValueError('Unknown select field: ' + selectField)
-
-                    tableName = selectFieldSplit[0]
-
-                    if selectFieldsByTable is None:
-                        selectFieldsByTable = self.getAllFieldNamesByTable()
-
-                    if tableName not in selectFieldsByTable:
-                        raise ValueError('Unknown table "%s" in select field: %s. Available tables are: %s' %(tableName, selectField, repr(list(selectFieldsByTable.keys())) ) )
-
-                    selectFields += [ "%s.%s" %(tableName, fieldName) for fieldName in selectFieldsByTable[tableName] ]
-                else:
-                    selectFields.append(selectField)
-
+            selectFields = self._resolveSpecialFields()
 
         return selectFields
 
