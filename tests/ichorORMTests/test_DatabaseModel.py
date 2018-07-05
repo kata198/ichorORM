@@ -3,6 +3,7 @@
     test_DatabaseModel - Test various methods on a DatabaseModel
 '''
 
+import copy
 import subprocess
 import sys
 
@@ -48,12 +49,50 @@ class TestDatabaseModel(object):
         except:
             dbConn.executeSql("CREATE TABLE %s ( id serial primary key, first_name varchar(255) NOT NULL, last_name varchar(255) NOT NULL, age smallint, birth_day smallint, birth_month smallint )" %(MyPersonModel.TABLE_NAME, ))
 
-        
-        dbConn.executeSql("INSERT INTO %s (first_name, last_name, age, birth_day, birth_month) VALUES ('John', 'Smith', 43, 4, 11)" %(MyPersonModel.TABLE_NAME, ))
-        dbConn.executeSql("INSERT INTO %s (first_name, last_name, age, birth_day, birth_month) VALUES ('John', 'Doe', 38, 2, 12)" %(MyPersonModel.TABLE_NAME, ))
-        dbConn.executeSql("INSERT INTO %s (first_name, last_name, age, birth_day, birth_month) VALUES ('Jane', 'Doe', 25, 8, 5)" %(MyPersonModel.TABLE_NAME, ))
-        dbConn.executeSql("INSERT INTO %s (first_name, last_name, age, birth_day, birth_month) VALUES ('Cathy', 'Lawson', 14, 6, 8)" %(MyPersonModel.TABLE_NAME, ))
-        dbConn.executeSql("INSERT INTO %s (first_name, last_name, age, birth_day, birth_month) VALUES ('Tom', 'Brown', 65, 2, 9)" %(MyPersonModel.TABLE_NAME, ))
+        # NOTE: "id" will be set upon insert
+        self.dataSet = [
+            { "id" : None, "first_name" : 'John', 'last_name'  : 'Smith',  'age' : 43, 'birth_day' : 4, 'birth_month' : 11 },
+            { "id" : None, "first_name" : 'John', 'last_name'  : 'Doe',    'age' : 38, 'birth_day' : 2, 'birth_month' : 12 },
+            { "id" : None, "first_name" : 'Jane', 'last_name'  : 'Doe',    'age' : 25, 'birth_day' : 8, 'birth_month' : 5 },
+            { "id" : None, "first_name" : 'Cathy', 'last_name' : 'Lawson', 'age' : 14, 'birth_day' : 6, 'birth_month' : 8 },
+            { "id" : None, "first_name" : 'Tom',  'last_name'  : 'Brown',  'age' : 65, 'birth_day' : 2, 'birth_month' : 9 },
+        ]
+
+
+    def setup_method(self, meth):
+        '''
+            setup_method - Called before every method.
+                
+                @param meth <builtins.method> - The test method that is about to be executed
+        '''
+
+        dbConn = ichorORM.getDatabaseConnection(isTransactionMode=True)
+
+        pks = dbConn.doInsert("INSERT INTO " + MyPersonModel.TABLE_NAME + " (first_name, last_name, age, birth_day, birth_month) VALUES ( %(first_name)s, %(last_name)s, %(age)s, %(birth_day)s, %(birth_month)s )", valueDicts=self.dataSet, autoCommit=False, returnPk=True)
+
+        for i in range(len(self.dataSet)):
+            self.dataSet[i]['id'] = pks[i]
+
+        #dbConn.executeSql("INSERT INTO %s (first_name, last_name, age, birth_day, birth_month) VALUES ('John', 'Smith', 43, 4, 11)" %(MyPersonModel.TABLE_NAME, ))
+        #dbConn.executeSql("INSERT INTO %s (first_name, last_name, age, birth_day, birth_month) VALUES ('John', 'Doe', 38, 2, 12)" %(MyPersonModel.TABLE_NAME, ))
+        #dbConn.executeSql("INSERT INTO %s (first_name, last_name, age, birth_day, birth_month) VALUES ('Jane', 'Doe', 25, 8, 5)" %(MyPersonModel.TABLE_NAME, ))
+        #dbConn.executeSql("INSERT INTO %s (first_name, last_name, age, birth_day, birth_month) VALUES ('Cathy', 'Lawson', 14, 6, 8)" %(MyPersonModel.TABLE_NAME, ))
+        #dbConn.executeSql("INSERT INTO %s (first_name, last_name, age, birth_day, birth_month) VALUES ('Tom', 'Brown', 65, 2, 9)" %(MyPersonModel.TABLE_NAME, ))
+
+        dbConn.commit()
+
+
+    def teardown_method(self, meth):
+        '''
+            teardown_method - Called after every method.
+                
+                @param meth <builtins.method> - The test method that completed
+        '''
+        try:
+            dbConn = ichorORM.getDatabaseConnection()
+            dbConn.executeSql("DELETE FROM %s" %(MyPersonModel.TABLE_NAME, ))
+        except Exception as e:
+            pass
 
     def teardown_class(self):
         '''
@@ -61,11 +100,6 @@ class TestDatabaseModel(object):
                 Ran after all tests have completed
         '''
         
-        try:
-            dbConn = ichorORM.getDatabaseConnection()
-            dbConn.executeSql("DELETE FROM %s" %(MyPersonModel.TABLE_NAME, ))
-        except Exception as e:
-            pass
 
         try:
             dbConn = ichorORM.getDatabaseConnection()
@@ -180,6 +214,35 @@ class TestDatabaseModel(object):
         assert foundTomBrown , 'Tom Brown is not in results.'
 
 
+    def test_allOrderBy(self):
+        '''
+            test_allOrderBy - Test the orderBy arguments to the DatabaseModel.all call
+        '''
+
+        dataSetAgeAsc = list(sorted( copy.copy(self.dataSet), key = lambda dataSet : dataSet['age'] ))
+        dataSetAgeDesc = list(reversed( sorted( copy.copy(self.dataSet), key = lambda dataSet : dataSet['age'] ) ))
+
+        allAgeAsc = MyPersonModel.all(orderByField='age', orderByDir='ASC')
+        assert allAgeAsc , 'Did not get any objects returned.'
+
+        assert len(allAgeAsc) == len(self.dataSet) , 'Expected to get %d objects, but got %d. Objects: %s' %( len(self.dataSet), len(allAgeAsc), repr(allAgeAsc) )
+
+        allAgeAscMaps = [ x.asDict(includePk=True) for x in allAgeAsc ]
+
+        assert allAgeAscMaps == dataSetAgeAsc , 'Objects seem out of order. Expected: %s     Got:  %s' %( repr(dataSetAgeAsc), repr(allAgeAscMaps) )
+
+
+        allAgeDesc = MyPersonModel.all(orderByField='age', orderByDir='DESC')
+        assert allAgeDesc , 'Did not get any objects returned.'
+
+        assert len(allAgeDesc) == len(self.dataSet) , 'Expected to get %d objects, but got %d. Objects: %s' %( len(self.dataSet), len(allAgeDesc), repr(allAgeDesc) )
+
+
+        allAgeDescMaps = [ x.asDict(includePk=True) for x in allAgeDesc ]
+        
+        assert allAgeDescMaps == dataSetAgeDesc , 'Objects seem out of order. Expected: %s     Got:  %s' %( repr(dataSetAgeDesc), repr(allAgeDescMaps) )
+
+
     def test_filter(self):
         '''
             test_filter - Test the "filter" method
@@ -230,6 +293,39 @@ class TestDatabaseModel(object):
 
         assert foundJohnDoe , 'Did not find expected John Doe entry in results.'
         assert foundTomBrown , 'Did not find expected Tom Brown entry in results.'
+
+
+    def test_filterOrderBy(self):
+        '''
+            test_filterOrderBy - Test that the order by parameters work with DatabaseModel.filter
+        '''
+
+        expectedObjs = [ copy.copy(dataItem) for dataItem in self.dataSet if dataItem['first_name'] in ('John', 'Tom') ]
+        expectedObjsAgeAsc = list(sorted( copy.copy(expectedObjs), key = lambda dataSet : dataSet['age'] ))
+        expectedObjsAgeDesc = list(reversed( sorted( copy.copy(expectedObjs), key = lambda dataSet : dataSet['age'] ) ))
+
+        # ASCending
+        filterObjs = MyPersonModel.filter(first_name__in=('John', 'Tom'), orderByField='age', orderByDir='ASC')
+
+        assert filterObjs , 'Did not get any results from filter.'
+
+        assert len(filterObjs) == len(expectedObjs) , 'Got unexpected number of results. Expected %d but got %d.  Got: %s' %(len(expectedObjs), len(filterObjs), repr(filterObjs) )
+
+        filterResultsDicts = [ obj.asDict(includePk=True) for obj in filterObjs ]
+
+        assert filterResultsDicts == expectedObjsAgeAsc , 'Did not get filtered results in expected order. Expected:  %s  Got:  %s' %( repr(expectedObjsAgeAsc), repr(filterResultsDicts) )
+
+        # DESCending
+        filterObjs = MyPersonModel.filter(first_name__in=('John', 'Tom'), orderByField='age', orderByDir='DESC')
+
+        assert filterObjs , 'Did not get any results from filter.'
+
+        assert len(filterObjs) == len(expectedObjs) , 'Got unexpected number of results. Expected %d but got %d.  Got: %s' %(len(expectedObjs), len(filterObjs), repr(filterObjs) )
+
+        filterResultsDicts = [ obj.asDict(includePk=True) for obj in filterObjs ]
+
+        assert filterResultsDicts == expectedObjsAgeDesc , 'Did not get filtered results in expected order. Expected:  %s  Got:  %s' %( repr(expectedObjsAgeDesc), repr(filterResultsDicts) )
+
 
 
     def test_insertObject(self):
