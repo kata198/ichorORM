@@ -381,11 +381,6 @@ class DatabaseModel(object):
             else:
                 operation = '='
 
-            if fieldValue is None or fieldValue == SQL_NULL:
-                if operation in ('eq', '='):
-                    operation = 'is'
-                elif operation == 'ne':
-                    operation = 'is not'
             where.addCondition(fieldName, operation, fieldValue)
 
         objs = q.executeGetObjs(dbConn=dbConn)

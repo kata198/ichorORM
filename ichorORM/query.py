@@ -79,6 +79,15 @@ class FilterField(FilterType):
         else:
             self.operator = operator
 
+        # Convert any = None/NULL to is NULL and any != None/NULL to is not NULL
+        #   In postgresql a NULL field does not = NULL, but it is NULL.
+        # This will prevent any unexpected filter failures when dealing with nulls
+        if filterValue == SQL_NULL or filterValue == None:
+            if self.operator == '=':
+                self.operator = self.filterType = 'is'
+            elif self.operator in ('<>', '!='):
+                self.operator = self.filterType = 'is not'
+
 
     def getFilterValue(self):
         '''
