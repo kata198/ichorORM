@@ -16,7 +16,7 @@ import re
 
 from psycopg2.extensions import adapt as psycopg2_adapt
 
-from .special import QueryStr, SQL_NULL
+from .special import QueryStr, SQL_NULL, isQueryStr
 from .constants import WHERE_AND, WHERE_OR, WHERE_ALL_TYPES, ALL_JOINS
 from .utils import convertFilterTypeToOperator, isMultiOperator
 from .objs import DictObj
@@ -97,7 +97,7 @@ class FilterField(FilterType):
         '''
         filterValue = self.filterValue
 
-        if issubclass(filterValue.__class__, QueryStr):
+        if isQueryStr(filterValue):
             filterValue = filterValue
         elif issubclass(filterValue.__class__, SelectQuery):
             filterValue = filterValue.asQueryStr()
@@ -123,7 +123,7 @@ class FilterField(FilterType):
 
         filterValue = self.getFilterValue()
 
-        if issubclass(filterValue.__class__, QueryStr):
+        if isQueryStr(filterValue):
             # Raw embedded SQL
             ret += filterValue + " "
         elif self.operator.lower() == 'between':
@@ -133,7 +133,7 @@ class FilterField(FilterType):
                 thisItem = []
 
                 # If we have a query str, put that directly in, otherwise param value
-                if issubclass(filterValue[0].__class__, QueryStr):
+                if isQueryStr(filterValue[0]):
                     thisItem.append(filterValue[0])
                 else:
                     slot1Name = paramName + '__item1_'
@@ -143,7 +143,7 @@ class FilterField(FilterType):
 
                 thisItem.append('  AND  ')
 
-                if issubclass(filterValue[1].__class__, QueryStr):
+                if isQueryStr(filterValue[1]):
                     thisItem.append(filterValue[1])
                 else:
                     slot2Name = paramName + '__item2_'
@@ -153,7 +153,7 @@ class FilterField(FilterType):
 
                 ret += ''.join(thisItem)
 
-            elif issubclass(filterValue.__class__, QueryStr):
+            elif isQueryStr(filterValue):
                 # NOTE: This should never be reached, should be caught in first conditional
                 ret += filterValue + " "
             else:
@@ -1686,7 +1686,7 @@ class UpdateQuery(QueryBase):
             if issubclass(newValue.__class__, SelectQuery):
                 newValue = newValue.asQueryStr()
 
-            if issubclass(newValue.__class__, QueryStr):
+            if isQueryStr(newValue):
                 newValueStr = newValue
             else:
                 newValueStr = str(psycopg2_adapt(newValue))
@@ -1718,7 +1718,7 @@ class UpdateQuery(QueryBase):
                 (fieldValue, extraRetParams) = fieldValue.asQueryStrParams(paramPrefix=identifier)
                 retValues.update(extraRetParams)
                 
-            if isinstance(fieldValue, QueryStr):
+            if isQueryStr(fieldValue):
                 retParams.append( fieldName + ' = ' + str(fieldValue) + " " )
             else:
                 retParams.append( fieldName + '= %(' + identifier + ')s ' )
@@ -1890,7 +1890,7 @@ class InsertQuery(QueryBase):
         useSetFieldValues = self.fieldValues
 
         for fieldName, fieldValue in useSetFieldValues.items():
-            if issubclass(fieldValue.__class__, QueryStr):
+            if isQueryStr(fieldValue):
                 retParams.append(fieldValue)
             elif issubclass(fieldValue.__class__, SelectQuery):
                 (selParams, selValues) = fieldValue.asQueryStrParams(paramPrefix=fieldName + '_')
@@ -1935,7 +1935,7 @@ class InsertQuery(QueryBase):
         useSetFieldValues = self.fieldValues
 
 
-        return ' ( %s ) ' %( ', '.join( [ not isinstance(val, QueryStr) and repr(val) or str(val) for val in useSetFieldValues.values() ] ), )
+        return ' ( %s ) ' %( ', '.join( [ not isQueryStr(val) and repr(val) or str(val) for val in useSetFieldValues.values() ] ), )
 
 
     def getSql(self):

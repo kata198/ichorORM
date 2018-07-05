@@ -10,7 +10,7 @@
 '''
 # vim: set ts=4 sw=4 st=4 expandtab:
 
-__all__ = ('QueryStr', 'SQL_NULL' )
+__all__ = ('QueryStr', 'SQL_NULL', 'isQueryStr' )
 
 class QueryStr(str):
     '''
@@ -19,7 +19,7 @@ class QueryStr(str):
     '''
 
     def __eq__(self, other):
-        if not issubclass(other.__class__, QueryStr):
+        if not isQueryStr(other):
             return False
         return str.__eq__(self, other)
 
@@ -27,3 +27,7 @@ class QueryStr(str):
         return not QueryStr.__eq__(self, other)
 
 SQL_NULL = QueryStr('NULL')
+
+
+def isQueryStr(obj):
+    return bool( issubclass(obj.__class__, QueryStr) )
