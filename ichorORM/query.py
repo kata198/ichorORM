@@ -970,7 +970,7 @@ class SelectInnerJoinQuery(SelectQuery):
 
                 @param models - list<DatabaseModel> - List of models to use
 
-                @param selectFields < 'ALL' or list< fieldName<str>> Default "ALL" - ALL to do * or a list of field names to select.
+                @param selectFields <'ALL' or list<str>> - Default ALL for all fields on all joined models, or a list of fields to select (prefix with table name, like MyTable.myField)
                     
                     Should be prefixed with table name, like "tableName.fieldName"
 
@@ -1088,7 +1088,7 @@ class SelectInnerJoinQuery(SelectQuery):
         '''
             executeGetObjs - Not supported for SelectInnerJoinQuery
         '''
-        raise NotImplementedError('SelectInnerJoinQuery does not support executeGetObjs. Use executeGetRows or executeGetMapping instead.')
+        raise NotImplementedError('SelectInnerJoinQuery does not support executeGetObjs. Use executeGetRows, executeGetMapping, or executeGetDictObjs instead.')
 
     def executeGetMapping(self, parameterized=True, dbConn=None):
         '''
@@ -1196,7 +1196,7 @@ class SelectGenericJoinQuery(SelectQuery):
 
                 @param primaryModel - <DatabaseModel> - Primary Database model
 
-                @param selectFields <'ALL' or list<str>> - Default ALL for all fields, or a list of fields to SELECT on primary table
+                @param selectFields <'ALL' or list<str>> - Default ALL for all fields on all joined models, or a list of fields to select (prefix with table name, like MyTable.myField)
 
                 @param orderByField <None/str> - Default None, if provided ORDER BY this field
 
@@ -1401,9 +1401,9 @@ class SelectGenericJoinQuery(SelectQuery):
 
     def executeGetObjs(self, parameterized=True, dbConn=None):
         '''
-            executeGetObjs - Not supported on SelectInnerJoinQuery
+            executeGetObjs - Not supported on SelectGenericJoinQuery
         '''
-        raise NotImplementedError('SelectInnerJoinQuery does not support executeGetObjs. Use executeGetRows or executeGetMapping instead.')
+        raise NotImplementedError('SelectInnerJoinQuery does not support executeGetObjs. Use executeGetRows, executeGetMapping, or executeGetDictObjs instead.')
 
     def executeGetMapping(self, parameterized=True, dbConn=None):
         '''
