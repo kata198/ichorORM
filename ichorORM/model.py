@@ -381,7 +381,7 @@ class DatabaseModel(object):
             else:
                 operation = '='
 
-            if fieldValue is None or fieldValue is SQL_NULL:
+            if fieldValue is None or fieldValue == SQL_NULL:
                 if operation in ('eq', '='):
                     operation = 'is'
                 elif operation == 'ne':

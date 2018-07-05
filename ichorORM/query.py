@@ -99,8 +99,6 @@ class FilterField(FilterType):
 
         if issubclass(filterValue.__class__, QueryStr):
             filterValue = filterValue
-        elif filterValue == SQL_NULL:
-            filterValue = 'NULL'
         elif issubclass(filterValue.__class__, SelectQuery):
             filterValue = filterValue.asQueryStr()
         else:
@@ -128,9 +126,6 @@ class FilterField(FilterType):
         if issubclass(filterValue.__class__, QueryStr):
             # Raw embedded SQL
             ret += filterValue + " "
-        elif filterValue is SQL_NULL:
-            # A raw NULL
-            ret += "NULL "
         elif self.operator.lower() == 'between':
             if issubclass(filterValue.__class__, (tuple, list)) and len(filterValue) == 2:
                 # Check if we are using "BETWEEN" operator and have a 2-element list/tuple
@@ -1693,8 +1688,6 @@ class UpdateQuery(QueryBase):
 
             if issubclass(newValue.__class__, QueryStr):
                 newValueStr = newValue
-            elif newValue == SQL_NULL:
-                newValueStr = 'NULL'
             else:
                 newValueStr = str(psycopg2_adapt(newValue))
 
@@ -1726,9 +1719,7 @@ class UpdateQuery(QueryBase):
                 retValues.update(extraRetParams)
                 
             if isinstance(fieldValue, QueryStr):
-                retParams.append( fieldName + ' = ' + fieldValue + " " )
-            elif fieldValue == SQL_NULL:
-                retParams.append( fieldName + " = NULL " )
+                retParams.append( fieldName + ' = ' + str(fieldValue) + " " )
             else:
                 retParams.append( fieldName + '= %(' + identifier + ')s ' )
                 retValues[identifier] = fieldValue
@@ -1901,8 +1892,6 @@ class InsertQuery(QueryBase):
         for fieldName, fieldValue in useSetFieldValues.items():
             if issubclass(fieldValue.__class__, QueryStr):
                 retParams.append(fieldValue)
-            elif fieldValue == SQL_NULL:
-                retParams.append('NULL')
             elif issubclass(fieldValue.__class__, SelectQuery):
                 (selParams, selValues) = fieldValue.asQueryStrParams(paramPrefix=fieldName + '_')
                 

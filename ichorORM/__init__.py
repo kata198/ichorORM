@@ -11,6 +11,9 @@
 from .connection import setGlobalConnectionParams, getDatabaseConnection, DatabaseConnection, DatabaseConnectionFailure
 
 from .model import DatabaseModel
+from .special import SQL_NULL, QueryStr
+
+from .query import SelectQuery, InsertQuery, UpdateQuery, DeleteQuery, SelectInnerJoinQuery, SelectGenericJoinQuery
 
 __version__ = '1.0.3'
 __version_tuple__ = ('1', '0', '3')

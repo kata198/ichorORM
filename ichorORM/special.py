@@ -17,6 +17,13 @@ class QueryStr(str):
         QueryStr - A portion that should be treated like a raw string (Embedded sql),
           and not a quoted value
     '''
-    pass
+
+    def __eq__(self, other):
+        if not issubclass(other.__class__, QueryStr):
+            return False
+        return str.__eq__(self, other)
+
+    def __ne__(self, other):
+        return not QueryStr.__eq__(self, other)
 
 SQL_NULL = QueryStr('NULL')
