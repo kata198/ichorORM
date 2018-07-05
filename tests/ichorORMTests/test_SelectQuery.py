@@ -57,7 +57,7 @@ class TestSelectQuery(object):
 
         # TODO: These tests were written before this pattern of test data was being used.
         #   Refactor the tests to replace the "magic numbers" to references to this test data
-        if meth in (self.test_whereOr, self.test_whereAnd, self.test_selectAllObjs, self.test_SelectWithWhere, self.test_SelectSpecificFields, self.test_selectOrderBy, self.test_limitNum):
+        if meth in (self.test_whereOr, self.test_whereAnd, self.test_selectAllObjs, self.test_SelectWithWhere, self.test_SelectSpecificFields, self.test_selectOrderBy, self.test_limitNum, self.test_aggregates):
 
             self.dataSet = [
                 { "id" : None, "first_name" : 'John', 'last_name'  : 'Smith',  'age' : 43, 'birth_day' : 4, 'birth_month' : 11 },
@@ -101,7 +101,7 @@ class TestSelectQuery(object):
         '''
             teardown_method - Called after each method
         '''
-        if meth in (self.test_whereOr, self.test_whereAnd, self.test_selectAllObjs, self.test_SelectWithWhere, self.test_SelectSpecificFields, self.test_selectOrderBy, self.test_limitNum):
+        if meth in (self.test_whereOr, self.test_whereAnd, self.test_selectAllObjs, self.test_SelectWithWhere, self.test_SelectSpecificFields, self.test_selectOrderBy, self.test_limitNum, self.test_aggregates) or meth in (self.test_sqlNulls, ):
             try:
                 dbConn = ichorORM.getDatabaseConnection()
                 dbConn.executeSql("DELETE FROM %s" %(MyPersonModel.TABLE_NAME, ))
@@ -510,6 +510,51 @@ class TestSelectQuery(object):
 
         results = selQ.executeGetObjs()
         testResults(results, expectedNotNullAgeMaps, 'age is not QueryStr("NULL")')
+
+    def test_aggregates(self):
+        '''
+            test_aggregates - Test some aggregates using QueryStr
+        '''
+        
+        selQ = SelectQuery(MyPersonModel, selectFields=[ QueryStr('AVG(age)'), QueryStr('MAX(age) as max_age'), QueryStr('MAX(birth_day)'), QueryStr('MIN(birth_month)'), QueryStr('MIN(age)') ])
+
+        selQFields = selQ.getFields()
+
+        results = selQ.executeGetRows()
+
+        assert results , 'Did not get any results for aggregate query'
+
+        assert len(results) == 1 , 'Expected 1 row of results for aggregate query. Got: %d rows:  %s' %(len(results), repr(results)) 
+
+        assert len(results[0]) == len(selQFields) , 'Expected to get %d fields back but got %d.  %s' %( len(selQFields), len(results[0]), repr(results[0]) )
+
+        aggrByField = lambda lst, fieldName : [ dataUnit[fieldName] for dataUnit in lst if dataUnit.get(fieldName, None) is not None ]
+        avg = lambda lst : float(sum(lst)) / float(len(lst))
+            
+
+        ageLst = aggrByField( self.dataSet, 'age')
+        birthDayLst = aggrByField( self.dataSet, 'birth_day')
+        birthMonthLst = aggrByField( self.dataSet, 'birth_month')
+
+        avgAge = avg( ageLst )
+        maxAge = max( ageLst )
+        maxBirthDay   = max( birthDayLst )
+        minBirthMonth = min( birthMonthLst )
+        minAge = min( ageLst )
+
+
+        (gotAvgAge, gotMaxAge, gotMaxBirthDay, gotMinBirthMonth, gotMinAge) = results[0]
+
+
+        def testIt(expectedValue, fetchedValue, fieldName):
+            assert fetchedValue == expectedValue , "Expected %s to have value of %s, but got %s." %( fieldName, repr(expectedValue), repr(fetchedValue) )
+
+        testIt(avgAge, gotAvgAge, repr(selQFields[0]))
+        testIt(maxAge, gotMaxAge, repr(selQFields[1]))
+        testIt(maxBirthDay, gotMaxBirthDay, repr(selQFields[2]))
+        testIt(minBirthMonth, gotMinBirthMonth, repr(selQFields[3]))
+        testIt(minAge, gotMinAge, repr(selQFields[4]))
+        
 
 
 if __name__ == '__main__':
