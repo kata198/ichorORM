@@ -77,7 +77,7 @@ class TestSelectGenericJoinQuery(object):
                 @param meth <built-in method> - The method being tested (compare meth == self.someMethod)
         '''
         
-        if meth in ( self.test_generalGetMapping, self.test_generalGetDictObjs ):
+        if meth in ( self.test_generalGetMapping, self.test_generalGetDictObjs, self.test_tableStarSelectFields ):
 
             # self.DEFAULT_PERSON_DATASET - A sample dataset of field -> value for Person model
             self.DEFAULT_PERSON_DATASET = [
@@ -168,7 +168,7 @@ class TestSelectGenericJoinQuery(object):
 
                 @param meth <built-in method> - The method being tested (compare meth == self.someMethod)
         '''
-        if meth in ( self.test_generalGetMapping, self.test_generalGetDictObjs):
+        if meth in ( self.test_generalGetMapping, self.test_generalGetDictObjs, self.test_tableStarSelectFields):
             self._deleteGlobalDatasets()
 
 
@@ -294,6 +294,82 @@ class TestSelectGenericJoinQuery(object):
                 assert mealFieldName in mealObj , 'Expected .meal to contain field %s but it did not. Fields are: %s' %( mealFieldName, repr(list(mealObj.keys())) )
 
                 assert str(mealObj[mealFieldName]) == str(expectedMealData[mealFieldName]) , 'Unexpected value on meal field %s. Got %s but expected %s' %( mealFieldName, repr(mealObj[mealFieldName]), repr(expectedMealData[mealFieldName]) )
+
+
+    def test_tableStarSelectFields(self):
+        '''
+            test_tableStarSelectFields - Test that TABLE_NAME + '.*' selects all fields on given table
+        '''
+
+        mealStarQ = SelectGenericJoinQuery( Person, selectFields=[ Person.TABLE_NAME + '.age', Meal.TABLE_NAME + '.*' ] )
+
+        mealStarJoin = mealStarQ.joinModel( Meal, JOIN_INNER )
+
+        selectFields = mealStarQ.getFields()
+
+        assert len(selectFields) == len ( Meal.FIELDS ) + 1 , 'Expected [Person.age, Meal.*] to runroll into Person.age and all of Meal fields. Got %d fields but expected %d.  getFields returned: %s' %( len(selectFields), len(Meal.FIELDS) + 1, repr(selectFields)) 
+
+        for mealField in Meal.FIELDS:
+            
+            combinedFieldName = Meal.TABLE_NAME + '.' + mealField
+
+            assert combinedFieldName in selectFields , 'Expected Meal.* to include field %s but it did not. Fields are: %s' %( repr(mealField), repr(selectFields)) 
+
+        personAgeField = Person.TABLE_NAME + '.age'
+
+        assert personAgeField in selectFields , 'Missing person.age field'
+
+        selQ = SelectGenericJoinQuery( Person, selectFields=[ Person.TABLE_NAME + '.*', Meal.TABLE_NAME + '.*'] )
+
+        selQWhere = selQ.addStage()
+        selQWhere.addCondition(Person.TABLE_NAME + '.datasetuid', '=', self.datasetUid)
+
+        joinWhere = selQ.joinModel( Meal, JOIN_INNER )
+
+        joinWhere.addJoin(Meal.TABLE_NAME + '.id_person', '=', Person.TABLE_NAME + '.id' )
+
+        resultMappings = selQ.executeGetMapping()
+
+        assert resultMappings , 'Did not get any results from query.'
+
+        # Should have 1 row per Meal, with Person fields duplicated therein
+        assert len(resultMappings) == len( self.DEFAULT_MEAL_DATASET ) , 'Expected %d rows but got %d back. Got: %s' %( len(self.DEFAULT_MEAL_DATASET), len(resultMappings), repr(resultMappings) )
+
+
+        # Check that all fields are correct
+        for resultMapping in resultMappings:
+            
+            assert 'person.id' in resultMapping , 'Expected person.id to be a mapping in results. Keys are: %s' %( repr(list(resultMapping.keys())), )
+
+            assert 'meal.id' in resultMapping, 'Expected meal.id to be a mapping in results.  Keys are: %s' %( repr(list(resultMapping.keys())), )
+
+            assert resultMapping['meal.id_person'] == resultMapping['person.id'] , 'Expected meal.id_person [ %s ] to equal person.id [ %s ].' %( repr(resultMapping['meal.id_person']), repr(resultMapping['person.id']) )
+                
+            # Ok, general sanity check seems okay. So let's verify that every field is present and accounted for
+
+            personId = resultMapping['person.id']
+            mealId = resultMapping['meal.id']
+
+            expectedPersonData = self.personIdToData[personId]
+            expectedMealData = self.mealIdToData[mealId]
+
+            # Check all person fields
+            for personFieldName in Person.FIELDS:
+                
+                mapKey = Person.TABLE_NAME + '.' + personFieldName
+
+                assert mapKey in resultMapping , 'Expected %s to be in mapping results, but it was not. Keys are: %s' %( mapKey, repr(list(resultMapping.keys())) )
+
+                assert str(resultMapping[mapKey]) == str(expectedPersonData[personFieldName]) , 'Unexpected value on mapping %s. Got %s but expected %s' %( mapKey, repr(resultMapping[mapKey]), repr(expectedPersonData[personFieldName]) )
+
+            # Check all meal fields
+            for mealFieldName in Meal.FIELDS:
+
+                mapKey = Meal.TABLE_NAME + '.' + mealFieldName
+
+                assert mapKey in resultMapping , 'Expected %s to be in mapping results, but it was not. Keys are: %s' %( mapKey, repr(list(resultMapping.keys())) )
+
+                assert str(resultMapping[mapKey]) == str(expectedMealData[mealFieldName]) , 'Unexpected value on mapping %s. Got %s but expected %s' %( mapKey, repr(resultMapping[mapKey]), repr(expectedMealData[mealFieldName]) )
 
 
 
