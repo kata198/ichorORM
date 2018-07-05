@@ -3,6 +3,7 @@
     test_Select - General "Select" test
 '''
 
+import copy
 import subprocess
 import sys
 
@@ -12,7 +13,7 @@ import LocalConfig
 import ichorORM
 
 from ichorORM.model import DatabaseModel
-from ichorORM.query import SelectQuery
+from ichorORM.query import SelectQuery, SQL_NULL, QueryStr
 
 
 class MyPersonModel(DatabaseModel):
@@ -74,6 +75,26 @@ class TestSelectQuery(object):
 
             for i in range(len(self.dataSet)):
                 self.dataSet[i]['id'] = pks[i]
+        
+        elif meth in ( self.test_sqlNulls, ):
+            
+            self.dataSet = [
+                { "id" : None, "first_name" : 'John', 'last_name'  : 'Smith',  'age' : 43, 'birth_day' : 4, 'birth_month' : 11 },
+                { "id" : None, "first_name" : 'John', 'last_name'  : 'Doe',    'age' : None, 'birth_day' : None, 'birth_month' : None },
+                { "id" : None, "first_name" : 'Jane', 'last_name'  : 'Doe',    'age' : 25, 'birth_day' : 8, 'birth_month' : 5 },
+                { "id" : None, "first_name" : 'Cathy', 'last_name' : 'Lawson', 'age' : None, 'birth_day' : 6, 'birth_month' : 8 },
+                { "id" : None, "first_name" : 'Tom',  'last_name'  : 'Brown',  'age' : 65, 'birth_day' : None, 'birth_month' : None },
+            ]
+            dbConn = ichorORM.getDatabaseConnection(isTransactionMode=True)
+            pks = dbConn.doInsert("INSERT INTO " + MyPersonModel.TABLE_NAME + " (first_name, last_name, age, birth_day, birth_month) VALUES ( %(first_name)s, %(last_name)s, %(age)s, %(birth_day)s, %(birth_month)s )", valueDicts=self.dataSet, autoCommit=False, returnPk=True)
+
+            dbConn.commit()
+
+            for i in range(len(self.dataSet)):
+                self.dataSet[i]['id'] = pks[i]
+        
+
+
 
 
     def teardown_method(self, meth):
@@ -385,6 +406,112 @@ class TestSelectQuery(object):
         assert foundJohnSmith , 'Did not find expected John Smith entry in results.'
         assert foundJohnDoe , 'Did not find expected John Doe entry in results.'
         assert foundTomBrown , 'Did not find expected Tom Brown entry in results.'
+
+
+    def test_sqlNulls(self):
+        pass
+        #self.dataSet = [
+        #    { "id" : None, "first_name" : 'John', 'last_name'  : 'Smith',  'age' : 43, 'birth_day' : 4, 'birth_month' : 11 },
+        #    { "id" : None, "first_name" : 'John', 'last_name'  : 'Doe',    'age' : None, 'birth_day' : None, 'birth_month' : None },
+        #    { "id" : None, "first_name" : 'Jane', 'last_name'  : 'Doe',    'age' : 25, 'birth_day' : 8, 'birth_month' : 5 },
+        #    { "id" : None, "first_name" : 'Cathy', 'last_name' : 'Lawson', 'age' : None, 'birth_day' : 6, 'birth_month' : 8 },
+        #    { "id" : None, "first_name" : 'Tom',  'last_name'  : 'Brown',  'age' : 65, 'birth_day' : None, 'birth_month' : None },
+        #]
+
+        expectedNullAgeMaps = [ copy.copy(x) for x in self.dataSet if x['age'] is None ]
+        expectedNotNullAgeMaps = [ copy.copy(x) for x in self.dataSet if x['age'] is not None ]
+
+
+        def testResults(results, expectedResults, whichTestStr):
+            assert results , 'Got no results for %s check' %(whichTestStr, )
+
+            assert len(results) == len(expectedResults) , 'Expected %d results on "%s" check but got %d.  Results:  %s' %(len(expectedResults), whichTestStr, len(results), repr(results) )
+
+            resultDicts = [result.asDict(includePk=True) for result in results]
+
+            for resultDict in resultDicts:
+                foundMatch = False
+                for expectedResult in expectedResults:
+                    if expectedResult == resultDict:
+                        foundMatch = True
+                        break
+
+                assert foundMatch , '"%s" check did not match expected data set: ' %( whichTestStr, repr(resultDict), )
+
+        # Test "is None"
+        selQ = SelectQuery(MyPersonModel)
+
+        selQWhere = selQ.addStage()
+        selQWhere.addCondition('age', 'is', None)
+
+        results = selQ.executeGetObjs()
+        testResults(results, expectedNullAgeMaps, 'age is null')
+
+        # Test "is not None"
+        selQ = SelectQuery(MyPersonModel)
+
+        selQWhere = selQ.addStage()
+        selQWhere.addCondition('age', 'is not', None)
+
+        results = selQ.executeGetObjs()
+        testResults(results, expectedNotNullAgeMaps, 'age is not null')
+
+        # XXX: Not implemented
+        # Test that = gets converted to "is" when None is used
+        #selQ = SelectQuery(MyPersonModel)
+        #
+        #selQWhere = selQ.addStage()
+        #selQWhere.addCondition('age', '=', None)
+        # 
+        #results = selQ.executeGetObjs()
+        #testResults(results, expectedNullAgeMaps, 'age = null')
+
+
+        # XXX: Not implemented
+        # Test that != gets converted to "is not" when None is used
+        #selQ = SelectQuery(MyPersonModel)
+        #
+        #selQWhere = selQ.addStage()
+        #selQWhere.addCondition('age', '!=', None)
+        # 
+        #results = selQ.executeGetObjs()
+        #testResults(results, expectedNotNullAgeMaps, 'age != null')
+
+        # Test "is SQL_NULL"
+        selQ = SelectQuery(MyPersonModel)
+
+        selQWhere = selQ.addStage()
+        selQWhere.addCondition('age', 'is', SQL_NULL)
+
+        results = selQ.executeGetObjs()
+        testResults(results, expectedNullAgeMaps, 'age is SQL_NULL')
+
+        # Test "is not SQL_NULL"
+        selQ = SelectQuery(MyPersonModel)
+
+        selQWhere = selQ.addStage()
+        selQWhere.addCondition('age', 'is not', SQL_NULL)
+
+        results = selQ.executeGetObjs()
+        testResults(results, expectedNotNullAgeMaps, 'age is not SQL_NULL')
+
+        # Test "is QueryStr('NULL')"
+        selQ = SelectQuery(MyPersonModel)
+
+        selQWhere = selQ.addStage()
+        selQWhere.addCondition('age', 'is', QueryStr('NULL'))
+
+        results = selQ.executeGetObjs()
+        testResults(results, expectedNullAgeMaps, 'age is QueryStr("NULL")')
+
+        # Test "is not QueryStr('NULL')"
+        selQ = SelectQuery(MyPersonModel)
+
+        selQWhere = selQ.addStage()
+        selQWhere.addCondition('age', 'is not', QueryStr('NULL'))
+
+        results = selQ.executeGetObjs()
+        testResults(results, expectedNotNullAgeMaps, 'age is not QueryStr("NULL")')
 
 
 if __name__ == '__main__':
