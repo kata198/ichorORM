@@ -762,6 +762,26 @@ This will generate a query like:
 	UPDATE Person SET age = age + 1 WHERE id in (SELECT id_person FROM Meal WHERE food_name LIKE '%Cake' AND consumed_date = '2018-07-04'::date )
 
 
+Aggregate Functions
+-------------------
+
+You may wish to select some aggregate data from one of your models, such as the average of some field or the sum of another.
+
+To accomplish this, use a QueryStr containing the aggregate expression within selectFields.
+
+For example,
+
+	# Build a SelectQuery with our aggregate functions specified within selectFields
+	selQ = SelectQuery(MyPersonModel, selectFields=[ QueryStr('AVG(age)'), QueryStr('MAX(age)'), QueryStr('MAX(birth_day)'), QueryStr('MIN(birth_month)'), QueryStr('MIN(age)') ])
+
+	# We need to use executeGetRows here, not executeGetObjs, as the models do not have fields for the aggregates.
+	results = selQ.executeGetRows()
+
+	# Because every entry in #selectFields is an aggregate function,
+	#   we will get one row back containing the results in the same
+	#   order as #selectFields specified
+	(gotAvgAge, gotMaxAge, gotMaxBirthDay, gotMinBirthMonth, gotMinAge) = results[0]
+
 
 Additional Libraries
 --------------------
