@@ -40,6 +40,12 @@ ion may also be a QueryString
 
 * Implement __repr__ on UseGlobalValue and IgnoreParameter so that the display within pydoc and help is sane and constant
 
+* Remove former SQL_NULL singleton type and replace SQL_NULL as constant QueryStr('NULL'). This simplfiies a bunch of code.
+
+* Make QueryStr's __eq__ and __ne__ include a subclass check, so that "NULL" will no longer equal QueryStr("NULL").
+
+* Move the __eq=None -> __is=None and __ne=None -> __isnot=None (basically converting = NULL to is NULL because = NULL won't ever return results in postgresql) from DatabaseModel.filter to the FilterField itself. This means that anywhere referenced (like addCondition or DatabaseModel.filter, whatever) = NULL will be converted to IS NULL and <> NULL will be converted to IS NOT NULL so that they behave as expected
+
 * Add a GoodTests (https://github.com/kata198/GoodTests) unit test framework, with the majority of usage covered in unit tests.
   Within the tests/ichorORMTests directory is a module LocalConfig.py wherein you can set configuration options to point to a postgresql server to use for testing
 
