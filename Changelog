@@ -46,6 +46,16 @@ ion may also be a QueryString
 
 * Move the __eq=None -> __is=None and __ne=None -> __isnot=None (basically converting = NULL to is NULL because = NULL won't ever return results in postgresql) from DatabaseModel.filter to the FilterField itself. This means that anywhere referenced (like addCondition or DatabaseModel.filter, whatever) = NULL will be converted to IS NULL and <> NULL will be converted to IS NOT NULL so that they behave as expected
 
+* Fixup / expand some error messages and docstrings
+
+* Default to all fields on all joined tables when using SelectGenericJoinQuery (previously "ALL" [the default] referred simply to  the fields on the primary table)
+
+* Support TABLE_NAME.* in selectFields on SelectQuery, SelectGenericJoinQuery and SelectInnerJoinQuery to select all fields on TABLE_NAME
+
+* Make generic and merge some code between the various Select* query builders
+
+* Add generic getModel and getModels method to QueryBase. Generally, getModel will return the primary model and getModels will return a list of all models. In the case of SelectInnerJoinQuery there is no primary model so getModel returns None. For the most part, getModels will return [ getModel() ] but in a few cases where multiple models are actually used ( like SelectGenericJoinQuery ) it exposes the internal list of models
+
 * Add a GoodTests (https://github.com/kata198/GoodTests) unit test framework, with the majority of usage covered in unit tests.
   Within the tests/ichorORMTests directory is a module LocalConfig.py wherein you can set configuration options to point to a postgresql server to use for testing
 
