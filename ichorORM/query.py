@@ -709,10 +709,18 @@ class SelectQuery(QueryBase):
 
 
     def clearOrderBy(self):
+        '''
+            clearOrderBy - Clears the "ORDER BY" portion of this query
+        '''
         self.orderBys.clear()
 
 
     def setLimitNum(self, limitNum):
+        '''
+            setLimitNum - Set the limit num (max # of records returned)
+
+                @param limitNum <int/None> - Provide the maximum number of records to return, or None for no limit.
+        '''
         self.limitNum = limitNum
 
 
