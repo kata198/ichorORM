@@ -181,7 +181,95 @@ Any objects fetched can be updated just by changing property values and calling 
 	personDict = personObj.asDict()
 
 
+Foreign Relations
+=================
 
+Foreign relations ( a foreign key that points to another object(s) ) can be defined easily by implementing the classmethod DatabaseModel.getModelRelations
+
+
+For example, consider that you have a model *Person* with primary key "id", and a model *Meal* that contains a foreign key reference "id\_person". You can implement these relations like so:
+
+Add "meals" relation to Person to fetch all Meals where Meal.id_person = Person.id
+
+	from ichorORM.relations import OneToManyRelation
+
+	class Person(DatabaseModel):
+
+		...
+
+		@classmethod
+		def getModelRelations(cls):
+			
+			# Import the model here to prevent circular reference
+			from .Meal import Meal
+
+			# Reference Person.id to Meal.id_person
+			mealRelation = OneToManyRelation('id', Meal, 'id_person')
+
+			return {
+				'meals' : mealRelation, # Add property "Person.meals" which will follow this relation
+				Meal : mealRelation,    # Add the same relation available by calling Person.getRelation(Meal)
+			}
+
+Add "person" relation to Meal to fetch the Person where Meal.id\_person = Person.id
+
+	from ichorORM.relations import OneToOneRelation
+
+	class Meal(DatabaseModel):
+
+		...
+
+		@classmethod
+		def getModelRelations(cls):
+			
+			# Import the model here to prevent circular reference
+			from .Person import Person
+
+			# Reference Meal.id_person to Person.id
+			personRelation = OneToOneRelation('id_person', Person, 'id')
+
+			return {
+				'person' : personRelation, # Add property "Meal.person" which will follow this relation
+				Person : personRelation, # Add the same relation available by calling Meal.getRelation(Person)
+			}
+
+
+There are two ways to use this relation:
+
+**By property**
+
+For any item in the dict returned by *getModelRelations* where the key is a string, a property is added to the model which, upon access, will follow the relation.
+
+For instance, in the above examples, if I have an instance of a Meal object, I can access the related person like so:
+
+	myMealObj = .... # Fetch the Meal object
+
+	personWhomAteMeal = myMealObj.person # follow the relation with key 'person' to return the Person where id = myMealObj.id_person
+
+And from an instance of a Person object I can access a list of all related meals like so:
+
+	myPersonObj = .... # Fetch the Person object
+
+	myPersonsMeals = myPersonObj.meals # follow the relation with key "meals" to return all Meal objects where id_person = myPersonObj.id
+
+Keep in mind that each time this property is accessed a query is executed to follow this relation. Thus, if you want to fetch the relation once then save the result to a local variable and use that local variable instead of re-accessing the property.
+
+**By method**
+
+For any item in the dict returned by *getModelRelations* you can pass the key to DatabaseModel.getRelated
+
+For instance, using the above examples, if I have an instance of a Meal object I can access the related person like so:
+
+	myMealObj = ..... # Fetch the Meal object
+
+	# We can use the string 'person' as returned in getModelRelations
+	personWhomAteMeal = myMealObj.getRelated('person')
+
+	# Or we can use the model itself which we also provided as a key returned by getModelRelations
+	personWhomAteMeal = myMealObj.getRelated(Person)
+
+
+For now, these relations are "read-only", that is, assinging myMealObj.person = someOtherPerson is not effective.
 
 
 Transactions
@@ -546,7 +634,7 @@ None will be used when fields have a NULL value, and can be used with filtering 
 
 You may also find it useful sometimes to use "ichorORM.constants.SQL\_NULL".
 
-If you do a quey like:
+If you do a query like:
 
     myObjs = MyModel.filter(some_field=None)
 
@@ -672,6 +760,7 @@ You may embed subqueries directly using the QueryStr object, or you can embed a 
 This will generate a query like:
 
 	UPDATE Person SET age = age + 1 WHERE id in (SELECT id_person FROM Meal WHERE food_name LIKE '%Cake' AND consumed_date = '2018-07-04'::date )
+
 
 
 Additional Libraries
