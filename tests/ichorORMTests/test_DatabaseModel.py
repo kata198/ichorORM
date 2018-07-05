@@ -528,7 +528,15 @@ class TestDatabaseModel(object):
         notNullAgeObjs = MyPersonModel.filter(age__isnot=QueryStr('NULL'))
         testResults(notNullAgeObjs, notNullAgeExpectedMaps, 'age__isnot=QueryStr("NULL)')
 
+        
+        # Test with = QueryStr('NULL') ( should be converted to is )
+        nullAgeObjs = MyPersonModel.filter(age=QueryStr('NULL'))
+        testResults(nullAgeObjs, nullAgeExpectedMaps, 'age=QueryStr("NULL")')
 
+
+        # Test with __ne= QueryStr('NULL') ( should be converted to is )
+        notNullAgeObjs = MyPersonModel.filter(age__ne=QueryStr('NULL'))
+        testResults(notNullAgeObjs, notNullAgeExpectedMaps, 'age__ne==QueryStr("NULL)')
 
 
 if __name__ == '__main__':
