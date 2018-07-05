@@ -13,7 +13,7 @@ import LocalConfig
 import ichorORM
 
 from ichorORM.model import DatabaseModel
-from ichorORM.query import SelectQuery
+from ichorORM.query import SelectQuery, QueryStr, SQL_NULL
 
 
 class MyPersonModel(DatabaseModel):
@@ -58,6 +58,12 @@ class TestDatabaseModel(object):
             { "id" : None, "first_name" : 'Tom',  'last_name'  : 'Brown',  'age' : 65, 'birth_day' : 2, 'birth_month' : 9 },
         ]
 
+        self.nullDataSet = [
+            { "id" : None, "first_name" : 'Henry', 'last_name'  : 'Thomson',    'age' : None, 'birth_day' : None, 'birth_month' : None },
+            { "id" : None, "first_name" : 'Frank', 'last_name' : "L'ray", 'age' : None, 'birth_day' : None, 'birth_month' : None },
+            { "id" : None, "first_name" : 'Bob',  'last_name'  : 'Bizzle',  'age' : None, 'birth_day' : None, 'birth_month' : None },
+        ]
+
 
     def setup_method(self, meth):
         '''
@@ -70,8 +76,21 @@ class TestDatabaseModel(object):
 
         pks = dbConn.doInsert("INSERT INTO " + MyPersonModel.TABLE_NAME + " (first_name, last_name, age, birth_day, birth_month) VALUES ( %(first_name)s, %(last_name)s, %(age)s, %(birth_day)s, %(birth_month)s )", valueDicts=self.dataSet, autoCommit=False, returnPk=True)
 
+        dbConn.commit()
+
         for i in range(len(self.dataSet)):
             self.dataSet[i]['id'] = pks[i]
+
+        if meth in (self.test_filterNull, ):
+            pks = dbConn.doInsert("INSERT INTO " + MyPersonModel.TABLE_NAME + " (first_name, last_name, age, birth_day, birth_month) VALUES ( %(first_name)s, %(last_name)s, %(age)s, %(birth_day)s, %(birth_month)s )", valueDicts=self.nullDataSet, autoCommit=False, returnPk=True)
+
+            dbConn.commit()
+
+            for i in range(len(self.nullDataSet)):
+                self.nullDataSet[i]['id'] = pks[i]
+                self.dataSet.append( self.nullDataSet[i] )
+
+
 
         #dbConn.executeSql("INSERT INTO %s (first_name, last_name, age, birth_day, birth_month) VALUES ('John', 'Smith', 43, 4, 11)" %(MyPersonModel.TABLE_NAME, ))
         #dbConn.executeSql("INSERT INTO %s (first_name, last_name, age, birth_day, birth_month) VALUES ('John', 'Doe', 38, 2, 12)" %(MyPersonModel.TABLE_NAME, ))
@@ -79,7 +98,6 @@ class TestDatabaseModel(object):
         #dbConn.executeSql("INSERT INTO %s (first_name, last_name, age, birth_day, birth_month) VALUES ('Cathy', 'Lawson', 14, 6, 8)" %(MyPersonModel.TABLE_NAME, ))
         #dbConn.executeSql("INSERT INTO %s (first_name, last_name, age, birth_day, birth_month) VALUES ('Tom', 'Brown', 65, 2, 9)" %(MyPersonModel.TABLE_NAME, ))
 
-        dbConn.commit()
 
 
     def teardown_method(self, meth):
@@ -442,6 +460,76 @@ class TestDatabaseModel(object):
         objFetch = MyPersonModel.get(newObj.id)
 
         assert objFetch.asDict() == newObj.asDict() , 'Expected fetched object to contain the same field values as inserted object'
+
+    def test_filterNull(self):
+        '''
+            test_filterNull - Test using NULL in filters
+        '''
+        nullAgeExpectedMaps = [ copy.copy(x) for x in self.dataSet if x['age'] is None ]
+        notNullAgeExpectedMaps = [ copy.copy(x) for x in self.dataSet if x['age'] is not None ]
+        #    { "id" : None, "first_name" : 'Henry', 'last_name'  : 'Thomson',    'age' : None, 'birth_day' : None, 'birth_month' : None },
+        #    { "id" : None, "first_name" : 'Frank', 'last_name' : "L'ray", 'age' : None, 'birth_day' : None, 'birth_month' : None },
+        #    { "id" : None, "first_name" : 'Bob',  'last_name'  : 'Bizzle',  'age' : None, 'birth_day' : None, 'birth_month' : None },
+        #]
+        def testResults(results, expectedResults, whichTestStr):
+            assert results , 'Got no results for %s check' %(whichTestStr, )
+
+            assert len(results) == len(expectedResults) , 'Expected %d results on "%s" check but got %d.  Results:  %s' %(len(expectedResults), whichTestStr, len(results), repr(results) )
+
+            resultDicts = [result.asDict(includePk=True) for result in results]
+
+            for resultDict in resultDicts:
+                foundMatch = False
+                for expectedResult in expectedResults:
+                    if expectedResult == resultDict:
+                        foundMatch = True
+                        break
+
+                assert foundMatch , '"%s" check did not match expected data set: ' %( whichTestStr, repr(resultDict), )
+
+        # Test is=None
+        nullAgeObjs = MyPersonModel.filter(age__is=None)
+        testResults(nullAgeObjs, nullAgeExpectedMaps, 'age__is=None')
+
+        # Test isnot=None
+        notNullAgeObjs = MyPersonModel.filter(age__isnot=None)
+        testResults(notNullAgeObjs, notNullAgeExpectedMaps, 'age__isnot=None')
+
+        # Test that =None is converted to is None
+        nullAgeObjs = MyPersonModel.filter(age=None)
+        testResults(nullAgeObjs, nullAgeExpectedMaps, 'age=None')
+
+        # Test that __ne=None is converted to isnot None
+        notNullAgeObjs = MyPersonModel.filter(age__ne=None)
+        testResults(notNullAgeObjs, notNullAgeExpectedMaps, 'age__ne=None')
+
+
+        # Test with SQL_NULL
+        nullAgeObjs = MyPersonModel.filter(age__is=SQL_NULL)
+        testResults(nullAgeObjs, nullAgeExpectedMaps, 'age__is=SQL_NULL')
+
+        # Test with = SQL_NULL (should be converted to is)
+        nullAgeObjs = MyPersonModel.filter(age=SQL_NULL)
+        testResults(nullAgeObjs, nullAgeExpectedMaps, 'age=SQL_NULL')
+
+        # Test isnot SQL_NULL
+        notNullAgeObjs = MyPersonModel.filter(age__isnot=SQL_NULL)
+        testResults(notNullAgeObjs, notNullAgeExpectedMaps, 'age__isnot=SQL_NULL')
+
+        # Test __ne= SQL_NULL (should be converted to is not)
+        notNullAgeObjs = MyPersonModel.filter(age__ne=SQL_NULL)
+        testResults(notNullAgeObjs, notNullAgeExpectedMaps, 'age__ne=SQL_NULL')
+
+        # Test with QueryStr('NULL')
+        nullAgeObjs = MyPersonModel.filter(age__is=QueryStr('NULL'))
+        testResults(nullAgeObjs, nullAgeExpectedMaps, 'age__is=QueryStr("NULL")')
+
+        # Test isnot SQL_NULL
+        notNullAgeObjs = MyPersonModel.filter(age__isnot=QueryStr('NULL'))
+        testResults(notNullAgeObjs, notNullAgeExpectedMaps, 'age__isnot=QueryStr("NULL)')
+
+
+
 
 if __name__ == '__main__':
     sys.exit(subprocess.Popen('GoodTests.py -n1 "%s" %s' %(sys.argv[0], ' '.join(['"%s"' %(arg.replace('"', '\\"'), ) for arg in sys.argv[1:]]) ), shell=True).wait())
