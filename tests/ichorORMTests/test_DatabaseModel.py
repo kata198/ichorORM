@@ -72,6 +72,8 @@ class TestDatabaseModel(object):
                 @param meth <builtins.method> - The test method that is about to be executed
         '''
 
+        self.fullDataSet = []
+
         dbConn = ichorORM.getDatabaseConnection(isTransactionMode=True)
 
         pks = dbConn.doInsert("INSERT INTO " + MyPersonModel.TABLE_NAME + " (first_name, last_name, age, birth_day, birth_month) VALUES ( %(first_name)s, %(last_name)s, %(age)s, %(birth_day)s, %(birth_month)s )", valueDicts=self.dataSet, autoCommit=False, returnPk=True)
@@ -81,6 +83,8 @@ class TestDatabaseModel(object):
         for i in range(len(self.dataSet)):
             self.dataSet[i]['id'] = pks[i]
 
+        self.fullDataSet += self.dataSet
+
         if meth in (self.test_filterNull, ):
             pks = dbConn.doInsert("INSERT INTO " + MyPersonModel.TABLE_NAME + " (first_name, last_name, age, birth_day, birth_month) VALUES ( %(first_name)s, %(last_name)s, %(age)s, %(birth_day)s, %(birth_month)s )", valueDicts=self.nullDataSet, autoCommit=False, returnPk=True)
 
@@ -88,7 +92,7 @@ class TestDatabaseModel(object):
 
             for i in range(len(self.nullDataSet)):
                 self.nullDataSet[i]['id'] = pks[i]
-                self.dataSet.append( self.nullDataSet[i] )
+                self.fullDataSet.append( self.nullDataSet[i] )
 
 
 
@@ -465,8 +469,8 @@ class TestDatabaseModel(object):
         '''
             test_filterNull - Test using NULL in filters
         '''
-        nullAgeExpectedMaps = [ copy.copy(x) for x in self.dataSet if x['age'] is None ]
-        notNullAgeExpectedMaps = [ copy.copy(x) for x in self.dataSet if x['age'] is not None ]
+        nullAgeExpectedMaps = [ copy.copy(x) for x in self.fullDataSet if x['age'] is None ]
+        notNullAgeExpectedMaps = [ copy.copy(x) for x in self.fullDataSet if x['age'] is not None ]
         #    { "id" : None, "first_name" : 'Henry', 'last_name'  : 'Thomson',    'age' : None, 'birth_day' : None, 'birth_month' : None },
         #    { "id" : None, "first_name" : 'Frank', 'last_name' : "L'ray", 'age' : None, 'birth_day' : None, 'birth_month' : None },
         #    { "id" : None, "first_name" : 'Bob',  'last_name'  : 'Bizzle',  'age' : None, 'birth_day' : None, 'birth_month' : None },

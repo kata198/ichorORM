@@ -456,26 +456,24 @@ class TestSelectQuery(object):
         results = selQ.executeGetObjs()
         testResults(results, expectedNotNullAgeMaps, 'age is not null')
 
-        # XXX: Not implemented
         # Test that = gets converted to "is" when None is used
-        #selQ = SelectQuery(MyPersonModel)
-        #
-        #selQWhere = selQ.addStage()
-        #selQWhere.addCondition('age', '=', None)
-        # 
-        #results = selQ.executeGetObjs()
-        #testResults(results, expectedNullAgeMaps, 'age = null')
+        selQ = SelectQuery(MyPersonModel)
+        
+        selQWhere = selQ.addStage()
+        selQWhere.addCondition('age', '=', None)
+         
+        results = selQ.executeGetObjs()
+        testResults(results, expectedNullAgeMaps, 'age = null')
 
 
-        # XXX: Not implemented
         # Test that != gets converted to "is not" when None is used
-        #selQ = SelectQuery(MyPersonModel)
-        #
-        #selQWhere = selQ.addStage()
-        #selQWhere.addCondition('age', '!=', None)
-        # 
-        #results = selQ.executeGetObjs()
-        #testResults(results, expectedNotNullAgeMaps, 'age != null')
+        selQ = SelectQuery(MyPersonModel)
+  
+        selQWhere = selQ.addStage()
+        selQWhere.addCondition('age', '!=', None)
+         
+        results = selQ.executeGetObjs()
+        testResults(results, expectedNotNullAgeMaps, 'age != null')
 
         # Test "is SQL_NULL"
         selQ = SelectQuery(MyPersonModel)
