@@ -27,7 +27,7 @@ from collections import OrderedDict
 from . import getDatabaseConnection
 
 __all__ = ('QueryStr', 'QueryBase', 'FilterType', 'isFilterType', 'FilterField', 'FilterJoin', 'FilterStage',
-            'SelectQuery', 'SelectInnerJoinQuery', 'SelectGenericJoinQuery',
+            'isSelectQuery', 'SelectQuery', 'SelectInnerJoinQuery', 'SelectGenericJoinQuery',
             'UpdateQuery', 'InsertQuery', 'DeleteQuery', 'SQL_NULL' )
 
 
@@ -108,7 +108,7 @@ class FilterField(FilterType):
 
         if isQueryStr(filterValue):
             filterValue = filterValue
-        elif issubclass(filterValue.__class__, SelectQuery):
+        elif isSelectQuery(filterValue):
             filterValue = filterValue.asQueryStr()
         else:
             # Convert complex types into proper representation
@@ -170,7 +170,7 @@ class FilterField(FilterType):
                 raise ValueError('Unexpected value for "BETWEEN" operator: <%s> %s.\nShould either be a 2-element array/tuple or a QueryStr.' %(str(type(filterValue)), repr(filterValue)))
 
 
-        elif issubclass(filterValue.__class__, SelectQuery):
+        elif isSelectQuery(filterValue):
             (_queryStr, _selectParams) = filterValue.asQueryStrParams(paramPrefix=paramName)
 
             ret += " " + _queryStr
@@ -293,7 +293,7 @@ class FilterStage(FilterType):
 
         expressions = []
         for _filterEm in self.filters:
-            if issubclass(_filterEm.__class__, SelectQuery):
+            if isSelectQuery(_filterEm):
                 filterStr = _filterEm.asQueryStr()
             else:
                 filterStr = _filterEm.toStr()
@@ -339,7 +339,7 @@ class FilterStage(FilterType):
                 if not expression:
                     continue
                 params.update(filterParams)
-            elif issubclass(_filterEm.__class__, SelectQuery):
+            elif isSelectQuery(_filterEm):
                 (expression, filterParams) = _filterEm.asQueryStrParams(paramPrefix=paramName)
                 if not expression:
                     continue
@@ -664,6 +664,11 @@ class QueryBase(object):
         '''
         return self.model.FIELDS
 
+def isSelectQuery(obj):
+    '''
+        isSelectQuery - Checks if passed object inherits from SelectQuery
+    '''
+    return bool( issubclass(obj.__class__, SelectQuery) )
 
 class SelectQuery(QueryBase):
     '''
@@ -1692,7 +1697,7 @@ class UpdateQuery(QueryBase):
 
         for fieldName, newValue in useNewFieldValues.items():
 
-            if issubclass(newValue.__class__, SelectQuery):
+            if isSelectQuery(newValue):
                 newValue = newValue.asQueryStr()
 
             if isQueryStr(newValue):
@@ -1723,7 +1728,7 @@ class UpdateQuery(QueryBase):
             identifier = 'arg' + str(argNum)
             argNum += 1
 
-            if issubclass(fieldValue.__class__, SelectQuery):
+            if isSelectQuery(fieldValue):
                 (fieldValue, extraRetParams) = fieldValue.asQueryStrParams(paramPrefix=identifier)
                 retValues.update(extraRetParams)
                 
@@ -1901,7 +1906,7 @@ class InsertQuery(QueryBase):
         for fieldName, fieldValue in useSetFieldValues.items():
             if isQueryStr(fieldValue):
                 retParams.append(fieldValue)
-            elif issubclass(fieldValue.__class__, SelectQuery):
+            elif isSelectQuery(fieldValue):
                 (selParams, selValues) = fieldValue.asQueryStrParams(paramPrefix=fieldName + '_')
                 
                 retParams += selParams
