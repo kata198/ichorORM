@@ -1204,13 +1204,9 @@ class SelectGenericJoinQuery(SelectQuery):
 
                 @param limitNum <None/int> default None - If provided, return max this many records
         '''
-        SelectQuery.__init__(self, None, selectFields=selectFields, orderByField=orderByField, orderByDir=orderByDir, limitNum=limitNum)
+        SelectQuery.__init__(self, primaryModel, selectFields=selectFields, orderByField=orderByField, orderByDir=orderByDir, limitNum=limitNum)
 
-        # TODO: Maybe pass this to SelectQuery?
-        self.model = primaryModel
         self.models = [ self.model ]
-        for model in models:
-            model._setupModel()
 
         self.joins = []
 
@@ -1335,7 +1331,7 @@ class SelectGenericJoinQuery(SelectQuery):
                 @return list<str> - List of field names
         '''
         if self.selectFields == 'ALL':
-            selectFields = self.getAllFieldNames()
+            selectFields = self.getAllFieldNamesIncludingTable()
         else:
             selectFields = self.selectFields
 
