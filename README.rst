@@ -321,7 +321,7 @@ This section covers how to do transactions within the DatabaseModel methods. Doi
 
 Each of the "save action" methods ( *insertObject*, *updateObject*, *createAndSave* ) take two parameters you will set to performa transaction.
 
-These are "dbConn" in which you will pass the transaction connection you opened in step 1, and "doCommit" which you will set to False. When you are done, you can call *commit* on the 
+These are "dbConn" in which you will pass the transaction connection you opened in step 1, and "doCommit" which you will set to False. When you are done, you can call *commit* on the connection object.
 
 	dbConn = getDatabaseConnection(isTransactionMode=True)
 
@@ -450,7 +450,7 @@ For example:
 
 This will generate a query with two "groups" in the WHERE clause. The executed query will look something like this:
 
-	SELECT \* FROM person WHERE ( age > 30 AND eye\_color = 'Blue' ) AND ( age < 35 or last\_name = 'Smith' )
+	SELECT \* FROM person WHERE ( age > 30 AND eye\_color = 'Blue' ) AND ( age < 35 OR last\_name = 'Smith' )
 
 
 Notice the top-level stages are joined by an "AND". You can get as complicated as you want here!
@@ -480,7 +480,7 @@ So, for example, if I wanted to filter where (age is > 30 and eye color is 'Blue
 
 so basically creating an "outer stage" set to OR and adding substages to that, we now get a query like:
 
-	SELECT \* FROM person WHERE ( ( age > 30 AND eye\_color = 'Blue' ) OR ( age < 35 or last\_name = 'Smith' ) )
+	SELECT \* FROM person WHERE ( ( age > 30 AND eye\_color = 'Blue' ) OR ( age < 35 OR last\_name = 'Smith' ) )
 
 
 Advanced Select / Join Multiple Tables
@@ -522,21 +522,21 @@ This will generate a query like
 
 This is the prefered method for getting the results of joined tables.
 
-It take sthe primary model ( the FROM ) as the first argument.
+It takes the primary model ( the FROM ) as the first argument.
 
 For selectFields, prefix with the table name ( e.x. "person.age" )
 
 
-	selQ = SelectGenericJoinQuery( Person )
+	selQ = SelectGenericJoinQuery( Person, selectFields=['Person.first\_name', 'Person.last\_name', 'Meal.item\_name'] )
 
 	selQWhere = selQ.addStage()
 
 	selQWhere.addCondition('age', '>', 18)
 
 
-Join on another table by calling *joinModel* passing the model to join, a join type constant JOIN\_\* (e.x. JOIN\_INNER, JOIN\_LEFT, JOIN\_RIGHT, JOIN\_OUTER\_FULL) , and "AND" or "OR" outer-mode for this stage.
+Join on another table by calling *joinModel* passing the model to join, a join type constant (from ichorORM.constants) JOIN\_\* (e.x. JOIN\_INNER, JOIN\_LEFT, JOIN\_RIGHT, JOIN\_OUTER\_FULL) , and "AND" or "OR" outer-mode for this stage.
 
-The stage is returned so you can call .addCondition on it to add more conditionals on the join line.
+The stage is returned so you can call .addCondition on it to add conditionals on the join line. Don't forget to join your tables with a condition here!
 
 
 	joinWhere = selQ.joinModel( Meal, 'INNER', 'AND' )
@@ -552,18 +552,23 @@ The stage is returned so you can call .addCondition on it to add more conditiona
 	mapping = selQ.executeGetMapping()
 
 
-If you call "executeGetDictObjs" you will get a list of DictObjs. This is an object where access is supported either via dot (.field) or sub (['field']). The first level is the table name, the second level is the field names. For example, obj['person']['first_name'] would be the person.first\_name field
+This will generate a more conventional joined-select query, like so:
 
-If you call executeGetMapping you will get a list of OrderedDict (in same order specified in selectFields). For example, obj['person.first\_name'] if you named the field like that in selectFields, or if you just had selectFields=['first\_name'... ] then it would be obj['first\_name']
+	SELECT Person.first\_name, Person.last\_name, Meal.item\_name FROM Person
+
+	  INNER JOIN Meal ON ( Meal.id\_person = Person.id )
+
+	WHERE
+
+	  person.age > 18
 
 
-This will generate a query like:
+**Results**
 
-	SELECT \* from Person
+If you call *executeGetDictObjs* you will get a list of DictObjs. This is an object where access is supported either via dot (.field) or sub (['field']). The first level is the table name, the second level is the field names. For example, obj['person']['first_name'] would be the person.first\_name field.
 
-	INNER JOIN Meal ON ( meal.id\_person = person.id )
 
-	WHERE person.age > 18
+If you call *executeGetMapping* you will get a list of OrderedDict (in same order specified in selectFields). For example, obj['person.first\_name'] if you named the field like that in selectFields, or if you just had selectFields=['first\_name'... ] then it would be obj['first\_name']
 
 
 
@@ -588,7 +593,6 @@ Use the method *setFieldValue* to update the value of a field.
 
 *execute* can also be used as an alias to *executeUpdate*
 
-The *executeUpdate* method has a parameter *replaceSpecialValues*. When True, this will convert special values such as the string 'NOW()' and 'current\_timestamp' with a datetime of now.
 
 Also keep in mind that you can pass a getDatabaseConnection(isTransactionMode=True) to executeUpdate and set doCommit=False to link multiple updates or inserts and updates into a single transaction (executed when dbConn.commit() is called)
 
@@ -604,9 +608,11 @@ An InsertQuery object is used to build queries to perform inserts.
 
 	insQ.setFieldValue('age', 22)
 
-	insQ.executeInsert()
+	personId = insQ.executeInsert()
 
 *execute* can also be used as an alias to *executeInsert*
+
+The "returnPk" argument (default True) causes the primary key of the Person model to be returned. This is returned immediately, even when within a transaction (read-commit).
 
 Also keep in mind that you can pass a getDatabaseConnection(isTransactionMode=True) to executeInsert and set doCommit=False to link multiple inserts or inserts and updates into a single transaction (executed when dbConn.commit() is called)
 
