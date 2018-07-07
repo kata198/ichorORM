@@ -91,7 +91,7 @@ class OneToManyRelation(ForeignRelation):
         OneToManyRelation - A relation where one field on the current object references one or more records of another type
     '''
 
-    def __init__(self, fkFieldName, relatedType, relatedFieldName):
+    def __init__(self, fkFieldName, relatedType, relatedFieldName=None):
         '''
             __init__ - Create this relation object
 
@@ -99,7 +99,9 @@ class OneToManyRelation(ForeignRelation):
 
                 @param relatedType <DatabaseModel type> - The model that references this model on #fkFieldName
 
-                @param relatedFieldName <str> - The field on the foreign model which references #fkFieldName
+                @param relatedFieldName <None/str> Default None - The field on the foreign model which references #fkFieldName
+
+                    If None, referenced the PRIMARY KEY on #relatedType
         '''
         
         self.fkFieldName = fkFieldName
