@@ -2120,7 +2120,7 @@ class InsertQuery(QueryBase):
         #    raise ValueError('Cannot have both doCommit=False and returnPk=True')
 
         if returnPk is True:
-            pks = dbConn.doInsert(sqlParam, (paramValues, ), autoCommit=False, returnPk=True)
+            pks = dbConn.doInsert(sqlParam, (paramValues, ), doCommit=False, returnPk=True)
         else:
             dbConn.executeSqlParams(sqlParam, paramValues)
 

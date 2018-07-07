@@ -69,7 +69,7 @@ class TestSelectQuery(object):
 
 
             dbConn = ichorORM.getDatabaseConnection(isTransactionMode=True)
-            pks = dbConn.doInsert("INSERT INTO " + MyPersonModel.TABLE_NAME + " (first_name, last_name, age, birth_day, birth_month) VALUES ( %(first_name)s, %(last_name)s, %(age)s, %(birth_day)s, %(birth_month)s )", valueDicts=self.dataSet, autoCommit=False, returnPk=True)
+            pks = dbConn.doInsert("INSERT INTO " + MyPersonModel.TABLE_NAME + " (first_name, last_name, age, birth_day, birth_month) VALUES ( %(first_name)s, %(last_name)s, %(age)s, %(birth_day)s, %(birth_month)s )", valueDicts=self.dataSet, doCommit=False, returnPk=True)
 
             dbConn.commit()
 
@@ -86,7 +86,7 @@ class TestSelectQuery(object):
                 { "id" : None, "first_name" : 'Tom',  'last_name'  : 'Brown',  'age' : 65, 'birth_day' : None, 'birth_month' : None },
             ]
             dbConn = ichorORM.getDatabaseConnection(isTransactionMode=True)
-            pks = dbConn.doInsert("INSERT INTO " + MyPersonModel.TABLE_NAME + " (first_name, last_name, age, birth_day, birth_month) VALUES ( %(first_name)s, %(last_name)s, %(age)s, %(birth_day)s, %(birth_month)s )", valueDicts=self.dataSet, autoCommit=False, returnPk=True)
+            pks = dbConn.doInsert("INSERT INTO " + MyPersonModel.TABLE_NAME + " (first_name, last_name, age, birth_day, birth_month) VALUES ( %(first_name)s, %(last_name)s, %(age)s, %(birth_day)s, %(birth_month)s )", valueDicts=self.dataSet, doCommit=False, returnPk=True)
 
             dbConn.commit()
 

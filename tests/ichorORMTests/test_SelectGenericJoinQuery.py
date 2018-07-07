@@ -99,7 +99,7 @@ class TestSelectGenericJoinQuery(object):
             dbConn = ichorORM.getDatabaseConnection(isTransactionMode=True)
 
             pks = dbConn.doInsert(query="INSERT INTO " + Person.TABLE_NAME + " (first_name, last_name, eye_color, age, birth_month, birth_day, datasetuid) VALUES ( %(first_name)s, %(last_name)s, %(eye_color)s, %(age)s, %(birth_month)s, %(birth_day)s, %(datasetuid)s )",
-                    valueDicts=self.DEFAULT_PERSON_DATASET, autoCommit=False)
+                    valueDicts=self.DEFAULT_PERSON_DATASET, doCommit=False)
 
             dbConn.commit()
 
@@ -150,7 +150,7 @@ class TestSelectGenericJoinQuery(object):
             dbConn = ichorORM.getDatabaseConnection(isTransactionMode=True)
 
             pks = dbConn.doInsert(query="INSERT INTO " + Meal.TABLE_NAME + " (food_group, item_name, price, id_person, datasetuid) VALUES ( %(food_group)s, %(item_name)s, %(price)s, %(id_person)s, %(datasetuid)s )",
-                    valueDicts=self.DEFAULT_MEAL_DATASET, autoCommit=False)
+                    valueDicts=self.DEFAULT_MEAL_DATASET, doCommit=False)
 
             dbConn.commit()
 

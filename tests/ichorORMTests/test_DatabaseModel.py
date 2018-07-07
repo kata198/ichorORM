@@ -76,7 +76,7 @@ class TestDatabaseModel(object):
 
         dbConn = ichorORM.getDatabaseConnection(isTransactionMode=True)
 
-        pks = dbConn.doInsert("INSERT INTO " + MyPersonModel.TABLE_NAME + " (first_name, last_name, age, birth_day, birth_month) VALUES ( %(first_name)s, %(last_name)s, %(age)s, %(birth_day)s, %(birth_month)s )", valueDicts=self.dataSet, autoCommit=False, returnPk=True)
+        pks = dbConn.doInsert("INSERT INTO " + MyPersonModel.TABLE_NAME + " (first_name, last_name, age, birth_day, birth_month) VALUES ( %(first_name)s, %(last_name)s, %(age)s, %(birth_day)s, %(birth_month)s )", valueDicts=self.dataSet, doCommit=False, returnPk=True)
 
         dbConn.commit()
 
@@ -86,7 +86,7 @@ class TestDatabaseModel(object):
         self.fullDataSet += self.dataSet
 
         if meth in (self.test_filterNull, ):
-            pks = dbConn.doInsert("INSERT INTO " + MyPersonModel.TABLE_NAME + " (first_name, last_name, age, birth_day, birth_month) VALUES ( %(first_name)s, %(last_name)s, %(age)s, %(birth_day)s, %(birth_month)s )", valueDicts=self.nullDataSet, autoCommit=False, returnPk=True)
+            pks = dbConn.doInsert("INSERT INTO " + MyPersonModel.TABLE_NAME + " (first_name, last_name, age, birth_day, birth_month) VALUES ( %(first_name)s, %(last_name)s, %(age)s, %(birth_day)s, %(birth_month)s )", valueDicts=self.nullDataSet, doCommit=False, returnPk=True)
 
             dbConn.commit()
 

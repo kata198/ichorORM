@@ -541,7 +541,7 @@ class DatabaseConnection(object):
         rows = cursor.fetchall()
         return rows
 
-    def doInsert(self, query, valueDicts=None, autoCommit=True, returnPk=True):
+    def doInsert(self, query, valueDicts=None, doCommit=True, returnPk=True):
         '''
             doInsert - Perform an INSERT query with a parameterized query
 
@@ -563,9 +563,11 @@ class DatabaseConnection(object):
                 which would cause the insert line to be executed twice,
                   once for each row to be inserted (element in the list)
 
-             @param autoCommit - If True, will commit transaction after these inserts
+             @param doCommit <bool> Default True - If True, will commit transaction after these inserts
 
-             @param returnPk <bool> - If True, will return the primary key(s) inserted
+                (formerly named autoCommit)
+
+             @param returnPk <bool> Default True - If True, will return the primary key(s) inserted
 
              @return list<int> - if returnPk is True, otherwise None
         '''
@@ -589,7 +591,7 @@ class DatabaseConnection(object):
             (cursor, result) = self._sendSqlCommand ( query, lambda _cursor : _cursor.executemany(query, valueDicts), )
 
 
-        if autoCommit is True:
+        if doCommit is True:
             self.commit()
 
 
