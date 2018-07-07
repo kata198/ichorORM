@@ -15,8 +15,8 @@ from .special import SQL_NULL, QueryStr
 
 from .query import SelectQuery, InsertQuery, UpdateQuery, DeleteQuery, SelectInnerJoinQuery, SelectGenericJoinQuery
 
-__version__ = '2.0.0'
-__version_tuple__ = ('2', '0', '0')
-__version_int_tuple__ = (2, 0, 0)
+__version__ = '2.0.1'
+__version_tuple__ = ('2', '0', '1')
+__version_int_tuple__ = (2, 0, 1)
 
 __all__ = ('setGlobalConnectionParams', 'getDatabaseConnection', 'DatabaseConnection', 'DatabaseConnectionFailure', 'DatabaseModel')
