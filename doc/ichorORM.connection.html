@@ -109,7 +109,7 @@ Alias&nbsp;is&nbsp;"startTransactionMode"</tt></dd></dl>
 &nbsp;<br />
 &nbsp;&nbsp;Requires&nbsp;transaction&nbsp;mode&nbsp;to&nbsp;be&nbsp;on,&nbsp;@see&nbsp;#beginTransactionMode</tt></dd></dl>
 
-<dl ><dt ><a name="DatabaseConnection-doInsert" ><strong >doInsert</strong></a>(self, query, valueDicts=None, autoCommit=True, returnPk=True)</dt><dd ><tt >doInsert&nbsp;-&nbsp;Perform&nbsp;an&nbsp;INSERT&nbsp;query&nbsp;with&nbsp;a&nbsp;parameterized&nbsp;query<br />
+<dl ><dt ><a name="DatabaseConnection-doInsert" ><strong >doInsert</strong></a>(self, query, valueDicts=None, doCommit=True, returnPk=True)</dt><dd ><tt >doInsert&nbsp;-&nbsp;Perform&nbsp;an&nbsp;INSERT&nbsp;query&nbsp;with&nbsp;a&nbsp;parameterized&nbsp;query<br />
 &nbsp;<br />
 @param&nbsp;query&nbsp;-&nbsp;Query&nbsp;string.<br />
 &nbsp;<br />
@@ -129,9 +129,11 @@ Alias&nbsp;is&nbsp;"startTransactionMode"</tt></dd></dl>
 &nbsp;&nbsp;&nbsp;&nbsp;which&nbsp;would&nbsp;cause&nbsp;the&nbsp;insert&nbsp;line&nbsp;to&nbsp;be&nbsp;executed&nbsp;twice,<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;once&nbsp;for&nbsp;each&nbsp;row&nbsp;to&nbsp;be&nbsp;inserted&nbsp;(element&nbsp;in&nbsp;the&nbsp;list)<br />
 &nbsp;<br />
-&nbsp;@param&nbsp;autoCommit&nbsp;-&nbsp;If&nbsp;True,&nbsp;will&nbsp;commit&nbsp;transaction&nbsp;after&nbsp;these&nbsp;inserts<br />
+&nbsp;@param&nbsp;doCommit&nbsp;&lt;bool&gt;&nbsp;Default&nbsp;True&nbsp;-&nbsp;If&nbsp;True,&nbsp;will&nbsp;commit&nbsp;transaction&nbsp;after&nbsp;these&nbsp;inserts<br />
 &nbsp;<br />
-&nbsp;@param&nbsp;returnPk&nbsp;&lt;bool&gt;&nbsp;-&nbsp;If&nbsp;True,&nbsp;will&nbsp;return&nbsp;the&nbsp;primary&nbsp;key(s)&nbsp;inserted<br />
+&nbsp;&nbsp;&nbsp;&nbsp;(formerly&nbsp;named&nbsp;autoCommit)<br />
+&nbsp;<br />
+&nbsp;@param&nbsp;returnPk&nbsp;&lt;bool&gt;&nbsp;Default&nbsp;True&nbsp;-&nbsp;If&nbsp;True,&nbsp;will&nbsp;return&nbsp;the&nbsp;primary&nbsp;key(s)&nbsp;inserted<br />
 &nbsp;<br />
 &nbsp;@return&nbsp;list&lt;int&gt;&nbsp;-&nbsp;if&nbsp;returnPk&nbsp;is&nbsp;True,&nbsp;otherwise&nbsp;None</tt></dd></dl>
 

@@ -73,13 +73,15 @@ relations&nbsp;-&nbsp;Defines&nbsp;relation&nbsp;types&nbsp;(One-to-one,&nbsp;on
 </dl>
 <hr />
 Methods defined here:<br />
-<dl ><dt ><a name="OneToManyRelation-__init__" ><strong >__init__</strong></a>(self, fkFieldName, relatedType, relatedFieldName)</dt><dd ><tt >__init__&nbsp;-&nbsp;Create&nbsp;this&nbsp;relation&nbsp;<a href="builtins.html#object" >object</a><br />
+<dl ><dt ><a name="OneToManyRelation-__init__" ><strong >__init__</strong></a>(self, fkFieldName, relatedType, relatedFieldName=None)</dt><dd ><tt >__init__&nbsp;-&nbsp;Create&nbsp;this&nbsp;relation&nbsp;<a href="builtins.html#object" >object</a><br />
 &nbsp;<br />
 &nbsp;&nbsp;&nbsp;&nbsp;@param&nbsp;fkFieldName&nbsp;&lt;str&gt;&nbsp;-&nbsp;The&nbsp;field&nbsp;on&nbsp;the&nbsp;current&nbsp;model&nbsp;that&nbsp;is&nbsp;being&nbsp;referenced<br />
 &nbsp;<br />
 &nbsp;&nbsp;&nbsp;&nbsp;@param&nbsp;relatedType&nbsp;&lt;DatabaseModel&nbsp;type&gt;&nbsp;-&nbsp;The&nbsp;model&nbsp;that&nbsp;references&nbsp;this&nbsp;model&nbsp;on&nbsp;#fkFieldName<br />
 &nbsp;<br />
-&nbsp;&nbsp;&nbsp;&nbsp;@param&nbsp;relatedFieldName&nbsp;&lt;str&gt;&nbsp;-&nbsp;The&nbsp;field&nbsp;on&nbsp;the&nbsp;foreign&nbsp;model&nbsp;which&nbsp;references&nbsp;#fkFieldName</tt></dd></dl>
+&nbsp;&nbsp;&nbsp;&nbsp;@param&nbsp;relatedFieldName&nbsp;&lt;None/str&gt;&nbsp;Default&nbsp;None&nbsp;-&nbsp;The&nbsp;field&nbsp;on&nbsp;the&nbsp;foreign&nbsp;model&nbsp;which&nbsp;references&nbsp;#fkFieldName<br />
+&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;None,&nbsp;referenced&nbsp;the&nbsp;PRIMARY&nbsp;KEY&nbsp;on&nbsp;#relatedType</tt></dd></dl>
 
 <dl ><dt ><a name="OneToManyRelation-getRelated" ><strong >getRelated</strong></a>(self, sourceObj)</dt><dd ><tt >getRelated&nbsp;-&nbsp;Return&nbsp;all&nbsp;related&nbsp;objects&nbsp;based&nbsp;off&nbsp;this&nbsp;relation<br />
 &nbsp;<br />
