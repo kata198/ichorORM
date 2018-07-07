@@ -1,3 +1,7 @@
+2.0.1 - Jul 07 2018
+
+* Minor README updates
+
 2.0.0 - Jul 05 2018
 
 * Update DatabaseModel.createAndSave to have "doCommit" and "dbConn" params to allow use within a transaction
