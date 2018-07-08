@@ -2,6 +2,9 @@
 
 * Rename DatabaseConnection.doInsert argument "autoCommit" to "doCommit" as to match everywhere else.
 
+* Add GoodTests unit test for DatabaseConnection (mostly internal methods)
+
+
 2.0.1 - Jul 07 2018
 
 * Minor README updates
