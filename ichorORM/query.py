@@ -1657,8 +1657,8 @@ class DeleteQuery(QueryBase):
         if doCommit:
             dbConn.commit()
 
-    # TODO: implement "forceDeleteAll" flag
-    def executeDelete(self, dbConn=None, doCommit=True):
+
+    def executeDelete(self, dbConn=None, doCommit=True, allowDeleteAll=False):
         '''
             executeDelete - Perform the delete. (parameterized)
 
@@ -1668,6 +1668,10 @@ class DeleteQuery(QueryBase):
 
               @param doCommit <bool> default True - If True will perform the delete right away.
 
+              @param allowDeleteAll <bool> default False - If True will allow execution of a DeleteQuery
+
+                without a "WHERE" stage (i.e. delete all records)
+
                     If False, you must manually commit the transaction and a #dbConn is required
         '''
 
@@ -1676,8 +1680,8 @@ class DeleteQuery(QueryBase):
 
         whereClause = self.getWhereClause()
 
-        if not whereClause:
-            raise ValueError('Error: Tried to delete the entire tablespace of  %s  (no where clause).' %(self.getTableName(), ))
+        if not allowDeleteAll and not whereClause:
+            raise ValueError('Error: Tried to delete the entire tablespace of  %s  (no where clause). Call executeDelete with allowDeleteAll=True to proceed anyway with deleting all records.' %(self.getTableName(), ))
 
         (sql, whereParams) = self.getSqlParameterizedValues()
 
