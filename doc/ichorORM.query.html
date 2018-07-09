@@ -103,13 +103,17 @@ Methods defined here:<br />
 &nbsp;<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;#dbConn&nbsp;must&nbsp;be&nbsp;specified&nbsp;if&nbsp;doCommit=False</tt></dd></dl>
 
-<dl ><dt ><a name="DeleteQuery-executeDelete" ><strong >executeDelete</strong></a>(self, dbConn=None, doCommit=True)</dt><dd ><tt >executeDelete&nbsp;-&nbsp;Perform&nbsp;the&nbsp;delete.&nbsp;(parameterized)<br />
+<dl ><dt ><a name="DeleteQuery-executeDelete" ><strong >executeDelete</strong></a>(self, dbConn=None, doCommit=True, allowDeleteAll=False)</dt><dd ><tt >executeDelete&nbsp;-&nbsp;Perform&nbsp;the&nbsp;delete.&nbsp;(parameterized)<br />
 &nbsp;<br />
 &nbsp;&nbsp;&nbsp;&nbsp;will&nbsp;NOT&nbsp;execute&nbsp;anything&nbsp;if&nbsp;conditionals&nbsp;are&nbsp;not&nbsp;set,&nbsp;to&nbsp;prevent&nbsp;accidently&nbsp;wiping&nbsp;the&nbsp;entire&nbsp;DB.<br />
 &nbsp;<br />
 &nbsp;&nbsp;@param&nbsp;dbConn&nbsp;&lt;DatabaseConnection&gt;&nbsp;-&nbsp;Connect&nbsp;to&nbsp;use,&nbsp;like&nbsp;for&nbsp;transaction<br />
 &nbsp;<br />
 &nbsp;&nbsp;@param&nbsp;doCommit&nbsp;&lt;bool&gt;&nbsp;default&nbsp;True&nbsp;-&nbsp;If&nbsp;True&nbsp;will&nbsp;perform&nbsp;the&nbsp;delete&nbsp;right&nbsp;away.<br />
+&nbsp;<br />
+&nbsp;&nbsp;@param&nbsp;allowDeleteAll&nbsp;&lt;bool&gt;&nbsp;default&nbsp;False&nbsp;-&nbsp;If&nbsp;True&nbsp;will&nbsp;allow&nbsp;execution&nbsp;of&nbsp;a&nbsp;<a href="#DeleteQuery" >DeleteQuery</a><br />
+&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;without&nbsp;a&nbsp;"WHERE"&nbsp;stage&nbsp;(i.e.&nbsp;delete&nbsp;all&nbsp;records)<br />
 &nbsp;<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;False,&nbsp;you&nbsp;must&nbsp;manually&nbsp;commit&nbsp;the&nbsp;transaction&nbsp;and&nbsp;a&nbsp;#dbConn&nbsp;is&nbsp;required</tt></dd></dl>
 
