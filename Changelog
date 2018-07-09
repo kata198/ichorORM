@@ -2,8 +2,11 @@
 
 * Rename DatabaseConnection.doInsert argument "autoCommit" to "doCommit" as to match everywhere else.
 
+* Add an allowDeleteAll flag (default False) which will override the safety on DeleteQuery to prevent execution without a WHERE defined (i.e. delete all records)
+
 * Add GoodTests unit test for DatabaseConnection (mostly internal methods)
 
+* Add a unit test for DeleteQuery
 
 2.0.1 - Jul 07 2018
 
