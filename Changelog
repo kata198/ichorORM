@@ -1,4 +1,4 @@
-2.0.2 - ??? ?? ????
+2.0.2 - Jul 08 2018
 
 * Rename DatabaseConnection.doInsert argument "autoCommit" to "doCommit" as to match everywhere else.
 
