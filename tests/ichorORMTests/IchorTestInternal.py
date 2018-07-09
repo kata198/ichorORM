@@ -112,8 +112,8 @@ def ensureTestSetup():
 
             # We aren't ready, so throw our marker in
             dbConn.executeSql("INSERT INTO ichor_orm_tests(my_uuid, state_num) VALUES ('%s', %d)" %(myUuid, _TEST_DATA_STATE_NUM))
-            # Wait 2 seconds
-            time.sleep(2)
+            # Wait 1.25 seconds
+            time.sleep(1.25)
 
             # Check if we got the marker
             resultRows = dbConn.doSelect('SELECT my_uuid, created_at FROM ichor_orm_tests WHERE state_num = ' + str(_TEST_DATA_STATE_NUM) + ' ORDER BY created_at ASC')
