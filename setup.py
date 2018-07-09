@@ -31,7 +31,7 @@ if __name__ == '__main__':
         long_description = summary
 
     setup(name='ichorORM',
-            version='2.0.1',
+            version='2.0.2',
             packages=['ichorORM'],
             author='Tim Savannah',
             author_email='kata198@gmail.com',
