@@ -599,6 +599,9 @@ class DatabaseConnection(object):
 
 
 class DatabaseConnectionFailure(Exception):
+    '''
+        DatabaseConnectionFailure - Exception raised when there is a failure connecting to the database
+    '''
     pass
 
 # vim: set ts=4 sw=4 expandtab:
