@@ -44,7 +44,9 @@ model.py&nbsp;-&nbsp;ORM&nbsp;model&nbsp;base</tt></p>
 <font color="#000000" face="helvetica, arial" ><a name="DatabaseModel" >class <strong >DatabaseModel</strong></a>(<a href="builtins.html#object" >builtins.object</a>)</font></td></tr>
     
 <tr bgcolor="#ffc8d8" ><td rowspan="2" ><tt >&nbsp;&nbsp;&nbsp;</tt></td>
-<td colspan="2" ><tt ><a href="#DatabaseModel" >DatabaseModel</a>&nbsp;-&nbsp;Models&nbsp;should&nbsp;extend&nbsp;this<br />&nbsp;</tt></td></tr>
+<td colspan="2" ><tt ><a href="#DatabaseModel" >DatabaseModel</a>(**kwargs)<br />
+&nbsp;<br />
+<a href="#DatabaseModel" >DatabaseModel</a>&nbsp;-&nbsp;Models&nbsp;should&nbsp;extend&nbsp;this<br />&nbsp;</tt></td></tr>
 <tr ><td >&nbsp;</td>
 <td width="100%" >Methods defined here:<br />
 <dl ><dt ><a name="DatabaseModel-__getattribute__" ><strong >__getattribute__</strong></a>(self, attrName)</dt><dd ><tt >Return&nbsp;getattr(self,&nbsp;name).</tt></dd></dl>
@@ -140,7 +142,7 @@ At&nbsp;least&nbsp;all&nbsp;entries&nbsp;in&nbsp;REQUIRED_FIELDS&nbsp;must&nbsp;
 &nbsp;<br />
 &nbsp;&nbsp;@param&nbsp;whereType&nbsp;&lt;WHERE_AND/WHERE_OR&gt;&nbsp;-&nbsp;Whether&nbsp;filter&nbsp;criteria&nbsp;should&nbsp;be&nbsp;AND&nbsp;or&nbsp;OR'd&nbsp;together<br />
 &nbsp;<br />
-&nbsp;&nbsp;@param&nbsp;dbConn&nbsp;&lt;DatabaseConnection/None&gt;&nbsp;default&nbsp;None-&nbsp;If&nbsp;present&nbsp;and&nbsp;not&nbsp;None,&nbsp;<br />
+&nbsp;&nbsp;@param&nbsp;dbConn&nbsp;&lt;DatabaseConnection/None&gt;&nbsp;default&nbsp;None-&nbsp;If&nbsp;present&nbsp;and&nbsp;not&nbsp;None,<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;will&nbsp;use&nbsp;this&nbsp;as&nbsp;the&nbsp;postgres&nbsp;connection.<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Otherwise,&nbsp;will&nbsp;start&nbsp;a&nbsp;new&nbsp;connection&nbsp;based&nbsp;on&nbsp;global&nbsp;settings<br />
 &nbsp;<br />
@@ -175,7 +177,7 @@ At&nbsp;least&nbsp;all&nbsp;entries&nbsp;in&nbsp;REQUIRED_FIELDS&nbsp;must&nbsp;
 &nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;method&nbsp;will&nbsp;be&nbsp;called&nbsp;once&nbsp;per&nbsp;class&nbsp;and&nbsp;the&nbsp;value&nbsp;cached.<br />
 &nbsp;<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@return&nbsp;dict&nbsp;&lt;&nbsp;&lt;str&gt;&nbsp;:&nbsp;relations.ForeignRelations&gt;&nbsp;-&nbsp;Foreign&nbsp;relations&nbsp;on&nbsp;this&nbsp;model<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+&nbsp;<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;the&nbsp;key&nbsp;is&nbsp;a&nbsp;string,&nbsp;this&nbsp;model&nbsp;will&nbsp;gain&nbsp;an&nbsp;attribute&nbsp;with&nbsp;that&nbsp;name&nbsp;which&nbsp;will<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;the&nbsp;related&nbsp;model&nbsp;when&nbsp;accessed.<br />
 &nbsp;<br />
@@ -183,7 +185,7 @@ At&nbsp;least&nbsp;all&nbsp;entries&nbsp;in&nbsp;REQUIRED_FIELDS&nbsp;must&nbsp;
 &nbsp;<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;you&nbsp;access&nbsp;myModelObj.person&nbsp;it&nbsp;will&nbsp;return&nbsp;the&nbsp;Person&nbsp;<a href="builtins.html#object" >object</a>&nbsp;related&nbsp;by&nbsp;Person.id&nbsp;=&nbsp;myModel.id_person<br />
 &nbsp;<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;key&nbsp;could&nbsp;also&nbsp;be&nbsp;a&nbsp;model&nbsp;class&nbsp;or&nbsp;whatever,&nbsp;and&nbsp;you&nbsp;can&nbsp;get&nbsp;the&nbsp;related&nbsp;<a href="builtins.html#object" >object</a>(s)&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;key&nbsp;could&nbsp;also&nbsp;be&nbsp;a&nbsp;model&nbsp;class&nbsp;or&nbsp;whatever,&nbsp;and&nbsp;you&nbsp;can&nbsp;get&nbsp;the&nbsp;related&nbsp;<a href="builtins.html#object" >object</a>(s)<br />
 &nbsp;<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;by&nbsp;calling&nbsp;myModelObj.<a href="#DatabaseModel-getRelated" >getRelated</a>(#key)</tt></dd></dl>
 

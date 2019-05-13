@@ -69,9 +69,7 @@ Methods inherited from <a href="builtins.html#str" >builtins.str</a>:<br />
 
 <dl ><dt ><a name="QueryStr-__contains__" ><strong >__contains__</strong></a>(self, key, /)</dt><dd ><tt >Return&nbsp;key&nbsp;in&nbsp;self.</tt></dd></dl>
 
-<dl ><dt ><a name="QueryStr-__format__" ><strong >__format__</strong></a>(...)</dt><dd ><tt >S.<a href="#QueryStr-__format__" >__format__</a>(format_spec)&nbsp;-&gt;&nbsp;<a href="builtins.html#str" >str</a><br />
-&nbsp;<br />
-Return&nbsp;a&nbsp;formatted&nbsp;version&nbsp;of&nbsp;S&nbsp;as&nbsp;described&nbsp;by&nbsp;format_spec.</tt></dd></dl>
+<dl ><dt ><a name="QueryStr-__format__" ><strong >__format__</strong></a>(self, format_spec, /)</dt><dd ><tt >Return&nbsp;a&nbsp;formatted&nbsp;version&nbsp;of&nbsp;the&nbsp;string&nbsp;as&nbsp;described&nbsp;by&nbsp;format_spec.</tt></dd></dl>
 
 <dl ><dt ><a name="QueryStr-__ge__" ><strong >__ge__</strong></a>(self, value, /)</dt><dd ><tt >Return&nbsp;self&gt;=value.</tt></dd></dl>
 
@@ -93,33 +91,28 @@ Return&nbsp;a&nbsp;formatted&nbsp;version&nbsp;of&nbsp;S&nbsp;as&nbsp;described&
 
 <dl ><dt ><a name="QueryStr-__mod__" ><strong >__mod__</strong></a>(self, value, /)</dt><dd ><tt >Return&nbsp;self%value.</tt></dd></dl>
 
-<dl ><dt ><a name="QueryStr-__mul__" ><strong >__mul__</strong></a>(self, value, /)</dt><dd ><tt >Return&nbsp;self*value.n</tt></dd></dl>
-
-<dl ><dt ><a name="QueryStr-__new__" ><strong >__new__</strong></a>(*args, **kwargs)<font color="#909090" ><font face="helvetica, arial" > from <a href="builtins.html#type" >builtins.type</a></font></font></dt><dd ><tt >Create&nbsp;and&nbsp;return&nbsp;a&nbsp;new&nbsp;object.&nbsp;&nbsp;See&nbsp;help(type)&nbsp;for&nbsp;accurate&nbsp;signature.</tt></dd></dl>
+<dl ><dt ><a name="QueryStr-__mul__" ><strong >__mul__</strong></a>(self, value, /)</dt><dd ><tt >Return&nbsp;self*value.</tt></dd></dl>
 
 <dl ><dt ><a name="QueryStr-__repr__" ><strong >__repr__</strong></a>(self, /)</dt><dd ><tt >Return&nbsp;repr(self).</tt></dd></dl>
 
 <dl ><dt ><a name="QueryStr-__rmod__" ><strong >__rmod__</strong></a>(self, value, /)</dt><dd ><tt >Return&nbsp;value%self.</tt></dd></dl>
 
-<dl ><dt ><a name="QueryStr-__rmul__" ><strong >__rmul__</strong></a>(self, value, /)</dt><dd ><tt >Return&nbsp;self*value.</tt></dd></dl>
+<dl ><dt ><a name="QueryStr-__rmul__" ><strong >__rmul__</strong></a>(self, value, /)</dt><dd ><tt >Return&nbsp;value*self.</tt></dd></dl>
 
-<dl ><dt ><a name="QueryStr-__sizeof__" ><strong >__sizeof__</strong></a>(...)</dt><dd ><tt >S.<a href="#QueryStr-__sizeof__" >__sizeof__</a>()&nbsp;-&gt;&nbsp;size&nbsp;of&nbsp;S&nbsp;in&nbsp;memory,&nbsp;in&nbsp;bytes</tt></dd></dl>
+<dl ><dt ><a name="QueryStr-__sizeof__" ><strong >__sizeof__</strong></a>(self, /)</dt><dd ><tt >Return&nbsp;the&nbsp;size&nbsp;of&nbsp;the&nbsp;string&nbsp;in&nbsp;memory,&nbsp;in&nbsp;bytes.</tt></dd></dl>
 
 <dl ><dt ><a name="QueryStr-__str__" ><strong >__str__</strong></a>(self, /)</dt><dd ><tt >Return&nbsp;<a href="builtins.html#str" >str</a>(self).</tt></dd></dl>
 
-<dl ><dt ><a name="QueryStr-capitalize" ><strong >capitalize</strong></a>(...)</dt><dd ><tt >S.<a href="#QueryStr-capitalize" >capitalize</a>()&nbsp;-&gt;&nbsp;<a href="builtins.html#str" >str</a><br />
+<dl ><dt ><a name="QueryStr-capitalize" ><strong >capitalize</strong></a>(self, /)</dt><dd ><tt >Return&nbsp;a&nbsp;capitalized&nbsp;version&nbsp;of&nbsp;the&nbsp;string.<br />
 &nbsp;<br />
-Return&nbsp;a&nbsp;capitalized&nbsp;version&nbsp;of&nbsp;S,&nbsp;i.e.&nbsp;make&nbsp;the&nbsp;first&nbsp;character<br />
-have&nbsp;upper&nbsp;case&nbsp;and&nbsp;the&nbsp;rest&nbsp;lower&nbsp;case.</tt></dd></dl>
+More&nbsp;specifically,&nbsp;make&nbsp;the&nbsp;first&nbsp;character&nbsp;have&nbsp;upper&nbsp;case&nbsp;and&nbsp;the&nbsp;rest&nbsp;lower<br />
+case.</tt></dd></dl>
 
-<dl ><dt ><a name="QueryStr-casefold" ><strong >casefold</strong></a>(...)</dt><dd ><tt >S.<a href="#QueryStr-casefold" >casefold</a>()&nbsp;-&gt;&nbsp;<a href="builtins.html#str" >str</a><br />
-&nbsp;<br />
-Return&nbsp;a&nbsp;version&nbsp;of&nbsp;S&nbsp;suitable&nbsp;for&nbsp;caseless&nbsp;comparisons.</tt></dd></dl>
+<dl ><dt ><a name="QueryStr-casefold" ><strong >casefold</strong></a>(self, /)</dt><dd ><tt >Return&nbsp;a&nbsp;version&nbsp;of&nbsp;the&nbsp;string&nbsp;suitable&nbsp;for&nbsp;caseless&nbsp;comparisons.</tt></dd></dl>
 
-<dl ><dt ><a name="QueryStr-center" ><strong >center</strong></a>(...)</dt><dd ><tt >S.<a href="#QueryStr-center" >center</a>(width[,&nbsp;fillchar])&nbsp;-&gt;&nbsp;<a href="builtins.html#str" >str</a><br />
+<dl ><dt ><a name="QueryStr-center" ><strong >center</strong></a>(self, width, fillchar=' ', /)</dt><dd ><tt >Return&nbsp;a&nbsp;centered&nbsp;string&nbsp;of&nbsp;length&nbsp;width.<br />
 &nbsp;<br />
-Return&nbsp;S&nbsp;centered&nbsp;in&nbsp;a&nbsp;string&nbsp;of&nbsp;length&nbsp;width.&nbsp;Padding&nbsp;is<br />
-done&nbsp;using&nbsp;the&nbsp;specified&nbsp;fill&nbsp;character&nbsp;(default&nbsp;is&nbsp;a&nbsp;space)</tt></dd></dl>
+Padding&nbsp;is&nbsp;done&nbsp;using&nbsp;the&nbsp;specified&nbsp;fill&nbsp;character&nbsp;(default&nbsp;is&nbsp;a&nbsp;space).</tt></dd></dl>
 
 <dl ><dt ><a name="QueryStr-count" ><strong >count</strong></a>(...)</dt><dd ><tt >S.<a href="#QueryStr-count" >count</a>(sub[,&nbsp;start[,&nbsp;end]])&nbsp;-&gt;&nbsp;int<br />
 &nbsp;<br />
@@ -127,14 +120,16 @@ Return&nbsp;the&nbsp;number&nbsp;of&nbsp;non-overlapping&nbsp;occurrences&nbsp;o
 string&nbsp;S[start:end].&nbsp;&nbsp;Optional&nbsp;arguments&nbsp;start&nbsp;and&nbsp;end&nbsp;are<br />
 interpreted&nbsp;as&nbsp;in&nbsp;slice&nbsp;notation.</tt></dd></dl>
 
-<dl ><dt ><a name="QueryStr-encode" ><strong >encode</strong></a>(...)</dt><dd ><tt >S.<a href="#QueryStr-encode" >encode</a>(encoding='utf-8',&nbsp;errors='strict')&nbsp;-&gt;&nbsp;bytes<br />
+<dl ><dt ><a name="QueryStr-encode" ><strong >encode</strong></a>(self, /, encoding='utf-8', errors='strict')</dt><dd ><tt >Encode&nbsp;the&nbsp;string&nbsp;using&nbsp;the&nbsp;codec&nbsp;registered&nbsp;for&nbsp;encoding.<br />
 &nbsp;<br />
-Encode&nbsp;S&nbsp;using&nbsp;the&nbsp;codec&nbsp;registered&nbsp;for&nbsp;encoding.&nbsp;Default&nbsp;encoding<br />
-is&nbsp;'utf-8'.&nbsp;errors&nbsp;may&nbsp;be&nbsp;given&nbsp;to&nbsp;set&nbsp;a&nbsp;different&nbsp;error<br />
-handling&nbsp;scheme.&nbsp;Default&nbsp;is&nbsp;'strict'&nbsp;meaning&nbsp;that&nbsp;encoding&nbsp;errors&nbsp;raise<br />
-a&nbsp;UnicodeEncodeError.&nbsp;Other&nbsp;possible&nbsp;values&nbsp;are&nbsp;'ignore',&nbsp;'replace'&nbsp;and<br />
-'xmlcharrefreplace'&nbsp;as&nbsp;well&nbsp;as&nbsp;any&nbsp;other&nbsp;name&nbsp;registered&nbsp;with<br />
-codecs.register_error&nbsp;that&nbsp;can&nbsp;handle&nbsp;UnicodeEncodeErrors.</tt></dd></dl>
+encoding<br />
+&nbsp;&nbsp;The&nbsp;encoding&nbsp;in&nbsp;which&nbsp;to&nbsp;encode&nbsp;the&nbsp;string.<br />
+errors<br />
+&nbsp;&nbsp;The&nbsp;error&nbsp;handling&nbsp;scheme&nbsp;to&nbsp;use&nbsp;for&nbsp;encoding&nbsp;errors.<br />
+&nbsp;&nbsp;The&nbsp;default&nbsp;is&nbsp;'strict'&nbsp;meaning&nbsp;that&nbsp;encoding&nbsp;errors&nbsp;raise&nbsp;a<br />
+&nbsp;&nbsp;UnicodeEncodeError.&nbsp;&nbsp;Other&nbsp;possible&nbsp;values&nbsp;are&nbsp;'ignore',&nbsp;'replace'&nbsp;and<br />
+&nbsp;&nbsp;'xmlcharrefreplace'&nbsp;as&nbsp;well&nbsp;as&nbsp;any&nbsp;other&nbsp;name&nbsp;registered&nbsp;with<br />
+&nbsp;&nbsp;codecs.register_error&nbsp;that&nbsp;can&nbsp;handle&nbsp;UnicodeEncodeErrors.</tt></dd></dl>
 
 <dl ><dt ><a name="QueryStr-endswith" ><strong >endswith</strong></a>(...)</dt><dd ><tt >S.<a href="#QueryStr-endswith" >endswith</a>(suffix[,&nbsp;start[,&nbsp;end]])&nbsp;-&gt;&nbsp;bool<br />
 &nbsp;<br />
@@ -143,9 +138,8 @@ With&nbsp;optional&nbsp;start,&nbsp;test&nbsp;S&nbsp;beginning&nbsp;at&nbsp;that
 With&nbsp;optional&nbsp;end,&nbsp;stop&nbsp;comparing&nbsp;S&nbsp;at&nbsp;that&nbsp;position.<br />
 suffix&nbsp;can&nbsp;also&nbsp;be&nbsp;a&nbsp;tuple&nbsp;of&nbsp;strings&nbsp;to&nbsp;try.</tt></dd></dl>
 
-<dl ><dt ><a name="QueryStr-expandtabs" ><strong >expandtabs</strong></a>(...)</dt><dd ><tt >S.<a href="#QueryStr-expandtabs" >expandtabs</a>(tabsize=8)&nbsp;-&gt;&nbsp;<a href="builtins.html#str" >str</a><br />
+<dl ><dt ><a name="QueryStr-expandtabs" ><strong >expandtabs</strong></a>(self, /, tabsize=8)</dt><dd ><tt >Return&nbsp;a&nbsp;copy&nbsp;where&nbsp;all&nbsp;tab&nbsp;characters&nbsp;are&nbsp;expanded&nbsp;using&nbsp;spaces.<br />
 &nbsp;<br />
-Return&nbsp;a&nbsp;copy&nbsp;of&nbsp;S&nbsp;where&nbsp;all&nbsp;tab&nbsp;characters&nbsp;are&nbsp;expanded&nbsp;using&nbsp;spaces.<br />
 If&nbsp;tabsize&nbsp;is&nbsp;not&nbsp;given,&nbsp;a&nbsp;tab&nbsp;size&nbsp;of&nbsp;8&nbsp;characters&nbsp;is&nbsp;assumed.</tt></dd></dl>
 
 <dl ><dt ><a name="QueryStr-find" ><strong >find</strong></a>(...)</dt><dd ><tt >S.<a href="#QueryStr-find" >find</a>(sub[,&nbsp;start[,&nbsp;end]])&nbsp;-&gt;&nbsp;int<br />
@@ -174,96 +168,100 @@ arguments&nbsp;start&nbsp;and&nbsp;end&nbsp;are&nbsp;interpreted&nbsp;as&nbsp;in
 &nbsp;<br />
 Raises&nbsp;ValueError&nbsp;when&nbsp;the&nbsp;substring&nbsp;is&nbsp;not&nbsp;found.</tt></dd></dl>
 
-<dl ><dt ><a name="QueryStr-isalnum" ><strong >isalnum</strong></a>(...)</dt><dd ><tt >S.<a href="#QueryStr-isalnum" >isalnum</a>()&nbsp;-&gt;&nbsp;bool<br />
+<dl ><dt ><a name="QueryStr-isalnum" ><strong >isalnum</strong></a>(self, /)</dt><dd ><tt >Return&nbsp;True&nbsp;if&nbsp;the&nbsp;string&nbsp;is&nbsp;an&nbsp;alpha-numeric&nbsp;string,&nbsp;False&nbsp;otherwise.<br />
 &nbsp;<br />
-Return&nbsp;True&nbsp;if&nbsp;all&nbsp;characters&nbsp;in&nbsp;S&nbsp;are&nbsp;alphanumeric<br />
-and&nbsp;there&nbsp;is&nbsp;at&nbsp;least&nbsp;one&nbsp;character&nbsp;in&nbsp;S,&nbsp;False&nbsp;otherwise.</tt></dd></dl>
+A&nbsp;string&nbsp;is&nbsp;alpha-numeric&nbsp;if&nbsp;all&nbsp;characters&nbsp;in&nbsp;the&nbsp;string&nbsp;are&nbsp;alpha-numeric&nbsp;and<br />
+there&nbsp;is&nbsp;at&nbsp;least&nbsp;one&nbsp;character&nbsp;in&nbsp;the&nbsp;string.</tt></dd></dl>
 
-<dl ><dt ><a name="QueryStr-isalpha" ><strong >isalpha</strong></a>(...)</dt><dd ><tt >S.<a href="#QueryStr-isalpha" >isalpha</a>()&nbsp;-&gt;&nbsp;bool<br />
+<dl ><dt ><a name="QueryStr-isalpha" ><strong >isalpha</strong></a>(self, /)</dt><dd ><tt >Return&nbsp;True&nbsp;if&nbsp;the&nbsp;string&nbsp;is&nbsp;an&nbsp;alphabetic&nbsp;string,&nbsp;False&nbsp;otherwise.<br />
 &nbsp;<br />
-Return&nbsp;True&nbsp;if&nbsp;all&nbsp;characters&nbsp;in&nbsp;S&nbsp;are&nbsp;alphabetic<br />
-and&nbsp;there&nbsp;is&nbsp;at&nbsp;least&nbsp;one&nbsp;character&nbsp;in&nbsp;S,&nbsp;False&nbsp;otherwise.</tt></dd></dl>
+A&nbsp;string&nbsp;is&nbsp;alphabetic&nbsp;if&nbsp;all&nbsp;characters&nbsp;in&nbsp;the&nbsp;string&nbsp;are&nbsp;alphabetic&nbsp;and&nbsp;there<br />
+is&nbsp;at&nbsp;least&nbsp;one&nbsp;character&nbsp;in&nbsp;the&nbsp;string.</tt></dd></dl>
 
-<dl ><dt ><a name="QueryStr-isdecimal" ><strong >isdecimal</strong></a>(...)</dt><dd ><tt >S.<a href="#QueryStr-isdecimal" >isdecimal</a>()&nbsp;-&gt;&nbsp;bool<br />
+<dl ><dt ><a name="QueryStr-isascii" ><strong >isascii</strong></a>(self, /)</dt><dd ><tt >Return&nbsp;True&nbsp;if&nbsp;all&nbsp;characters&nbsp;in&nbsp;the&nbsp;string&nbsp;are&nbsp;ASCII,&nbsp;False&nbsp;otherwise.<br />
 &nbsp;<br />
-Return&nbsp;True&nbsp;if&nbsp;there&nbsp;are&nbsp;only&nbsp;decimal&nbsp;characters&nbsp;in&nbsp;S,<br />
-False&nbsp;otherwise.</tt></dd></dl>
+ASCII&nbsp;characters&nbsp;have&nbsp;code&nbsp;points&nbsp;in&nbsp;the&nbsp;range&nbsp;U+0000-U+007F.<br />
+Empty&nbsp;string&nbsp;is&nbsp;ASCII&nbsp;too.</tt></dd></dl>
 
-<dl ><dt ><a name="QueryStr-isdigit" ><strong >isdigit</strong></a>(...)</dt><dd ><tt >S.<a href="#QueryStr-isdigit" >isdigit</a>()&nbsp;-&gt;&nbsp;bool<br />
+<dl ><dt ><a name="QueryStr-isdecimal" ><strong >isdecimal</strong></a>(self, /)</dt><dd ><tt >Return&nbsp;True&nbsp;if&nbsp;the&nbsp;string&nbsp;is&nbsp;a&nbsp;decimal&nbsp;string,&nbsp;False&nbsp;otherwise.<br />
 &nbsp;<br />
-Return&nbsp;True&nbsp;if&nbsp;all&nbsp;characters&nbsp;in&nbsp;S&nbsp;are&nbsp;digits<br />
-and&nbsp;there&nbsp;is&nbsp;at&nbsp;least&nbsp;one&nbsp;character&nbsp;in&nbsp;S,&nbsp;False&nbsp;otherwise.</tt></dd></dl>
+A&nbsp;string&nbsp;is&nbsp;a&nbsp;decimal&nbsp;string&nbsp;if&nbsp;all&nbsp;characters&nbsp;in&nbsp;the&nbsp;string&nbsp;are&nbsp;decimal&nbsp;and<br />
+there&nbsp;is&nbsp;at&nbsp;least&nbsp;one&nbsp;character&nbsp;in&nbsp;the&nbsp;string.</tt></dd></dl>
 
-<dl ><dt ><a name="QueryStr-isidentifier" ><strong >isidentifier</strong></a>(...)</dt><dd ><tt >S.<a href="#QueryStr-isidentifier" >isidentifier</a>()&nbsp;-&gt;&nbsp;bool<br />
+<dl ><dt ><a name="QueryStr-isdigit" ><strong >isdigit</strong></a>(self, /)</dt><dd ><tt >Return&nbsp;True&nbsp;if&nbsp;the&nbsp;string&nbsp;is&nbsp;a&nbsp;digit&nbsp;string,&nbsp;False&nbsp;otherwise.<br />
 &nbsp;<br />
-Return&nbsp;True&nbsp;if&nbsp;S&nbsp;is&nbsp;a&nbsp;valid&nbsp;identifier&nbsp;according<br />
-to&nbsp;the&nbsp;language&nbsp;definition.<br />
-&nbsp;<br />
-Use&nbsp;keyword.iskeyword()&nbsp;to&nbsp;test&nbsp;for&nbsp;reserved&nbsp;identifiers<br />
-such&nbsp;as&nbsp;"def"&nbsp;and&nbsp;"class".</tt></dd></dl>
+A&nbsp;string&nbsp;is&nbsp;a&nbsp;digit&nbsp;string&nbsp;if&nbsp;all&nbsp;characters&nbsp;in&nbsp;the&nbsp;string&nbsp;are&nbsp;digits&nbsp;and&nbsp;there<br />
+is&nbsp;at&nbsp;least&nbsp;one&nbsp;character&nbsp;in&nbsp;the&nbsp;string.</tt></dd></dl>
 
-<dl ><dt ><a name="QueryStr-islower" ><strong >islower</strong></a>(...)</dt><dd ><tt >S.<a href="#QueryStr-islower" >islower</a>()&nbsp;-&gt;&nbsp;bool<br />
+<dl ><dt ><a name="QueryStr-isidentifier" ><strong >isidentifier</strong></a>(self, /)</dt><dd ><tt >Return&nbsp;True&nbsp;if&nbsp;the&nbsp;string&nbsp;is&nbsp;a&nbsp;valid&nbsp;Python&nbsp;identifier,&nbsp;False&nbsp;otherwise.<br />
 &nbsp;<br />
-Return&nbsp;True&nbsp;if&nbsp;all&nbsp;cased&nbsp;characters&nbsp;in&nbsp;S&nbsp;are&nbsp;lowercase&nbsp;and&nbsp;there&nbsp;is<br />
-at&nbsp;least&nbsp;one&nbsp;cased&nbsp;character&nbsp;in&nbsp;S,&nbsp;False&nbsp;otherwise.</tt></dd></dl>
+Use&nbsp;keyword.iskeyword()&nbsp;to&nbsp;test&nbsp;for&nbsp;reserved&nbsp;identifiers&nbsp;such&nbsp;as&nbsp;"def"&nbsp;and<br />
+"class".</tt></dd></dl>
 
-<dl ><dt ><a name="QueryStr-isnumeric" ><strong >isnumeric</strong></a>(...)</dt><dd ><tt >S.<a href="#QueryStr-isnumeric" >isnumeric</a>()&nbsp;-&gt;&nbsp;bool<br />
+<dl ><dt ><a name="QueryStr-islower" ><strong >islower</strong></a>(self, /)</dt><dd ><tt >Return&nbsp;True&nbsp;if&nbsp;the&nbsp;string&nbsp;is&nbsp;a&nbsp;lowercase&nbsp;string,&nbsp;False&nbsp;otherwise.<br />
 &nbsp;<br />
-Return&nbsp;True&nbsp;if&nbsp;there&nbsp;are&nbsp;only&nbsp;numeric&nbsp;characters&nbsp;in&nbsp;S,<br />
-False&nbsp;otherwise.</tt></dd></dl>
+A&nbsp;string&nbsp;is&nbsp;lowercase&nbsp;if&nbsp;all&nbsp;cased&nbsp;characters&nbsp;in&nbsp;the&nbsp;string&nbsp;are&nbsp;lowercase&nbsp;and<br />
+there&nbsp;is&nbsp;at&nbsp;least&nbsp;one&nbsp;cased&nbsp;character&nbsp;in&nbsp;the&nbsp;string.</tt></dd></dl>
 
-<dl ><dt ><a name="QueryStr-isprintable" ><strong >isprintable</strong></a>(...)</dt><dd ><tt >S.<a href="#QueryStr-isprintable" >isprintable</a>()&nbsp;-&gt;&nbsp;bool<br />
+<dl ><dt ><a name="QueryStr-isnumeric" ><strong >isnumeric</strong></a>(self, /)</dt><dd ><tt >Return&nbsp;True&nbsp;if&nbsp;the&nbsp;string&nbsp;is&nbsp;a&nbsp;numeric&nbsp;string,&nbsp;False&nbsp;otherwise.<br />
 &nbsp;<br />
-Return&nbsp;True&nbsp;if&nbsp;all&nbsp;characters&nbsp;in&nbsp;S&nbsp;are&nbsp;considered<br />
-printable&nbsp;in&nbsp;repr()&nbsp;or&nbsp;S&nbsp;is&nbsp;empty,&nbsp;False&nbsp;otherwise.</tt></dd></dl>
+A&nbsp;string&nbsp;is&nbsp;numeric&nbsp;if&nbsp;all&nbsp;characters&nbsp;in&nbsp;the&nbsp;string&nbsp;are&nbsp;numeric&nbsp;and&nbsp;there&nbsp;is&nbsp;at<br />
+least&nbsp;one&nbsp;character&nbsp;in&nbsp;the&nbsp;string.</tt></dd></dl>
 
-<dl ><dt ><a name="QueryStr-isspace" ><strong >isspace</strong></a>(...)</dt><dd ><tt >S.<a href="#QueryStr-isspace" >isspace</a>()&nbsp;-&gt;&nbsp;bool<br />
+<dl ><dt ><a name="QueryStr-isprintable" ><strong >isprintable</strong></a>(self, /)</dt><dd ><tt >Return&nbsp;True&nbsp;if&nbsp;the&nbsp;string&nbsp;is&nbsp;printable,&nbsp;False&nbsp;otherwise.<br />
 &nbsp;<br />
-Return&nbsp;True&nbsp;if&nbsp;all&nbsp;characters&nbsp;in&nbsp;S&nbsp;are&nbsp;whitespace<br />
-and&nbsp;there&nbsp;is&nbsp;at&nbsp;least&nbsp;one&nbsp;character&nbsp;in&nbsp;S,&nbsp;False&nbsp;otherwise.</tt></dd></dl>
+A&nbsp;string&nbsp;is&nbsp;printable&nbsp;if&nbsp;all&nbsp;of&nbsp;its&nbsp;characters&nbsp;are&nbsp;considered&nbsp;printable&nbsp;in<br />
+repr()&nbsp;or&nbsp;if&nbsp;it&nbsp;is&nbsp;empty.</tt></dd></dl>
 
-<dl ><dt ><a name="QueryStr-istitle" ><strong >istitle</strong></a>(...)</dt><dd ><tt >S.<a href="#QueryStr-istitle" >istitle</a>()&nbsp;-&gt;&nbsp;bool<br />
+<dl ><dt ><a name="QueryStr-isspace" ><strong >isspace</strong></a>(self, /)</dt><dd ><tt >Return&nbsp;True&nbsp;if&nbsp;the&nbsp;string&nbsp;is&nbsp;a&nbsp;whitespace&nbsp;string,&nbsp;False&nbsp;otherwise.<br />
 &nbsp;<br />
-Return&nbsp;True&nbsp;if&nbsp;S&nbsp;is&nbsp;a&nbsp;titlecased&nbsp;string&nbsp;and&nbsp;there&nbsp;is&nbsp;at&nbsp;least&nbsp;one<br />
-character&nbsp;in&nbsp;S,&nbsp;i.e.&nbsp;upper-&nbsp;and&nbsp;titlecase&nbsp;characters&nbsp;may&nbsp;only<br />
-follow&nbsp;uncased&nbsp;characters&nbsp;and&nbsp;lowercase&nbsp;characters&nbsp;only&nbsp;cased&nbsp;ones.<br />
-Return&nbsp;False&nbsp;otherwise.</tt></dd></dl>
+A&nbsp;string&nbsp;is&nbsp;whitespace&nbsp;if&nbsp;all&nbsp;characters&nbsp;in&nbsp;the&nbsp;string&nbsp;are&nbsp;whitespace&nbsp;and&nbsp;there<br />
+is&nbsp;at&nbsp;least&nbsp;one&nbsp;character&nbsp;in&nbsp;the&nbsp;string.</tt></dd></dl>
 
-<dl ><dt ><a name="QueryStr-isupper" ><strong >isupper</strong></a>(...)</dt><dd ><tt >S.<a href="#QueryStr-isupper" >isupper</a>()&nbsp;-&gt;&nbsp;bool<br />
+<dl ><dt ><a name="QueryStr-istitle" ><strong >istitle</strong></a>(self, /)</dt><dd ><tt >Return&nbsp;True&nbsp;if&nbsp;the&nbsp;string&nbsp;is&nbsp;a&nbsp;title-cased&nbsp;string,&nbsp;False&nbsp;otherwise.<br />
 &nbsp;<br />
-Return&nbsp;True&nbsp;if&nbsp;all&nbsp;cased&nbsp;characters&nbsp;in&nbsp;S&nbsp;are&nbsp;uppercase&nbsp;and&nbsp;there&nbsp;is<br />
-at&nbsp;least&nbsp;one&nbsp;cased&nbsp;character&nbsp;in&nbsp;S,&nbsp;False&nbsp;otherwise.</tt></dd></dl>
+In&nbsp;a&nbsp;title-cased&nbsp;string,&nbsp;upper-&nbsp;and&nbsp;title-case&nbsp;characters&nbsp;may&nbsp;only<br />
+follow&nbsp;uncased&nbsp;characters&nbsp;and&nbsp;lowercase&nbsp;characters&nbsp;only&nbsp;cased&nbsp;ones.</tt></dd></dl>
 
-<dl ><dt ><a name="QueryStr-join" ><strong >join</strong></a>(...)</dt><dd ><tt >S.<a href="#QueryStr-join" >join</a>(iterable)&nbsp;-&gt;&nbsp;<a href="builtins.html#str" >str</a><br />
+<dl ><dt ><a name="QueryStr-isupper" ><strong >isupper</strong></a>(self, /)</dt><dd ><tt >Return&nbsp;True&nbsp;if&nbsp;the&nbsp;string&nbsp;is&nbsp;an&nbsp;uppercase&nbsp;string,&nbsp;False&nbsp;otherwise.<br />
 &nbsp;<br />
-Return&nbsp;a&nbsp;string&nbsp;which&nbsp;is&nbsp;the&nbsp;concatenation&nbsp;of&nbsp;the&nbsp;strings&nbsp;in&nbsp;the<br />
-iterable.&nbsp;&nbsp;The&nbsp;separator&nbsp;between&nbsp;elements&nbsp;is&nbsp;S.</tt></dd></dl>
+A&nbsp;string&nbsp;is&nbsp;uppercase&nbsp;if&nbsp;all&nbsp;cased&nbsp;characters&nbsp;in&nbsp;the&nbsp;string&nbsp;are&nbsp;uppercase&nbsp;and<br />
+there&nbsp;is&nbsp;at&nbsp;least&nbsp;one&nbsp;cased&nbsp;character&nbsp;in&nbsp;the&nbsp;string.</tt></dd></dl>
 
-<dl ><dt ><a name="QueryStr-ljust" ><strong >ljust</strong></a>(...)</dt><dd ><tt >S.<a href="#QueryStr-ljust" >ljust</a>(width[,&nbsp;fillchar])&nbsp;-&gt;&nbsp;<a href="builtins.html#str" >str</a><br />
+<dl ><dt ><a name="QueryStr-join" ><strong >join</strong></a>(self, iterable, /)</dt><dd ><tt >Concatenate&nbsp;any&nbsp;number&nbsp;of&nbsp;strings.<br />
 &nbsp;<br />
-Return&nbsp;S&nbsp;left-justified&nbsp;in&nbsp;a&nbsp;Unicode&nbsp;string&nbsp;of&nbsp;length&nbsp;width.&nbsp;Padding&nbsp;is<br />
-done&nbsp;using&nbsp;the&nbsp;specified&nbsp;fill&nbsp;character&nbsp;(default&nbsp;is&nbsp;a&nbsp;space).</tt></dd></dl>
+The&nbsp;string&nbsp;whose&nbsp;method&nbsp;is&nbsp;called&nbsp;is&nbsp;inserted&nbsp;in&nbsp;between&nbsp;each&nbsp;given&nbsp;string.<br />
+The&nbsp;result&nbsp;is&nbsp;returned&nbsp;as&nbsp;a&nbsp;new&nbsp;string.<br />
+&nbsp;<br />
+Example:&nbsp;'.'.<a href="#QueryStr-join" >join</a>(['ab',&nbsp;'pq',&nbsp;'rs'])&nbsp;-&gt;&nbsp;'ab.pq.rs'</tt></dd></dl>
 
-<dl ><dt ><a name="QueryStr-lower" ><strong >lower</strong></a>(...)</dt><dd ><tt >S.<a href="#QueryStr-lower" >lower</a>()&nbsp;-&gt;&nbsp;<a href="builtins.html#str" >str</a><br />
+<dl ><dt ><a name="QueryStr-ljust" ><strong >ljust</strong></a>(self, width, fillchar=' ', /)</dt><dd ><tt >Return&nbsp;a&nbsp;left-justified&nbsp;string&nbsp;of&nbsp;length&nbsp;width.<br />
 &nbsp;<br />
-Return&nbsp;a&nbsp;copy&nbsp;of&nbsp;the&nbsp;string&nbsp;S&nbsp;converted&nbsp;to&nbsp;lowercase.</tt></dd></dl>
+Padding&nbsp;is&nbsp;done&nbsp;using&nbsp;the&nbsp;specified&nbsp;fill&nbsp;character&nbsp;(default&nbsp;is&nbsp;a&nbsp;space).</tt></dd></dl>
 
-<dl ><dt ><a name="QueryStr-lstrip" ><strong >lstrip</strong></a>(...)</dt><dd ><tt >S.<a href="#QueryStr-lstrip" >lstrip</a>([chars])&nbsp;-&gt;&nbsp;<a href="builtins.html#str" >str</a><br />
+<dl ><dt ><a name="QueryStr-lower" ><strong >lower</strong></a>(self, /)</dt><dd ><tt >Return&nbsp;a&nbsp;copy&nbsp;of&nbsp;the&nbsp;string&nbsp;converted&nbsp;to&nbsp;lowercase.</tt></dd></dl>
+
+<dl ><dt ><a name="QueryStr-lstrip" ><strong >lstrip</strong></a>(self, chars=None, /)</dt><dd ><tt >Return&nbsp;a&nbsp;copy&nbsp;of&nbsp;the&nbsp;string&nbsp;with&nbsp;leading&nbsp;whitespace&nbsp;removed.<br />
 &nbsp;<br />
-Return&nbsp;a&nbsp;copy&nbsp;of&nbsp;the&nbsp;string&nbsp;S&nbsp;with&nbsp;leading&nbsp;whitespace&nbsp;removed.<br />
 If&nbsp;chars&nbsp;is&nbsp;given&nbsp;and&nbsp;not&nbsp;None,&nbsp;remove&nbsp;characters&nbsp;in&nbsp;chars&nbsp;instead.</tt></dd></dl>
 
-<dl ><dt ><a name="QueryStr-partition" ><strong >partition</strong></a>(...)</dt><dd ><tt >S.<a href="#QueryStr-partition" >partition</a>(sep)&nbsp;-&gt;&nbsp;(head,&nbsp;sep,&nbsp;tail)<br />
+<dl ><dt ><a name="QueryStr-partition" ><strong >partition</strong></a>(self, sep, /)</dt><dd ><tt >Partition&nbsp;the&nbsp;string&nbsp;into&nbsp;three&nbsp;parts&nbsp;using&nbsp;the&nbsp;given&nbsp;separator.<br />
 &nbsp;<br />
-Search&nbsp;for&nbsp;the&nbsp;separator&nbsp;sep&nbsp;in&nbsp;S,&nbsp;and&nbsp;return&nbsp;the&nbsp;part&nbsp;before&nbsp;it,<br />
-the&nbsp;separator&nbsp;itself,&nbsp;and&nbsp;the&nbsp;part&nbsp;after&nbsp;it.&nbsp;&nbsp;If&nbsp;the&nbsp;separator&nbsp;is&nbsp;not<br />
-found,&nbsp;return&nbsp;S&nbsp;and&nbsp;two&nbsp;empty&nbsp;strings.</tt></dd></dl>
+This&nbsp;will&nbsp;search&nbsp;for&nbsp;the&nbsp;separator&nbsp;in&nbsp;the&nbsp;string.&nbsp;&nbsp;If&nbsp;the&nbsp;separator&nbsp;is&nbsp;found,<br />
+returns&nbsp;a&nbsp;3-tuple&nbsp;containing&nbsp;the&nbsp;part&nbsp;before&nbsp;the&nbsp;separator,&nbsp;the&nbsp;separator<br />
+itself,&nbsp;and&nbsp;the&nbsp;part&nbsp;after&nbsp;it.<br />
+&nbsp;<br />
+If&nbsp;the&nbsp;separator&nbsp;is&nbsp;not&nbsp;found,&nbsp;returns&nbsp;a&nbsp;3-tuple&nbsp;containing&nbsp;the&nbsp;original&nbsp;string<br />
+and&nbsp;two&nbsp;empty&nbsp;strings.</tt></dd></dl>
 
-<dl ><dt ><a name="QueryStr-replace" ><strong >replace</strong></a>(...)</dt><dd ><tt >S.<a href="#QueryStr-replace" >replace</a>(old,&nbsp;new[,&nbsp;count])&nbsp;-&gt;&nbsp;<a href="builtins.html#str" >str</a><br />
+<dl ><dt ><a name="QueryStr-replace" ><strong >replace</strong></a>(self, old, new, count=-1, /)</dt><dd ><tt >Return&nbsp;a&nbsp;copy&nbsp;with&nbsp;all&nbsp;occurrences&nbsp;of&nbsp;substring&nbsp;old&nbsp;replaced&nbsp;by&nbsp;new.<br />
 &nbsp;<br />
-Return&nbsp;a&nbsp;copy&nbsp;of&nbsp;S&nbsp;with&nbsp;all&nbsp;occurrences&nbsp;of&nbsp;substring<br />
-old&nbsp;replaced&nbsp;by&nbsp;new.&nbsp;&nbsp;If&nbsp;the&nbsp;optional&nbsp;argument&nbsp;count&nbsp;is<br />
-given,&nbsp;only&nbsp;the&nbsp;first&nbsp;count&nbsp;occurrences&nbsp;are&nbsp;replaced.</tt></dd></dl>
+&nbsp;&nbsp;count<br />
+&nbsp;&nbsp;&nbsp;&nbsp;Maximum&nbsp;number&nbsp;of&nbsp;occurrences&nbsp;to&nbsp;replace.<br />
+&nbsp;&nbsp;&nbsp;&nbsp;-1&nbsp;(the&nbsp;default&nbsp;value)&nbsp;means&nbsp;replace&nbsp;all&nbsp;occurrences.<br />
+&nbsp;<br />
+If&nbsp;the&nbsp;optional&nbsp;argument&nbsp;count&nbsp;is&nbsp;given,&nbsp;only&nbsp;the&nbsp;first&nbsp;count&nbsp;occurrences&nbsp;are<br />
+replaced.</tt></dd></dl>
 
 <dl ><dt ><a name="QueryStr-rfind" ><strong >rfind</strong></a>(...)</dt><dd ><tt >S.<a href="#QueryStr-rfind" >rfind</a>(sub[,&nbsp;start[,&nbsp;end]])&nbsp;-&gt;&nbsp;int<br />
 &nbsp;<br />
@@ -281,43 +279,49 @@ arguments&nbsp;start&nbsp;and&nbsp;end&nbsp;are&nbsp;interpreted&nbsp;as&nbsp;in
 &nbsp;<br />
 Raises&nbsp;ValueError&nbsp;when&nbsp;the&nbsp;substring&nbsp;is&nbsp;not&nbsp;found.</tt></dd></dl>
 
-<dl ><dt ><a name="QueryStr-rjust" ><strong >rjust</strong></a>(...)</dt><dd ><tt >S.<a href="#QueryStr-rjust" >rjust</a>(width[,&nbsp;fillchar])&nbsp;-&gt;&nbsp;<a href="builtins.html#str" >str</a><br />
+<dl ><dt ><a name="QueryStr-rjust" ><strong >rjust</strong></a>(self, width, fillchar=' ', /)</dt><dd ><tt >Return&nbsp;a&nbsp;right-justified&nbsp;string&nbsp;of&nbsp;length&nbsp;width.<br />
 &nbsp;<br />
-Return&nbsp;S&nbsp;right-justified&nbsp;in&nbsp;a&nbsp;string&nbsp;of&nbsp;length&nbsp;width.&nbsp;Padding&nbsp;is<br />
-done&nbsp;using&nbsp;the&nbsp;specified&nbsp;fill&nbsp;character&nbsp;(default&nbsp;is&nbsp;a&nbsp;space).</tt></dd></dl>
+Padding&nbsp;is&nbsp;done&nbsp;using&nbsp;the&nbsp;specified&nbsp;fill&nbsp;character&nbsp;(default&nbsp;is&nbsp;a&nbsp;space).</tt></dd></dl>
 
-<dl ><dt ><a name="QueryStr-rpartition" ><strong >rpartition</strong></a>(...)</dt><dd ><tt >S.<a href="#QueryStr-rpartition" >rpartition</a>(sep)&nbsp;-&gt;&nbsp;(head,&nbsp;sep,&nbsp;tail)<br />
+<dl ><dt ><a name="QueryStr-rpartition" ><strong >rpartition</strong></a>(self, sep, /)</dt><dd ><tt >Partition&nbsp;the&nbsp;string&nbsp;into&nbsp;three&nbsp;parts&nbsp;using&nbsp;the&nbsp;given&nbsp;separator.<br />
 &nbsp;<br />
-Search&nbsp;for&nbsp;the&nbsp;separator&nbsp;sep&nbsp;in&nbsp;S,&nbsp;starting&nbsp;at&nbsp;the&nbsp;end&nbsp;of&nbsp;S,&nbsp;and&nbsp;return<br />
-the&nbsp;part&nbsp;before&nbsp;it,&nbsp;the&nbsp;separator&nbsp;itself,&nbsp;and&nbsp;the&nbsp;part&nbsp;after&nbsp;it.&nbsp;&nbsp;If&nbsp;the<br />
-separator&nbsp;is&nbsp;not&nbsp;found,&nbsp;return&nbsp;two&nbsp;empty&nbsp;strings&nbsp;and&nbsp;S.</tt></dd></dl>
+This&nbsp;will&nbsp;search&nbsp;for&nbsp;the&nbsp;separator&nbsp;in&nbsp;the&nbsp;string,&nbsp;starting&nbsp;at&nbsp;the&nbsp;end.&nbsp;If<br />
+the&nbsp;separator&nbsp;is&nbsp;found,&nbsp;returns&nbsp;a&nbsp;3-tuple&nbsp;containing&nbsp;the&nbsp;part&nbsp;before&nbsp;the<br />
+separator,&nbsp;the&nbsp;separator&nbsp;itself,&nbsp;and&nbsp;the&nbsp;part&nbsp;after&nbsp;it.<br />
+&nbsp;<br />
+If&nbsp;the&nbsp;separator&nbsp;is&nbsp;not&nbsp;found,&nbsp;returns&nbsp;a&nbsp;3-tuple&nbsp;containing&nbsp;two&nbsp;empty&nbsp;strings<br />
+and&nbsp;the&nbsp;original&nbsp;string.</tt></dd></dl>
 
-<dl ><dt ><a name="QueryStr-rsplit" ><strong >rsplit</strong></a>(...)</dt><dd ><tt >S.<a href="#QueryStr-rsplit" >rsplit</a>(sep=None,&nbsp;maxsplit=-1)&nbsp;-&gt;&nbsp;list&nbsp;of&nbsp;strings<br />
+<dl ><dt ><a name="QueryStr-rsplit" ><strong >rsplit</strong></a>(self, /, sep=None, maxsplit=-1)</dt><dd ><tt >Return&nbsp;a&nbsp;list&nbsp;of&nbsp;the&nbsp;words&nbsp;in&nbsp;the&nbsp;string,&nbsp;using&nbsp;sep&nbsp;as&nbsp;the&nbsp;delimiter&nbsp;string.<br />
 &nbsp;<br />
-Return&nbsp;a&nbsp;list&nbsp;of&nbsp;the&nbsp;words&nbsp;in&nbsp;S,&nbsp;using&nbsp;sep&nbsp;as&nbsp;the<br />
-delimiter&nbsp;string,&nbsp;starting&nbsp;at&nbsp;the&nbsp;end&nbsp;of&nbsp;the&nbsp;string&nbsp;and<br />
-working&nbsp;to&nbsp;the&nbsp;front.&nbsp;&nbsp;If&nbsp;maxsplit&nbsp;is&nbsp;given,&nbsp;at&nbsp;most&nbsp;maxsplit<br />
-splits&nbsp;are&nbsp;done.&nbsp;If&nbsp;sep&nbsp;is&nbsp;not&nbsp;specified,&nbsp;any&nbsp;whitespace&nbsp;string<br />
-is&nbsp;a&nbsp;separator.</tt></dd></dl>
+&nbsp;&nbsp;sep<br />
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;delimiter&nbsp;according&nbsp;which&nbsp;to&nbsp;split&nbsp;the&nbsp;string.<br />
+&nbsp;&nbsp;&nbsp;&nbsp;None&nbsp;(the&nbsp;default&nbsp;value)&nbsp;means&nbsp;split&nbsp;according&nbsp;to&nbsp;any&nbsp;whitespace,<br />
+&nbsp;&nbsp;&nbsp;&nbsp;and&nbsp;discard&nbsp;empty&nbsp;strings&nbsp;from&nbsp;the&nbsp;result.<br />
+&nbsp;&nbsp;maxsplit<br />
+&nbsp;&nbsp;&nbsp;&nbsp;Maximum&nbsp;number&nbsp;of&nbsp;splits&nbsp;to&nbsp;do.<br />
+&nbsp;&nbsp;&nbsp;&nbsp;-1&nbsp;(the&nbsp;default&nbsp;value)&nbsp;means&nbsp;no&nbsp;limit.<br />
+&nbsp;<br />
+Splits&nbsp;are&nbsp;done&nbsp;starting&nbsp;at&nbsp;the&nbsp;end&nbsp;of&nbsp;the&nbsp;string&nbsp;and&nbsp;working&nbsp;to&nbsp;the&nbsp;front.</tt></dd></dl>
 
-<dl ><dt ><a name="QueryStr-rstrip" ><strong >rstrip</strong></a>(...)</dt><dd ><tt >S.<a href="#QueryStr-rstrip" >rstrip</a>([chars])&nbsp;-&gt;&nbsp;<a href="builtins.html#str" >str</a><br />
+<dl ><dt ><a name="QueryStr-rstrip" ><strong >rstrip</strong></a>(self, chars=None, /)</dt><dd ><tt >Return&nbsp;a&nbsp;copy&nbsp;of&nbsp;the&nbsp;string&nbsp;with&nbsp;trailing&nbsp;whitespace&nbsp;removed.<br />
 &nbsp;<br />
-Return&nbsp;a&nbsp;copy&nbsp;of&nbsp;the&nbsp;string&nbsp;S&nbsp;with&nbsp;trailing&nbsp;whitespace&nbsp;removed.<br />
 If&nbsp;chars&nbsp;is&nbsp;given&nbsp;and&nbsp;not&nbsp;None,&nbsp;remove&nbsp;characters&nbsp;in&nbsp;chars&nbsp;instead.</tt></dd></dl>
 
-<dl ><dt ><a name="QueryStr-split" ><strong >split</strong></a>(...)</dt><dd ><tt >S.<a href="#QueryStr-split" >split</a>(sep=None,&nbsp;maxsplit=-1)&nbsp;-&gt;&nbsp;list&nbsp;of&nbsp;strings<br />
+<dl ><dt ><a name="QueryStr-split" ><strong >split</strong></a>(self, /, sep=None, maxsplit=-1)</dt><dd ><tt >Return&nbsp;a&nbsp;list&nbsp;of&nbsp;the&nbsp;words&nbsp;in&nbsp;the&nbsp;string,&nbsp;using&nbsp;sep&nbsp;as&nbsp;the&nbsp;delimiter&nbsp;string.<br />
 &nbsp;<br />
-Return&nbsp;a&nbsp;list&nbsp;of&nbsp;the&nbsp;words&nbsp;in&nbsp;S,&nbsp;using&nbsp;sep&nbsp;as&nbsp;the<br />
-delimiter&nbsp;string.&nbsp;&nbsp;If&nbsp;maxsplit&nbsp;is&nbsp;given,&nbsp;at&nbsp;most&nbsp;maxsplit<br />
-splits&nbsp;are&nbsp;done.&nbsp;If&nbsp;sep&nbsp;is&nbsp;not&nbsp;specified&nbsp;or&nbsp;is&nbsp;None,&nbsp;any<br />
-whitespace&nbsp;string&nbsp;is&nbsp;a&nbsp;separator&nbsp;and&nbsp;empty&nbsp;strings&nbsp;are<br />
-removed&nbsp;from&nbsp;the&nbsp;result.</tt></dd></dl>
+sep<br />
+&nbsp;&nbsp;The&nbsp;delimiter&nbsp;according&nbsp;which&nbsp;to&nbsp;split&nbsp;the&nbsp;string.<br />
+&nbsp;&nbsp;None&nbsp;(the&nbsp;default&nbsp;value)&nbsp;means&nbsp;split&nbsp;according&nbsp;to&nbsp;any&nbsp;whitespace,<br />
+&nbsp;&nbsp;and&nbsp;discard&nbsp;empty&nbsp;strings&nbsp;from&nbsp;the&nbsp;result.<br />
+maxsplit<br />
+&nbsp;&nbsp;Maximum&nbsp;number&nbsp;of&nbsp;splits&nbsp;to&nbsp;do.<br />
+&nbsp;&nbsp;-1&nbsp;(the&nbsp;default&nbsp;value)&nbsp;means&nbsp;no&nbsp;limit.</tt></dd></dl>
 
-<dl ><dt ><a name="QueryStr-splitlines" ><strong >splitlines</strong></a>(...)</dt><dd ><tt >S.<a href="#QueryStr-splitlines" >splitlines</a>([keepends])&nbsp;-&gt;&nbsp;list&nbsp;of&nbsp;strings<br />
+<dl ><dt ><a name="QueryStr-splitlines" ><strong >splitlines</strong></a>(self, /, keepends=False)</dt><dd ><tt >Return&nbsp;a&nbsp;list&nbsp;of&nbsp;the&nbsp;lines&nbsp;in&nbsp;the&nbsp;string,&nbsp;breaking&nbsp;at&nbsp;line&nbsp;boundaries.<br />
 &nbsp;<br />
-Return&nbsp;a&nbsp;list&nbsp;of&nbsp;the&nbsp;lines&nbsp;in&nbsp;S,&nbsp;breaking&nbsp;at&nbsp;line&nbsp;boundaries.<br />
-Line&nbsp;breaks&nbsp;are&nbsp;not&nbsp;included&nbsp;in&nbsp;the&nbsp;resulting&nbsp;list&nbsp;unless&nbsp;keepends<br />
-is&nbsp;given&nbsp;and&nbsp;true.</tt></dd></dl>
+Line&nbsp;breaks&nbsp;are&nbsp;not&nbsp;included&nbsp;in&nbsp;the&nbsp;resulting&nbsp;list&nbsp;unless&nbsp;keepends&nbsp;is&nbsp;given&nbsp;and<br />
+true.</tt></dd></dl>
 
 <dl ><dt ><a name="QueryStr-startswith" ><strong >startswith</strong></a>(...)</dt><dd ><tt >S.<a href="#QueryStr-startswith" >startswith</a>(prefix[,&nbsp;start[,&nbsp;end]])&nbsp;-&gt;&nbsp;bool<br />
 &nbsp;<br />
@@ -326,42 +330,37 @@ With&nbsp;optional&nbsp;start,&nbsp;test&nbsp;S&nbsp;beginning&nbsp;at&nbsp;that
 With&nbsp;optional&nbsp;end,&nbsp;stop&nbsp;comparing&nbsp;S&nbsp;at&nbsp;that&nbsp;position.<br />
 prefix&nbsp;can&nbsp;also&nbsp;be&nbsp;a&nbsp;tuple&nbsp;of&nbsp;strings&nbsp;to&nbsp;try.</tt></dd></dl>
 
-<dl ><dt ><a name="QueryStr-strip" ><strong >strip</strong></a>(...)</dt><dd ><tt >S.<a href="#QueryStr-strip" >strip</a>([chars])&nbsp;-&gt;&nbsp;<a href="builtins.html#str" >str</a><br />
+<dl ><dt ><a name="QueryStr-strip" ><strong >strip</strong></a>(self, chars=None, /)</dt><dd ><tt >Return&nbsp;a&nbsp;copy&nbsp;of&nbsp;the&nbsp;string&nbsp;with&nbsp;leading&nbsp;and&nbsp;trailing&nbsp;whitespace&nbsp;remove.<br />
 &nbsp;<br />
-Return&nbsp;a&nbsp;copy&nbsp;of&nbsp;the&nbsp;string&nbsp;S&nbsp;with&nbsp;leading&nbsp;and&nbsp;trailing<br />
-whitespace&nbsp;removed.<br />
 If&nbsp;chars&nbsp;is&nbsp;given&nbsp;and&nbsp;not&nbsp;None,&nbsp;remove&nbsp;characters&nbsp;in&nbsp;chars&nbsp;instead.</tt></dd></dl>
 
-<dl ><dt ><a name="QueryStr-swapcase" ><strong >swapcase</strong></a>(...)</dt><dd ><tt >S.<a href="#QueryStr-swapcase" >swapcase</a>()&nbsp;-&gt;&nbsp;<a href="builtins.html#str" >str</a><br />
-&nbsp;<br />
-Return&nbsp;a&nbsp;copy&nbsp;of&nbsp;S&nbsp;with&nbsp;uppercase&nbsp;characters&nbsp;converted&nbsp;to&nbsp;lowercase<br />
-and&nbsp;vice&nbsp;versa.</tt></dd></dl>
+<dl ><dt ><a name="QueryStr-swapcase" ><strong >swapcase</strong></a>(self, /)</dt><dd ><tt >Convert&nbsp;uppercase&nbsp;characters&nbsp;to&nbsp;lowercase&nbsp;and&nbsp;lowercase&nbsp;characters&nbsp;to&nbsp;uppercase.</tt></dd></dl>
 
-<dl ><dt ><a name="QueryStr-title" ><strong >title</strong></a>(...)</dt><dd ><tt >S.<a href="#QueryStr-title" >title</a>()&nbsp;-&gt;&nbsp;<a href="builtins.html#str" >str</a><br />
+<dl ><dt ><a name="QueryStr-title" ><strong >title</strong></a>(self, /)</dt><dd ><tt >Return&nbsp;a&nbsp;version&nbsp;of&nbsp;the&nbsp;string&nbsp;where&nbsp;each&nbsp;word&nbsp;is&nbsp;titlecased.<br />
 &nbsp;<br />
-Return&nbsp;a&nbsp;titlecased&nbsp;version&nbsp;of&nbsp;S,&nbsp;i.e.&nbsp;words&nbsp;start&nbsp;with&nbsp;title&nbsp;case<br />
-characters,&nbsp;all&nbsp;remaining&nbsp;cased&nbsp;characters&nbsp;have&nbsp;lower&nbsp;case.</tt></dd></dl>
+More&nbsp;specifically,&nbsp;words&nbsp;start&nbsp;with&nbsp;uppercased&nbsp;characters&nbsp;and&nbsp;all&nbsp;remaining<br />
+cased&nbsp;characters&nbsp;have&nbsp;lower&nbsp;case.</tt></dd></dl>
 
-<dl ><dt ><a name="QueryStr-translate" ><strong >translate</strong></a>(...)</dt><dd ><tt >S.<a href="#QueryStr-translate" >translate</a>(table)&nbsp;-&gt;&nbsp;<a href="builtins.html#str" >str</a><br />
+<dl ><dt ><a name="QueryStr-translate" ><strong >translate</strong></a>(self, table, /)</dt><dd ><tt >Replace&nbsp;each&nbsp;character&nbsp;in&nbsp;the&nbsp;string&nbsp;using&nbsp;the&nbsp;given&nbsp;translation&nbsp;table.<br />
 &nbsp;<br />
-Return&nbsp;a&nbsp;copy&nbsp;of&nbsp;the&nbsp;string&nbsp;S&nbsp;in&nbsp;which&nbsp;each&nbsp;character&nbsp;has&nbsp;been&nbsp;mapped<br />
-through&nbsp;the&nbsp;given&nbsp;translation&nbsp;table.&nbsp;The&nbsp;table&nbsp;must&nbsp;implement<br />
-lookup/indexing&nbsp;via&nbsp;__getitem__,&nbsp;for&nbsp;instance&nbsp;a&nbsp;dictionary&nbsp;or&nbsp;list,<br />
-mapping&nbsp;Unicode&nbsp;ordinals&nbsp;to&nbsp;Unicode&nbsp;ordinals,&nbsp;strings,&nbsp;or&nbsp;None.&nbsp;If<br />
-this&nbsp;operation&nbsp;raises&nbsp;LookupError,&nbsp;the&nbsp;character&nbsp;is&nbsp;left&nbsp;untouched.<br />
-Characters&nbsp;mapped&nbsp;to&nbsp;None&nbsp;are&nbsp;deleted.</tt></dd></dl>
+&nbsp;&nbsp;table<br />
+&nbsp;&nbsp;&nbsp;&nbsp;Translation&nbsp;table,&nbsp;which&nbsp;must&nbsp;be&nbsp;a&nbsp;mapping&nbsp;of&nbsp;Unicode&nbsp;ordinals&nbsp;to<br />
+&nbsp;&nbsp;&nbsp;&nbsp;Unicode&nbsp;ordinals,&nbsp;strings,&nbsp;or&nbsp;None.<br />
+&nbsp;<br />
+The&nbsp;table&nbsp;must&nbsp;implement&nbsp;lookup/indexing&nbsp;via&nbsp;__getitem__,&nbsp;for&nbsp;instance&nbsp;a<br />
+dictionary&nbsp;or&nbsp;list.&nbsp;&nbsp;If&nbsp;this&nbsp;operation&nbsp;raises&nbsp;LookupError,&nbsp;the&nbsp;character&nbsp;is<br />
+left&nbsp;untouched.&nbsp;&nbsp;Characters&nbsp;mapped&nbsp;to&nbsp;None&nbsp;are&nbsp;deleted.</tt></dd></dl>
 
-<dl ><dt ><a name="QueryStr-upper" ><strong >upper</strong></a>(...)</dt><dd ><tt >S.<a href="#QueryStr-upper" >upper</a>()&nbsp;-&gt;&nbsp;<a href="builtins.html#str" >str</a><br />
-&nbsp;<br />
-Return&nbsp;a&nbsp;copy&nbsp;of&nbsp;S&nbsp;converted&nbsp;to&nbsp;uppercase.</tt></dd></dl>
+<dl ><dt ><a name="QueryStr-upper" ><strong >upper</strong></a>(self, /)</dt><dd ><tt >Return&nbsp;a&nbsp;copy&nbsp;of&nbsp;the&nbsp;string&nbsp;converted&nbsp;to&nbsp;uppercase.</tt></dd></dl>
 
-<dl ><dt ><a name="QueryStr-zfill" ><strong >zfill</strong></a>(...)</dt><dd ><tt >S.<a href="#QueryStr-zfill" >zfill</a>(width)&nbsp;-&gt;&nbsp;<a href="builtins.html#str" >str</a><br />
+<dl ><dt ><a name="QueryStr-zfill" ><strong >zfill</strong></a>(self, width, /)</dt><dd ><tt >Pad&nbsp;a&nbsp;numeric&nbsp;string&nbsp;with&nbsp;zeros&nbsp;on&nbsp;the&nbsp;left,&nbsp;to&nbsp;fill&nbsp;a&nbsp;field&nbsp;of&nbsp;the&nbsp;given&nbsp;width.<br />
 &nbsp;<br />
-Pad&nbsp;a&nbsp;numeric&nbsp;string&nbsp;S&nbsp;with&nbsp;zeros&nbsp;on&nbsp;the&nbsp;left,&nbsp;to&nbsp;fill&nbsp;a&nbsp;field<br />
-of&nbsp;the&nbsp;specified&nbsp;width.&nbsp;The&nbsp;string&nbsp;S&nbsp;is&nbsp;never&nbsp;truncated.</tt></dd></dl>
+The&nbsp;string&nbsp;is&nbsp;never&nbsp;truncated.</tt></dd></dl>
 
 <hr />
 Static methods inherited from <a href="builtins.html#str" >builtins.str</a>:<br />
+<dl ><dt ><a name="QueryStr-__new__" ><strong >__new__</strong></a>(*args, **kwargs)<font color="#909090" ><font face="helvetica, arial" > from <a href="builtins.html#type" >builtins.type</a></font></font></dt><dd ><tt >Create&nbsp;and&nbsp;return&nbsp;a&nbsp;new&nbsp;object.&nbsp;&nbsp;See&nbsp;help(type)&nbsp;for&nbsp;accurate&nbsp;signature.</tt></dd></dl>
+
 <dl ><dt ><a name="QueryStr-maketrans" ><strong >maketrans</strong></a>(x, y=None, z=None, /)</dt><dd ><tt >Return&nbsp;a&nbsp;translation&nbsp;table&nbsp;usable&nbsp;for&nbsp;<a href="builtins.html#str" >str</a>.<a href="#QueryStr-translate" >translate</a>().<br />
 &nbsp;<br />
 If&nbsp;there&nbsp;is&nbsp;only&nbsp;one&nbsp;argument,&nbsp;it&nbsp;must&nbsp;be&nbsp;a&nbsp;dictionary&nbsp;mapping&nbsp;Unicode<br />
