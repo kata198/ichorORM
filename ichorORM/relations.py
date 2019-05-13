@@ -1,8 +1,8 @@
-'''    
+'''
     Copyright (c) 2018 Timothy Savannah
 
     Licensed under the terms of the Lesser GNU Lesser General Public License version 2.1
-    
+
       license can be found at https://raw.githubusercontent.com/kata198/ichorORM/master/LICENSE
 
     relations - Defines relation types (One-to-one, one-to-many)
@@ -22,7 +22,7 @@ def isForeignRelationType(obj):
 
             @return <bool> - True if #obj extends ForeignRelation, otherwise False
     '''
-    
+
     return bool( issubclass(obj.__class__, ForeignRelation) )
 
 class RelationIntegrityError(Exception):
@@ -47,7 +47,7 @@ class OneToOneRelation(ForeignRelation):
                 @param relatedFieldName <None/str> Default None - If None, will use the primary key
                     of #relatedType as the other end of the relation. Otherwise, provide an explicit field name.
         '''
-        
+
         self.fkFieldName = fkFieldName
         self.relatedType = relatedType
 
@@ -65,7 +65,7 @@ class OneToOneRelation(ForeignRelation):
 
                 @return <None/DatabaseModel> - None if no related object found, otherwise the related object.
         '''
-        
+
         fk = getattr(sourceObj, self.fkFieldName)
 
         if not fk:
@@ -103,7 +103,7 @@ class OneToManyRelation(ForeignRelation):
 
                     If None, referenced the PRIMARY KEY on #relatedType
         '''
-        
+
         self.fkFieldName = fkFieldName
         self.relatedType = relatedType
 
@@ -121,7 +121,7 @@ class OneToManyRelation(ForeignRelation):
 
                 @return list<DatabaseModel instance> - All instances of foreign model referenced
         '''
-        
+
         fk = getattr(sourceObj, self.fkFieldName)
 
         if not fk:

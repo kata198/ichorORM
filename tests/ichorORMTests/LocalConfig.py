@@ -29,7 +29,7 @@ _CONFIG_USERNAME = None
 _CONFIG_PASSWORD = None
 
 # _CONFIG_DBNAME - Set this to a specific dbname to use,
-#         or leave as None for the default ( will use postgres default, 
+#         or leave as None for the default ( will use postgres default,
 #           which in most configurations is same as username)
 _CONFIG_DBNAME = None
 
@@ -42,7 +42,7 @@ _CONFIG_DBNAME = None
 __all__ = ( 'ensureTestSetup', )
 
 # NOTE: The below code tries to just execute SQL directly and use minimum ichorORM code
-#         possible. 
+#         possible.
 #  It tests that you have properly configured the connection above, and that the "base"
 #    set of models for the test cases have been loaded properly,
 #     and if not loads them.

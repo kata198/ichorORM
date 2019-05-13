@@ -22,7 +22,7 @@ class TestDatabaseConnection(object):
     def setup_class(self):
         '''
             setup_class - Called at the beginning of the test
-                
+
                 Sets configuration based on LocalConfig
         '''
         LocalConfig.ensureTestSetup()
@@ -41,7 +41,7 @@ class TestDatabaseConnection(object):
 
         assert gotException is False , 'Got exception calling getDatabaseConnection:  %s  %s' %( str(type(gotException)), str(gotException) )
 
-         
+
         assert dbConn.host == LocalConfig._CONFIG_HOSTNAME , 'Expected LocalConfig._CONFIG_HOSTNAME to be set on database connection. Expected %s but got %s' %( repr(LocalConfig._CONFIG_HOSTNAME), repr(dbConn.host) )
 
         assert dbConn.port == LocalConfig._CONFIG_PORT , 'Expected LocalConfig._CONFIG_PORT to be set on database connection. Expected %s but got %s' %( repr(LocalConfig._CONFIG_PORT), repr(dbConn.port) )
@@ -85,18 +85,18 @@ class TestDatabaseConnection(object):
 
             dbConnAlt = ichorORM.getDatabaseConnection(**args)
 
-            
+
             assert getattr(dbConnAlt, attrName) == attrValue , 'Expected to set %s=%s but object had value %s.' %( attrName, repr(attrValue), repr(getattr(dbConnAlt, attrName)) )
 
             for connField in ( 'host', 'port', 'user', 'dbname', 'password' ):
                 if connField == attrName:
                     # Skip if this is the field we modified
                     continue
-    
+
                 globalVal = getattr(dbConnGlobal, connField)
                 altVal = getattr(dbConnAlt, connField)
 
-                assert globalVal == altVal , 'Expected that when changing field %s but not %s we would inherit global value for %s. Expected %s but got %s' %( attrName, connField, connField, repr(globalVal), repr(altVal) ) 
+                assert globalVal == altVal , 'Expected that when changing field %s but not %s we would inherit global value for %s. Expected %s but got %s' %( attrName, connField, connField, repr(globalVal), repr(altVal) )
 
 
     def test_getCursor(self):
@@ -164,7 +164,7 @@ class TestDatabaseConnection(object):
 
             query = '''INSERT INTO ichor_test_conn_table(name, value, extra_data) VALUES ('%s', '%s', %s)''' %(name, value, extraDataVal)
             dbConn.executeSql(query)
-        
+
 
         gotException = False
         try:
@@ -191,7 +191,7 @@ class TestDatabaseConnection(object):
 
         assert gotException is not False , 'Expected to get exception from executeSql with nonsense query, but did not.'
 
-   
+
     def test_doSelect(self):
         '''
             test_doSelect - Test the doSelect method
@@ -271,9 +271,9 @@ class TestDatabaseConnection(object):
 
                     @param extra_data <None/str> default None - Extra_data field
             '''
-            query = '''INSERT INTO ichor_test_conn_table(name, value, extra_data) VALUES (%(name)s, %(value)s, %(extra_data)s)''' 
+            query = '''INSERT INTO ichor_test_conn_table(name, value, extra_data) VALUES (%(name)s, %(value)s, %(extra_data)s)'''
             dbConn.executeSqlParams(query, {'name' : name, 'value' : value, 'extra_data' : extra_data })
-        
+
 
         gotException = False
         try:
@@ -305,14 +305,14 @@ class TestDatabaseConnection(object):
 
         gotException = False
         try:
-            query = '''INSERT INTO ichor_test_conn_table(name, value, extra_data) VALUES (%(name)s, %(value)s, %(extra_data)s)''' 
+            query = '''INSERT INTO ichor_test_conn_table(name, value, extra_data) VALUES (%(name)s, %(value)s, %(extra_data)s)'''
             dbConn.executeSqlParams(query, {'nameX' : name, 'value' : value, 'extra_data' : extra_data })
         except Exception as e:
             gotException = e
 
         assert gotException is not False , 'Expected to get exception from executeSqlParams with a param that does not match expected values.'
 
-   
+
     def test_doSelectFromParams(self):
         '''
             test_doSelectFromParams - Test the doSelect method (using the params insert)
@@ -386,7 +386,7 @@ class TestDatabaseConnection(object):
 
 
         # Insert with one valueDict
-        queryParams = '''INSERT INTO ichor_test_conn_table(name, value, extra_data) VALUES (%(name)s, %(value)s, %(extra_data)s)''' 
+        queryParams = '''INSERT INTO ichor_test_conn_table(name, value, extra_data) VALUES (%(name)s, %(value)s, %(extra_data)s)'''
         gotException = False
         try:
             pks = dbConn.doInsert(queryParams, valueDicts=[{'name' : 'one', 'value' : 'Hello', 'extra_data' : None }], returnPk=True)
@@ -396,9 +396,9 @@ class TestDatabaseConnection(object):
         assert gotException is False , 'Got unexpected exception from doInsert: %s  %s' %(str(type(gotException)), str(gotException))
         assert pks and len(pks) == 1 and pks[0] , 'Expected to get primary key back from doInsert, but did not.'
         self.nameToPk['one'] = pks[0]
-        
+
         # insert with inline values and no valueDict
-        queryInline = '''INSERT INTO ichor_test_conn_table(name, value, extra_data) VALUES ('two', 'Goodbye', NULL)''' 
+        queryInline = '''INSERT INTO ichor_test_conn_table(name, value, extra_data) VALUES ('two', 'Goodbye', NULL)'''
         gotException = False
         try:
             pks = dbConn.doInsert(queryInline, returnPk=True)
@@ -408,9 +408,9 @@ class TestDatabaseConnection(object):
         assert gotException is False , 'Got unexpected exception from doInsert: %s  %s' %(str(type(gotException)), str(gotException))
         assert pks and len(pks) == 1 and pks[0] , 'Expected to get primary key back from doInsert, but did not.'
         self.nameToPk['two'] = pks[0]
-        
+
         # insert multiple valueDicts
-        valueDicts = [ 
+        valueDicts = [
             { 'name' : 'three', 'value' : 'Goodbye', 'extra_data' : 'Some extra data' },
             { 'name' : 'four', 'value' : 'Cheese', 'extra_data' : 'Yummy yum yum'},
         ]
@@ -425,7 +425,7 @@ class TestDatabaseConnection(object):
         assert len(pks) == 2 , 'Expected to get 2 primary keys back from insert with 2 rows, but got %d  %s' %(len(pks), repr(pks))
 
         assert len([x for x in pks if x]) == 2, 'Expected to have primary keys set, but got empty/missing values. Got: ' + repr(pks)
-        
+
         self.nameToPk['three'] = pks[0]
         self.nameToPk['four'] = pks[1]
         # TODO: Test returnPk = False
@@ -447,7 +447,7 @@ class TestDatabaseConnection(object):
 
         gotException = False
         try:
-            query = '''INSERT INTO ichor_test_conn_table(name, value, extra_data) VALUES (%(name)s, %(value)s, %(extra_data)s)''' 
+            query = '''INSERT INTO ichor_test_conn_table(name, value, extra_data) VALUES (%(name)s, %(value)s, %(extra_data)s)'''
             dbConn.doInsert(query, valueDicts=[{'nameX' : name, 'value' : value, 'extra_data' : extra_data }])
         except Exception as e:
             gotException = e
@@ -540,7 +540,7 @@ class TestDatabaseConnection(object):
 
 
         # Insert with one valueDict
-        queryParams = '''INSERT INTO ichor_test_conn_table(name, value, extra_data) VALUES (%(name)s, %(value)s, %(extra_data)s)''' 
+        queryParams = '''INSERT INTO ichor_test_conn_table(name, value, extra_data) VALUES (%(name)s, %(value)s, %(extra_data)s)'''
         gotException = False
         try:
             pks = dbConn.doInsert(queryParams, valueDicts=[{'name' : 'one', 'value' : 'Hello', 'extra_data' : None }], returnPk=True, doCommit=False)
@@ -550,9 +550,9 @@ class TestDatabaseConnection(object):
         assert gotException is False , 'Got unexpected exception from doInsert with transaction: %s  %s' %(str(type(gotException)), str(gotException))
         assert pks and len(pks) == 1 and pks[0] , 'Expected to get primary key back from doInsert, but did not.'
         self.nameToPk['one'] = pks[0]
-        
+
         # insert with inline values and no valueDict
-        queryInline = '''INSERT INTO ichor_test_conn_table(name, value, extra_data) VALUES ('two', 'Goodbye', NULL)''' 
+        queryInline = '''INSERT INTO ichor_test_conn_table(name, value, extra_data) VALUES ('two', 'Goodbye', NULL)'''
         gotException = False
         try:
             pks = dbConn.doInsert(queryInline, returnPk=True, doCommit=False)
@@ -562,9 +562,9 @@ class TestDatabaseConnection(object):
         assert gotException is False , 'Got unexpected exception from doInsert with transaction: %s  %s' %(str(type(gotException)), str(gotException))
         assert pks and len(pks) == 1 and pks[0] , 'Expected to get primary key back from doInsert, but did not.'
         self.nameToPk['two'] = pks[0]
-        
+
         # insert multiple valueDicts
-        valueDicts = [ 
+        valueDicts = [
             { 'name' : 'three', 'value' : 'Goodbye', 'extra_data' : 'Some extra data' },
             { 'name' : 'four', 'value' : 'Cheese', 'extra_data' : 'Yummy yum yum'},
         ]
@@ -589,7 +589,7 @@ class TestDatabaseConnection(object):
         assert countResults , 'Did not get any return from SELECT count(*) query'
 
         assert len(countResults) == 1 , 'Expected count(*) query to return 1 row, but got %d.  %s' %(len(countResults), repr(countResults))
-        
+
         assert countResults[0][0] == 0 , 'Expected no rows to be present before commit with doInsert using transaction. count(*) returned %s' %(repr(countResults), )
 
         # commit
@@ -607,7 +607,7 @@ class TestDatabaseConnection(object):
         assert countResults , 'Did not get any return from SELECT count(*) query'
 
         assert len(countResults) == 1 , 'Expected count(*) query to return 1 row, but got %d.  %s' %(len(countResults), repr(countResults))
-        
+
         assert countResults[0][0] == 4 , 'Expected 4 rows to be present after commit with doInsert using transaction. count(*) returned %s' %(repr(countResults), )
 
 

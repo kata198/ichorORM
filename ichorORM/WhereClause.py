@@ -1,8 +1,8 @@
-'''    
+'''
     Copyright (c) 2016-2018 Timothy Savannah
 
     Licensed under the terms of the Lesser GNU Lesser General Public License version 2.1
-    
+
       license can be found at https://raw.githubusercontent.com/kata198/ichorORM/master/LICENSE
 
     WhereClause - type to represent a WHERE clause and related

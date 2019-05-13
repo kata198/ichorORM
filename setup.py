@@ -13,7 +13,7 @@ from setuptools import setup
 
 
 if __name__ == '__main__':
- 
+
 
     dirName = os.path.dirname(__file__)
     if dirName and os.getcwd() != dirName:

@@ -22,9 +22,9 @@ class TestDummy(object):
         LocalConfig.ensureTestSetup()
 
     def test_Connect(self):
-        
+
         dbConn = ichorORM.getDatabaseConnection()
-        
+
         pass
         pass
         b = 1

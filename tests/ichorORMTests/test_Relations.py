@@ -43,7 +43,7 @@ class TestRelations(object):
             dbConn = ichorORM.getDatabaseConnection()
             dbConn.executeSql("DELETE FROM %s WHERE datasetUid = '%s'" %(tableName, self.datasetUid, ))
         except Exception as e:
-            sys.stderr.write('Error deleting all %s objects with dataset uid "%s": %s  %s\n' % 
+            sys.stderr.write('Error deleting all %s objects with dataset uid "%s": %s  %s\n' %
                 (tableName, self.datasetUid, str(type(e)), str(e) )
             )
 
@@ -54,7 +54,7 @@ class TestRelations(object):
         '''
         # First, delete from Meal which refrences Person
         self._deleteDataset(Meal.TABLE_NAME)
-        
+
         # Now can delete the Person from this dataset
         self._deleteDataset(Person.TABLE_NAME)
 
@@ -73,7 +73,7 @@ class TestRelations(object):
 
                 @param meth <built-in method> - The method being tested (compare meth == self.someMethod)
         '''
-        
+
         if meth in ( self.test_oneToOneRelation, self.test_oneToManyRelation ):
 
             # self.DEFAULT_PERSON_DATASET - A sample dataset of field -> value for Person model
@@ -97,7 +97,7 @@ class TestRelations(object):
             dbConn = ichorORM.getDatabaseConnection()
 
             pks = dbConn.doInsert(query="INSERT INTO person ( first_name, last_name, eye_color, age, birth_day, birth_month, datasetuid ) VALUES ( %(first_name)s, %(last_name)s, %(eye_color)s, %(age)s, %(birth_day)s, %(birth_month)s, %(datasetuid)s )", valueDicts=self.DEFAULT_PERSON_DATASET, returnPk=True)
-            
+
             self.personIdToDataset = {}
             # Add the "id" to each dataset and build ref map
 
@@ -115,7 +115,7 @@ class TestRelations(object):
             self.personHasPizza = []
 
             for i in range(len(self.DEFAULT_PERSON_DATASET)):
-                
+
                 personDataset = self.DEFAULT_PERSON_DATASET[i]
 
                 mealPk = dbConn.doInsert(query="INSERT INTO meal ( food_group, item_name, price, id_person, datasetuid ) VALUES ('desert', 'ice cream', 2.38, %d, '%s')" %( personDataset['id'], self.datasetUid ), returnPk=True )
@@ -128,7 +128,7 @@ class TestRelations(object):
                     mealPks.append(mealPk)
 
                     self.personHasPizza.append(personDataset['id'])
-                    
+
 
 
     def teardown_method(self, meth):
@@ -148,7 +148,7 @@ class TestRelations(object):
         allPersons = Person.filter(datasetuid=self.datasetUid, orderByField='id', orderByDir='ASC')
 
         for i in range(len(allPersons)):
-            
+
             person = allPersons[i]
             relatedMeals = person.meals
 
@@ -168,14 +168,14 @@ class TestRelations(object):
 
                 assert foundPizza is True , 'Did not find pizza related model for person %d  %s' %( i, repr(person) )
             else:
-                
+
                 assert len(relatedMeals) == 1 , 'Expected to get 1 meal for non-first-or-third person. Got: ' + repr(relatedMeals)
 
                 meal = relatedMeals[0]
 
                 assert meal.item_name == 'ice cream' , 'Expected to find ice cream, but got meal: ' + repr(meal)
                 assert meal.id_person == person.id , 'Bad relation! meal.id_person %d != person.id %d' %(meal.id_person, person.id)
-        
+
 
 
     def test_oneToManyRelation(self):
@@ -185,7 +185,7 @@ class TestRelations(object):
         allMeals = Meal.filter(datasetuid=self.datasetUid)
 
         for meal in allMeals:
-            
+
             relatedPerson = meal.person
 
             assert relatedPerson , 'Expected to get a person from this meal, but did not. Meal is: ' + repr(meal)

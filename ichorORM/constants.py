@@ -2,13 +2,13 @@
     Copyright (c) 2016-2018 Timothy Savannah
 
     Licensed under the terms of the Lesser GNU Lesser General Public License version 2.1
-    
+
       license can be found at https://raw.githubusercontent.com/kata198/ichorORM/master/LICENSE
 
     constants.py - Some constants
 '''
 
-__all__ = ('FETCH_ALL_FIELDS', 'WHERE_AND', 'WHERE_OR', 'WHERE_ALL_TYPES', 'SQL_NULL', 
+__all__ = ('FETCH_ALL_FIELDS', 'WHERE_AND', 'WHERE_OR', 'WHERE_ALL_TYPES', 'SQL_NULL',
     'JOIN_INNER', 'JOIN_LEFT', 'JOIN_RIGHT', 'JOIN_OUTER_FULL'
 )
 

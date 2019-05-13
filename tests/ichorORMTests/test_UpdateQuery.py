@@ -44,7 +44,7 @@ class TestUpdateQuery(object):
             dbConn = ichorORM.getDatabaseConnection()
             dbConn.executeSql("DELETE FROM %s WHERE datasetUid = '%s'" %(tableName, self.datasetUid, ))
         except Exception as e:
-            sys.stderr.write('Error deleting all %s objects with dataset uid "%s": %s  %s\n' % 
+            sys.stderr.write('Error deleting all %s objects with dataset uid "%s": %s  %s\n' %
                 (tableName, self.datasetUid, str(type(e)), str(e) )
             )
 
@@ -55,7 +55,7 @@ class TestUpdateQuery(object):
         '''
         # First, delete from Meal which refrences Person
         self._deleteDataset(Meal.TABLE_NAME)
-        
+
         # Now can delete the Person from this dataset
         self._deleteDataset(Person.TABLE_NAME)
 
@@ -74,7 +74,7 @@ class TestUpdateQuery(object):
 
                 @param meth <built-in method> - The method being tested (compare meth == self.someMethod)
         '''
-        
+
         if meth in ( self.test_generalUpdate, self.test_updateTransaction, self.test_updateWithQueryStr ):
 
             # self.DEFAULT_PERSON_DATASET - A sample dataset of field -> value for Person model
@@ -98,7 +98,7 @@ class TestUpdateQuery(object):
             dbConn = ichorORM.getDatabaseConnection()
 
             pks = dbConn.doInsert(query="INSERT INTO person ( first_name, last_name, eye_color, age, birth_day, birth_month, datasetuid ) VALUES ( %(first_name)s, %(last_name)s, %(eye_color)s, %(age)s, %(birth_day)s, %(birth_month)s, %(datasetuid)s )", valueDicts=self.DEFAULT_PERSON_DATASET, returnPk=True)
-            
+
             self.personIdToDataset = {}
             # Add the "id" to each dataset and build ref map
 
@@ -155,7 +155,7 @@ class TestUpdateQuery(object):
         assert len(results) == len(self.DEFAULT_PERSON_DATASET) , 'Did not get expected number of results back. Expected %d but got %d' %( len(self.DEFAULT_PERSON_DATASET), len(results))
 
         for resultRow in results:
-            
+
             ( _id, first_name, last_name, eye_color, age, birth_day, birth_month, datasetuid ) = resultRow
 
             myFetchedValues = { 'id' : _id, 'first_name' : first_name, 'last_name' : last_name, 'eye_color' : eye_color,
@@ -173,10 +173,10 @@ class TestUpdateQuery(object):
                 testAgainstValues = self.personIdToDataset[_id]
 
             for fieldName, fieldValue in myFetchedValues.items():
-                
+
                 expectedValue = testAgainstValues[fieldName]
 
-                assert fieldValue == expectedValue , 'Got unexpected value after Jane Doe update. On person %s %s  field "%s" does not have expected value %s. Fetched value was %s' %( first_name, last_name, fieldName, repr(expectedValue), repr(fieldValue) ) 
+                assert fieldValue == expectedValue , 'Got unexpected value after Jane Doe update. On person %s %s  field "%s" does not have expected value %s. Fetched value was %s' %( first_name, last_name, fieldName, repr(expectedValue), repr(fieldValue) )
 
 
     def test_updateTransaction(self):
@@ -245,7 +245,7 @@ class TestUpdateQuery(object):
         assert len(results) == len(self.DEFAULT_PERSON_DATASET) , 'Did not get expected number of results back. Expected %d but got %d' %( len(self.DEFAULT_PERSON_DATASET), len(results))
 
         for resultRow in results:
-            
+
             ( _id, first_name, last_name, eye_color, age, birth_day, birth_month, datasetuid ) = resultRow
 
             myFetchedValues = { 'id' : _id, 'first_name' : first_name, 'last_name' : last_name, 'eye_color' : eye_color,
@@ -255,10 +255,10 @@ class TestUpdateQuery(object):
             testAgainstValues = self.personIdToDataset[_id]
 
             for fieldName, fieldValue in myFetchedValues.items():
-                
+
                 expectedValue = testAgainstValues[fieldName]
 
-                assert fieldValue == expectedValue , 'Got unexpected value before transaction commit. On person %s %s  field "%s" does not have expected value %s. Fetched value was %s' %( first_name, last_name, fieldName, repr(expectedValue), repr(fieldValue) ) 
+                assert fieldValue == expectedValue , 'Got unexpected value before transaction commit. On person %s %s  field "%s" does not have expected value %s. Fetched value was %s' %( first_name, last_name, fieldName, repr(expectedValue), repr(fieldValue) )
 
         gotException = False
         try:
@@ -278,7 +278,7 @@ class TestUpdateQuery(object):
         assert len(results) == len(self.DEFAULT_PERSON_DATASET) , 'Did not get expected number of results back. Expected %d but got %d' %( len(self.DEFAULT_PERSON_DATASET), len(results))
 
         for resultRow in results:
-            
+
             ( _id, first_name, last_name, eye_color, age, birth_day, birth_month, datasetuid ) = resultRow
 
             myFetchedValues = { 'id' : _id, 'first_name' : first_name, 'last_name' : last_name, 'eye_color' : eye_color,
@@ -302,10 +302,10 @@ class TestUpdateQuery(object):
                 testAgainstValues = self.personIdToDataset[_id]
 
             for fieldName, fieldValue in myFetchedValues.items():
-                
+
                 expectedValue = testAgainstValues[fieldName]
 
-                assert fieldValue == expectedValue , 'Got unexpected value after update transaction commit. On person %s %s  field "%s" does not have expected value %s. Fetched value was %s' %( first_name, last_name, fieldName, repr(expectedValue), repr(fieldValue) ) 
+                assert fieldValue == expectedValue , 'Got unexpected value after update transaction commit. On person %s %s  field "%s" does not have expected value %s. Fetched value was %s' %( first_name, last_name, fieldName, repr(expectedValue), repr(fieldValue) )
 
 
     def test_updateWithQueryStr(self):
@@ -340,7 +340,7 @@ class TestUpdateQuery(object):
         assert len(results) == len(self.DEFAULT_PERSON_DATASET) , 'Did not get expected number of results back. Expected %d but got %d' %( len(self.DEFAULT_PERSON_DATASET), len(results))
 
         for resultRow in results:
-            
+
             ( _id, first_name, last_name, eye_color, age, birth_day, birth_month, datasetuid ) = resultRow
 
             myFetchedValues = { 'id' : _id, 'first_name' : first_name, 'last_name' : last_name, 'eye_color' : eye_color,
@@ -350,13 +350,13 @@ class TestUpdateQuery(object):
             testAgainstValues = self.personIdToDataset[_id]
 
             for fieldName, fieldValue in myFetchedValues.items():
-                
+
                 expectedValue = testAgainstValues[fieldName]
                 # We incremented age, so check against orig age + 1
                 if fieldName == 'age':
                     expectedValue += 1
 
-                assert fieldValue == expectedValue , 'Got unexpected value after update incrementing age. On person %s %s  field "%s" does not have expected value %s. Fetched value was %s' %( first_name, last_name, fieldName, repr(expectedValue), repr(fieldValue) ) 
+                assert fieldValue == expectedValue , 'Got unexpected value after update incrementing age. On person %s %s  field "%s" does not have expected value %s. Fetched value was %s' %( first_name, last_name, fieldName, repr(expectedValue), repr(fieldValue) )
 
 
 if __name__ == '__main__':

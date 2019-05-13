@@ -45,7 +45,7 @@ class TestSelectInnerJoinQuery(object):
             dbConn = ichorORM.getDatabaseConnection()
             dbConn.executeSql("DELETE FROM %s WHERE datasetUid = '%s'" %(tableName, self.datasetUid, ))
         except Exception as e:
-            sys.stderr.write('Error deleting all %s objects with dataset uid "%s": %s  %s\n' % 
+            sys.stderr.write('Error deleting all %s objects with dataset uid "%s": %s  %s\n' %
                 (tableName, self.datasetUid, str(type(e)), str(e) )
             )
 
@@ -56,7 +56,7 @@ class TestSelectInnerJoinQuery(object):
         '''
         # First, delete from Meal which refrences Person
         self._deleteDataset(Meal.TABLE_NAME)
-        
+
         # Now can delete the Person from this dataset
         self._deleteDataset(Person.TABLE_NAME)
 
@@ -75,7 +75,7 @@ class TestSelectInnerJoinQuery(object):
 
                 @param meth <built-in method> - The method being tested (compare meth == self.someMethod)
         '''
-        
+
         if meth in ( self.test_generalGetMapping, self.test_generalGetDictObjs, self.test_tableStarSelectFields ):
 
             # self.DEFAULT_PERSON_DATASET - A sample dataset of field -> value for Person model
@@ -109,7 +109,7 @@ class TestSelectInnerJoinQuery(object):
                 self.personIdToData[ pks[i] ] = self.DEFAULT_PERSON_DATASET[i]
 
     #FIELDS = ['id', 'food_group', 'item_name', 'price', 'id_person', 'datasetuid']
-        
+
             def getMealForPerson(mealDict, personIdx):
                 mealDict = copy.deepcopy(mealDict)
                 mealDict['id_person'] = self.DEFAULT_PERSON_DATASET[personIdx]['id']
@@ -117,17 +117,17 @@ class TestSelectInnerJoinQuery(object):
                 return mealDict
 
             MEAL_ICE_CREAM = { \
-                    "id" : None, "food_group" : "desert", "item_name" : "ice cream", 
+                    "id" : None, "food_group" : "desert", "item_name" : "ice cream",
                     "price" : 3.99, "id_person" : None, "datasetuid" : None,
             }
 
             MEAL_PIZZA = { \
-                    "id" : None, "food_group" : "junk", "item_name" : "pizza", 
+                    "id" : None, "food_group" : "junk", "item_name" : "pizza",
                     "price" : 9.99, "id_person" : None, "datasetuid" : None,
             }
 
             MEAL_MILK = { \
-                    "id" : None, "food_group" : "dairy", "item_name" : "milk", 
+                    "id" : None, "food_group" : "dairy", "item_name" : "milk",
                     "price" : 4.20, "id_person" : None, "datasetuid" : None,
             }
 
@@ -192,13 +192,13 @@ class TestSelectInnerJoinQuery(object):
 
         # Check that all fields are correct
         for resultMapping in resultMappings:
-            
+
             assert 'person.id' in resultMapping , 'Expected person.id to be a mapping in results. Keys are: %s' %( repr(list(resultMapping.keys())), )
 
             assert 'meal.id' in resultMapping, 'Expected meal.id to be a mapping in results.  Keys are: %s' %( repr(list(resultMapping.keys())), )
 
             assert resultMapping['meal.id_person'] == resultMapping['person.id'] , 'Expected meal.id_person [ %s ] to equal person.id [ %s ].' %( repr(resultMapping['meal.id_person']), repr(resultMapping['person.id']) )
-                
+
             # Ok, general sanity check seems okay. So let's verify that every field is present and accounted for
 
             personId = resultMapping['person.id']
@@ -209,7 +209,7 @@ class TestSelectInnerJoinQuery(object):
 
             # Check all person fields
             for personFieldName in Person.FIELDS:
-                
+
                 mapKey = Person.TABLE_NAME + '.' + personFieldName
 
                 assert mapKey in resultMapping , 'Expected %s to be in mapping results, but it was not. Keys are: %s' %( mapKey, repr(list(resultMapping.keys())) )
@@ -257,7 +257,7 @@ class TestSelectInnerJoinQuery(object):
 
             assert hasattr(resultDictObj, Meal.TABLE_NAME) , 'Expected a Meal.TABLE_NAME attribute, but there is none.'
             assert Meal.TABLE_NAME in resultDictObj , 'Expected a key of Meal.TABLE_NAME, but it is not present.'
-            
+
             personObj = getattr(resultDictObj, Person.TABLE_NAME) # Aka resultDictObj.person
             mealObj = getattr(resultDictObj, Meal.TABLE_NAME)     # Aka resultDictObj.meal
 
@@ -265,7 +265,7 @@ class TestSelectInnerJoinQuery(object):
             assert 'id' in mealObj , 'Expected meal.id to be in results.  Keys are: %s' %( repr(list(mealObj.keys())), )
 
             assert mealObj.id_person == personObj.id , 'Expected meal.id_person [ %s ] to equal person.id [ %s ].' %( repr(mealObj.id_person), repr(personObj.id) )
-                
+
             # Ok, general sanity check seems okay. So let's verify that every field is present and accounted for
 
             personId = personObj.id
@@ -276,7 +276,7 @@ class TestSelectInnerJoinQuery(object):
 
             # Check all person fields
             for personFieldName in Person.FIELDS:
-                
+
                 assert personFieldName in personObj , 'Expected .person to contain field %s but it did not. Fields are: %s' %( personFieldName, repr(list(personObj.keys())) )
 
                 assert str(personObj[personFieldName]) == str(expectedPersonData[personFieldName]) , 'Unexpected value on person field %s. Got %s but expected %s' %( personFieldName, repr(personObj[personFieldName]), repr(expectedPersonData[personFieldName]) )
@@ -298,13 +298,13 @@ class TestSelectInnerJoinQuery(object):
 
         selectFields = mealStarQ.getFields()
 
-        assert len(selectFields) == len ( Meal.FIELDS ) + 1 , 'Expected [ Person.age, Meal.* ] to runroll into Person.age and all of Meal fields. Got %d fields but expected %d.  getFields returned: %s' %( len(selectFields), len(Meal.FIELDS) + 1, repr(selectFields)) 
+        assert len(selectFields) == len ( Meal.FIELDS ) + 1 , 'Expected [ Person.age, Meal.* ] to runroll into Person.age and all of Meal fields. Got %d fields but expected %d.  getFields returned: %s' %( len(selectFields), len(Meal.FIELDS) + 1, repr(selectFields))
 
         for mealField in Meal.FIELDS:
-            
+
             combinedFieldName = Meal.TABLE_NAME + '.' + mealField
 
-            assert combinedFieldName in selectFields , 'Expected Meal.* to include field %s but it did not. Fields are: %s' %( repr(mealField), repr(selectFields)) 
+            assert combinedFieldName in selectFields , 'Expected Meal.* to include field %s but it did not. Fields are: %s' %( repr(mealField), repr(selectFields))
 
         personAgeField = Person.TABLE_NAME + '.age'
 
@@ -326,13 +326,13 @@ class TestSelectInnerJoinQuery(object):
 
         # Check that all fields are correct
         for resultMapping in resultMappings:
-            
+
             assert 'person.id' in resultMapping , 'Expected person.id to be a mapping in results. Keys are: %s' %( repr(list(resultMapping.keys())), )
 
             assert 'meal.id' in resultMapping, 'Expected meal.id to be a mapping in results.  Keys are: %s' %( repr(list(resultMapping.keys())), )
 
             assert resultMapping['meal.id_person'] == resultMapping['person.id'] , 'Expected meal.id_person [ %s ] to equal person.id [ %s ].' %( repr(resultMapping['meal.id_person']), repr(resultMapping['person.id']) )
-                
+
             # Ok, general sanity check seems okay. So let's verify that every field is present and accounted for
 
             personId = resultMapping['person.id']
@@ -343,7 +343,7 @@ class TestSelectInnerJoinQuery(object):
 
             # Check all person fields
             for personFieldName in Person.FIELDS:
-                
+
                 mapKey = Person.TABLE_NAME + '.' + personFieldName
 
                 assert mapKey in resultMapping , 'Expected %s to be in mapping results, but it was not. Keys are: %s' %( mapKey, repr(list(resultMapping.keys())) )

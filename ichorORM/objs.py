@@ -2,7 +2,7 @@
     Copyright (c) 2016-2018 Timothy Savannah
 
     Licensed under the terms of the Lesser GNU Lesser General Public License version 2.1
-    
+
       license can be found at https://raw.githubusercontent.com/kata198/ichorORM/master/LICENSE
 
 
@@ -22,7 +22,7 @@ class DictObj(dict):
     def __getattribute__(self, attrName):
         '''
             __getattribute__ - Called on dot-access.
-                
+
                 Searches if a key exists within this dict with the given name,
                   falling back to object-access
         '''

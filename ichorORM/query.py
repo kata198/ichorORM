@@ -2,7 +2,7 @@
     Copyright (c) 2016-2018 Timothy Savannah
 
     Licensed under the terms of the Lesser GNU Lesser General Public License version 2.1
-    
+
       license can be found at https://raw.githubusercontent.com/kata198/ichorORM/master/LICENSE
 
 
@@ -63,7 +63,7 @@ class FilterField(FilterType):
                 @param filterValue <str/QueryStr/SelectQuery> - The value to match, or a query to embed to fetch value
 
                 @param operator <str/None> default None - If provided, will use
-                    
+
                     this as the operator, otherwise will calculate from #filterType
         '''
 
@@ -175,7 +175,7 @@ class FilterField(FilterType):
 
             ret += " " + _queryStr
             params.update(_selectParams)
-            
+
         elif not isMultiOperator(self.operator):
             # If not a multi operator, insert one parameterized value
             ret += ' %(' + paramName + ')s '
@@ -297,7 +297,7 @@ class FilterStage(FilterType):
                 filterStr = _filterEm.asQueryStr()
             else:
                 filterStr = _filterEm.toStr()
-            
+
             filterStr = filterStr.strip()
             if filterStr:
                 expressions.append(filterStr)
@@ -431,7 +431,7 @@ class FilterStage(FilterType):
             removeFilter - Remove a filter from the list of filters.
 
                 @param _filter <FilterType obj> - The filter to remove
-                
+
                 @return <None/FilterType obj> - The filter removed, or None if not found.
         '''
         ret = None
@@ -506,8 +506,8 @@ class QueryBase(object):
 
                 @param model <DatabaseModel> - The DatabaseModel to use for this query
 
-                @param filterStages <None/list<FilterType objs>> Default None - 
-                
+                @param filterStages <None/list<FilterType objs>> Default None -
+
                     You may past a list of initial filter stages to use in the WHERE portion of the query, or leave as None and add them indivdiualy with #addStage (preferred).
 
                     This list will be copied, but the stages themselves will not
@@ -530,7 +530,7 @@ class QueryBase(object):
             for filterStage in filterStages:
                 # TODO: Confirm that FilterType is good enough, maybe should enforce FilterStage?
                 if not isFilterType(filterStage):
-                    raise ValueError('Non-subclass of FilterType provided as a FilterStage. Type was: ' + 
+                    raise ValueError('Non-subclass of FilterType provided as a FilterStage. Type was: ' +
                         filterStage.__class__.__name__
                     )
                 self.filterStages.append(filterStage)
@@ -539,7 +539,7 @@ class QueryBase(object):
     def getModel(self):
         '''
             getModel - Gets the model <DatabaseModel> associated with this Query.
-            
+
                 NOTE: Not all queries have the same meaning here.
                   For example, a SelectInnerJoinQuery
                     has no "model" set but a list of "models" ( @see #getModels ).
@@ -642,7 +642,7 @@ class QueryBase(object):
             paramPrefix = paramPrefix + '_' + 'wh_stg'
         else:
             paramPrefix = 'wh_stg'
-            
+
         stageNum = 0
 
         stagesStrLst = []
@@ -744,7 +744,7 @@ class SelectQuery(QueryBase):
 
         self.limitNum = limitNum
 
-    
+
     def clearOrderBy(self):
         '''
             clearOrderBy - Clears the "ORDER BY" portion of this query
@@ -988,7 +988,7 @@ class SelectQuery(QueryBase):
                                 A QueryStr representing this SELECT, with values inline
         '''
 
-        
+
         retQS = QueryStr()
         retParams = {}
 
@@ -1020,7 +1020,7 @@ class SelectQuery(QueryBase):
                                 1 - A dict containing any params (to be added to param list)
         '''
 
-        
+
         retQS = QueryStr()
         retParams = {}
 
@@ -1052,7 +1052,7 @@ class SelectInnerJoinQuery(SelectQuery):
                 @param models - list<DatabaseModel> - List of models to use
 
                 @param selectFields <'ALL' or list<str>> - Default ALL for all fields on all joined models, or a list of fields to select (prefix with table name, like MyTable.myField)
-                    
+
 
                     Use MyModel.TABLE_NAME + '.*' to select all fields on "MyModel"
 
@@ -1083,7 +1083,7 @@ class SelectInnerJoinQuery(SelectQuery):
     def getTableNames(self):
         '''
             getTableNames - Get a list of associated table names
-        
+
                 @return list<str> - List of table names
         '''
         return [ model.TABLE_NAME for model in self.models ]
@@ -1364,7 +1364,7 @@ class SelectGenericJoinQuery(SelectQuery):
     def getTableNames(self):
         '''
             getTableNames - Get a list of all table names in this query
-            
+
                 @return list<str> - A list of table names
         '''
         return [ model.TABLE_NAME for model in self.models ]
@@ -1724,7 +1724,7 @@ class UpdateQuery(QueryBase):
               @param model - The model class
 
               @param newFieldValues <dict/None> Default None.
- 
+
                     If provided, will use these as initial field values for update.
                     Providing this is the same as calling #setFieldValues(newFieldValues)
 
@@ -1732,7 +1732,7 @@ class UpdateQuery(QueryBase):
                         methods after constructing the object.
 
               @param filterStages <None/list<FilterStage>> Default None - Provide a list of
-                    
+
                     filter stages to use. A copy of this list will be made internally
         '''
         QueryBase.__init__(self, model, filterStages)
@@ -1749,8 +1749,8 @@ class UpdateQuery(QueryBase):
 
                 @param fieldName <str> - The field name (should be in FIELDS array on model class)
 
-                @param newValue <???> - The new value for the field. This can be a string, integer, datetime object, etc. 
-                      depending on the schema for this field  
+                @param newValue <???> - The new value for the field. This can be a string, integer, datetime object, etc.
+                      depending on the schema for this field
         '''
 
         self.newFieldValues[fieldName] = newValue
@@ -1758,7 +1758,7 @@ class UpdateQuery(QueryBase):
     def setFieldValues(self, fieldNameToValueMap):
         '''
             setFieldValues - Sets one or more field -> value associations for the insert operation.
-                
+
                 "Bulk mode"
 
                 @param fieldNameToValueMap dict<str : ???> - A map of field name -> field value
@@ -1769,7 +1769,7 @@ class UpdateQuery(QueryBase):
     def hasAnyUpdates(self):
         '''
             hasAnyUpdates - Property reflecting whether any fields have been set thus far
-                
+
                 in this update query.
 
                 @return <bool> - True if any fields have been configured to be updated, otherwise False
@@ -1821,7 +1821,7 @@ class UpdateQuery(QueryBase):
             if isSelectQuery(fieldValue):
                 (fieldValue, extraRetParams) = fieldValue.asQueryStrParams(paramPrefix=identifier)
                 retValues.update(extraRetParams)
-                
+
             if isQueryStr(fieldValue):
                 retParams.append( fieldName + ' = ' + str(fieldValue) + " " )
             else:
@@ -1945,8 +1945,8 @@ class InsertQuery(QueryBase):
 
               @param model <DatabaseModel> - The model to use
 
-              @param initialFieldValues <None / dict< str : ??? > > Default None - 
-                
+              @param initialFieldValues <None / dict< str : ??? > > Default None -
+
                 If provided, must be a map to fieldName : fieldValue, and this will become the
                  initial set of fields to be set on the inserted object.
 
@@ -1975,7 +1975,7 @@ class InsertQuery(QueryBase):
             setFieldValues - Set multiple field values
 
                 @param fieldNameToValueMap dict<str : ???> - A map of field name -> field value
-                    
+
                     This will define the values of the fields upon insert
         '''
         self.fieldValues.update(fieldNameToValueMap)
@@ -1998,7 +1998,7 @@ class InsertQuery(QueryBase):
                 retParams.append(fieldValue)
             elif isSelectQuery(fieldValue):
                 (selParams, selValues) = fieldValue.asQueryStrParams(paramPrefix=fieldName + '_')
-                
+
                 retParams += selParams
                 retValues.update(selValues)
             else:

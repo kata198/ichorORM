@@ -93,7 +93,7 @@ class TestDeleteQuery(object):
             dbConn = ichorORM.getDatabaseConnection()
             dbConn.executeSql("DELETE FROM %s WHERE datasetUid = '%s'" %(tableName, self.datasetUid, ))
         except Exception as e:
-            sys.stderr.write('Error deleting all %s objects with dataset uid "%s": %s  %s\n' % 
+            sys.stderr.write('Error deleting all %s objects with dataset uid "%s": %s  %s\n' %
                 (tableName, self.datasetUid, str(type(e)), str(e) )
             )
 
@@ -104,7 +104,7 @@ class TestDeleteQuery(object):
         '''
         # First, delete from Meal which refrences Person
         self._deleteDataset(Meal.TABLE_NAME)
-        
+
         # Now can delete the Person from this dataset
         self._deleteDataset(Person.TABLE_NAME)
 
@@ -125,7 +125,7 @@ class TestDeleteQuery(object):
 
                 @param meth <built-in method> - The method being tested (compare meth == self.someMethod)
         '''
-        
+
         if meth in ( self.test_generalDelete, self.test_deleteWithQueryStr, self.test_deleteWithSelectQuery, self.test_deleteAll ):
 
             # self.dataSet - A sample dataset of field -> value for Person model
@@ -149,7 +149,7 @@ class TestDeleteQuery(object):
 
             for i in range(len(self.dataSet)):
                 self.dataSet[i]['id'] = pks[i]
-        
+
 
 
     def teardown_method(self, meth):
@@ -174,11 +174,11 @@ class TestDeleteQuery(object):
         results = dbConn.doSelect(query)
 
         assert results , 'Did not get any results for COUNT(*) query'
-        
+
         assert len(results) == 1 , 'Expected 1 row of results for COUNT(*) query, but got %d.  %s' %(len(results), repr(results))
 
         return int(results[0][0])
-        
+
 
     def test_generalDelete(self):
         '''
@@ -190,7 +190,7 @@ class TestDeleteQuery(object):
         numberPeople = self._getNumberPeople()
 
         assert numberPeople == 5 , 'Expected 5 rows in Person model, but got %d' %(numberPeople, )
-        
+
         delQ = DeleteQuery(MyPersonModel)
 
         delQWhere = delQ.addStage()
@@ -230,7 +230,7 @@ class TestDeleteQuery(object):
         numberPeople = self._getNumberPeople()
 
         assert numberPeople == 5 , 'Expected 5 rows in Person model, but got %d' %(numberPeople, )
-        
+
         delQ = DeleteQuery(MyPersonModel)
 
         delQWhere = delQ.addStage()
@@ -271,7 +271,7 @@ class TestDeleteQuery(object):
         numberPeople = self._getNumberPeople()
 
         assert numberPeople == 5 , 'Expected 5 rows in Person model, but got %d' %(numberPeople, )
-        
+
         delQ = DeleteQuery(MyPersonModel)
         delQWhere = delQ.addStage()
 

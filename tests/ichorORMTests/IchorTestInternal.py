@@ -83,7 +83,7 @@ def ensureTestSetup():
             badIds = []
 
             for resultRow in resultRows:
-                
+
                 (resId, resIsComplete, resCreatedAt) = resultRow
                 if str(resIsComplete) == '1':
                     isReady = True
@@ -119,7 +119,7 @@ def ensureTestSetup():
             resultRows = dbConn.doSelect('SELECT my_uuid, created_at FROM ichor_orm_tests WHERE state_num = ' + str(_TEST_DATA_STATE_NUM) + ' ORDER BY created_at ASC')
             if resultRows[0][0] == myUuid:
                 okToCreate = True
-            
+
 
         if okToCreate is True:
             # At this point, we have the "lead" entry, and win the rights to create the database.
@@ -138,7 +138,7 @@ def ensureTestSetup():
 
             # Create tables
             for model in ALL_MODELS:
-                
+
                 try:
                     dbConn.executeSql(model._CREATE_TABLE_SQL)
                 except Exception as e:
@@ -154,7 +154,7 @@ def ensureTestSetup():
             else:
                 raise ImportError('Failed to create at least one model.')
         else:
-            
+
             startWaitTime = datetime.datetime.now()
 
             while True:
@@ -165,7 +165,7 @@ def ensureTestSetup():
                     return
 
                 now = datetime.datetime.now()
-                
+
                 runTime = now - startWaitTime
                 if runTime.total_seconds() > 120:
                     msg = 'Error: Ran for 120 seconds waiting for table creation but did not occur. Try again?'

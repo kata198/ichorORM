@@ -43,7 +43,7 @@ class TestInsertQuery(object):
             dbConn = ichorORM.getDatabaseConnection()
             dbConn.executeSql("DELETE FROM %s WHERE datasetUid = '%s'" %(tableName, self.datasetUid, ))
         except Exception as e:
-            sys.stderr.write('Error deleting all %s objects with dataset uid "%s": %s  %s\n' % 
+            sys.stderr.write('Error deleting all %s objects with dataset uid "%s": %s  %s\n' %
                 (tableName, self.datasetUid, str(type(e)), str(e) )
             )
 
@@ -54,7 +54,7 @@ class TestInsertQuery(object):
         '''
         # First, delete from Meal which refrences Person
         self._deleteDataset(Meal.TABLE_NAME)
-        
+
         # Now can delete the Person from this dataset
         self._deleteDataset(Person.TABLE_NAME)
 
@@ -73,7 +73,7 @@ class TestInsertQuery(object):
 
                 @param meth <built-in method> - The method being tested (compare meth == self.someMethod)
         '''
-        
+
         if meth in ( self.test_transactionInsert, ):
 
             # self.DEFAULT_PERSON_DATASET - A sample dataset of field -> value for Person model
@@ -141,7 +141,7 @@ class TestInsertQuery(object):
         assert len(resultRows) == 1 , 'Expected to get one result, but got %d' %(len(resultRows), )
 
         resultRow = resultRows[0]
-        
+
         assert resultRow[0] == 'John' , 'Expected first_name to be set to "John" but got: %s' %(repr(resultRow[0]), )
         assert resultRow[1] == 'Smith' , 'Expected last_name to be set to "Smith" but got: %s' %(repr(resultRow[1]), )
         assert str(resultRow[2]) == '35' , 'Expected age to be set to 35 but got: %s' %(repr(resultRow[2]), )
@@ -164,7 +164,7 @@ class TestInsertQuery(object):
         personIdToDataset = {}
 
         for dataEntry in self.DEFAULT_PERSON_DATASET:
-            
+
             insQ = InsertQuery(Person, initialFieldValues=dataEntry)
 
             gotException = False
@@ -237,7 +237,7 @@ class TestInsertQuery(object):
             sourceData = personIdToDataset[_id]
 
             for fieldName, fieldValue in thisResultDict.items():
-                
+
                 sourceValue = sourceData[fieldName]
                 assert fieldValue == sourceValue , 'Got unexpected value for field "%s". We set with "%s" but got back "%s".\nFull source fields/values: %s\nFull returned fields/values: %s\n' %( fieldName, sourceValue, fieldValue, repr(sourceData), repr(thisResultDict))
 

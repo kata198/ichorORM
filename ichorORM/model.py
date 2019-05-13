@@ -2,7 +2,7 @@
     Copyright (c) 2016-2018 Timothy Savannah
 
     Licensed under the terms of the Lesser GNU Lesser General Public License version 2.1
-    
+
       license can be found at https://raw.githubusercontent.com/kata198/ichorORM/master/LICENSE
 
     model.py - ORM model base
@@ -28,7 +28,7 @@ except NameError:
 			self.getter = getter
 		def __get__(self, instance, owner):
 			return self.getter(owner)
-    
+
 class DatabaseModel(object):
     '''
         DatabaseModel - Models should extend this
@@ -68,7 +68,7 @@ class DatabaseModel(object):
                 This method will be called once per class and the value cached.
 
                     @return dict < <str> : relations.ForeignRelations> - Foreign relations on this model
-                        
+
                         If the key is a string, this model will gain an attribute with that name which will
                           return the related model when accessed.
 
@@ -76,7 +76,7 @@ class DatabaseModel(object):
 
                           If you access myModelObj.person it will return the Person object related by Person.id = myModel.id_person
 
-                        The key could also be a model class or whatever, and you can get the related object(s) 
+                        The key could also be a model class or whatever, and you can get the related object(s)
 
                           by calling myModelObj.getRelated(#key)
         '''
@@ -91,7 +91,7 @@ class DatabaseModel(object):
                 or generate it via #getModelRelations if not yet set on this class.
 
                 @return dict < <str> : relations.ForeignRelations> - Foreign relations on this model
-                    
+
                     Key should be a string of a name, or could be a model, whatever. You will pass this to "getRelated(#key)"
         '''
         if cls._MODEL_RELATIONS is None:
@@ -336,7 +336,7 @@ class DatabaseModel(object):
 
               @param whereType <WHERE_AND/WHERE_OR> - Whether filter criteria should be AND or OR'd together
 
-              @param dbConn <DatabaseConnection/None> default None- If present and not None, 
+              @param dbConn <DatabaseConnection/None> default None- If present and not None,
                   will use this as the postgres connection.
                   Otherwise, will start a new connection based on global settings
 
