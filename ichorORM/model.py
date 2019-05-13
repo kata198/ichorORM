@@ -111,7 +111,7 @@ class DatabaseModel(object):
         FIELDS = self.FIELDS
         DEFAULT_FIELD_VALUES = self.DEFAULT_FIELD_VALUES
 
-        # TODO: Add some basic support for his some
+        # TODO: Add support for non-serial primary key?
         if not self.SERIAL_PRIMARY_KEY:
             raise NotImplementedError('Models without a serial sequenced primary key are not currently supported')
 
@@ -131,7 +131,7 @@ class DatabaseModel(object):
 
             setattr(self, fieldName, value)
 
-    # TODO: rename to includePk?
+
     def asDict(self, includePk=True):
         '''
             asDict - Return a dict representation of this model
